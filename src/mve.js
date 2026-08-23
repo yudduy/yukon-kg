@@ -84,7 +84,10 @@ const EXECUTOR_SCHEMA = {
   properties: {
     status: { type: "string", enum: ["implemented", "no_patch", "blocked"] },
     summary: { type: "string" },
-    patch: { type: "string" },
+    patch: {
+      type: "string",
+      pattern: "^(?:$|diff --git a/src/point_add/trailmix_ludicrous/square/product_register\\.rs b/src/point_add/trailmix_ludicrous/square/product_register\\.rs\\n)",
+    },
   },
 };
 const CANARY_SCHEMA = {
@@ -958,6 +961,8 @@ function executorPrompt(decision, sourcePrefix) {
   return [
     "Implement one assigned experiment by returning a unified Git patch. Do not choose a different strategy or call tools.",
     `The patch may edit only ${PRODUCT_REGISTER} before the protected harness marker.`,
+    `For an implemented change, patch must start exactly with "diff --git a/${PRODUCT_REGISTER} b/${PRODUCT_REGISTER}" and every hunk header must include real old/new line numbers, for example "@@ -10,3 +10,4 @@".`,
+    "The patch must be accepted by git apply. Never return *** Begin Patch, *** Update File, placeholder line numbers, Markdown fences, or prose inside patch.",
     "The host applies and scores the patch. If blocked, return an empty patch.",
     `Branch brief:\n${decision.branchBrief}`,
     `Hypothesis:\n${decision.hypothesis}`,

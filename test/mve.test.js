@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import {
   CodexRunner,
+  EXECUTOR_SCHEMA,
   Semaphore,
   checkCandidateIntegrity,
   codexConfigArguments,
@@ -152,6 +153,19 @@ describe("runtime primitives", () => {
     expect(result.lastMessage).toBe('{"ok":true}');
     expect(result.usage.input_tokens).toBe(10);
     expect(result.errorItems).toEqual(["warning"]);
+  });
+
+  test("requires executors to return a real git diff", () => {
+    const pattern = new RegExp(EXECUTOR_SCHEMA.properties.patch.pattern, "u");
+    expect(pattern.test("*** Begin Patch\n*** Update File: src/example.rs")).toBe(false);
+    expect(pattern.test([
+      "diff --git a/src/point_add/trailmix_ludicrous/square/product_register.rs b/src/point_add/trailmix_ludicrous/square/product_register.rs",
+      "--- a/src/point_add/trailmix_ludicrous/square/product_register.rs",
+      "+++ b/src/point_add/trailmix_ludicrous/square/product_register.rs",
+      "@@ -1,1 +1,2 @@",
+      " line",
+      "+line",
+    ].join("\n"))).toBe(true);
   });
 
   test("retries only infrastructure failures that occur before model output", async () => {
