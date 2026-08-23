@@ -6,6 +6,7 @@ import {
   CodexRunner,
   EXECUTOR_SCHEMA,
   Semaphore,
+  applyExactReplacements,
   checkCandidateIntegrity,
   codexConfigArguments,
   enabledMcpServers,
@@ -82,20 +83,15 @@ class FakeCodexRunner {
     }
     this.executorCalls += 1;
     if (this.executorCalls === this.invalidExecutorCall) {
-      return fakeCodexResult({ status: "no_patch", summary: "No admissible patch.", patch: "" }, `executor-${this.calls}`);
+      return fakeCodexResult({ status: "no_patch", summary: "No admissible edit.", replacements: [] }, `executor-${this.calls}`);
     }
-    const file = path.join(options.cwd, "src", "point_add", "trailmix_ludicrous", "square", "product_register.rs");
-    const source = await fs.readFile(file, "utf8");
-    await fs.writeFile(file, source.replace(
-      "pub(super) fn selfcheck()",
-      `// fake-optimization-${this.executorCalls}\npub(super) fn selfcheck()`,
-    ));
-    const patch = await Bun.$`git diff --binary HEAD`.cwd(options.cwd).text();
-    await fs.writeFile(file, source);
     return fakeCodexResult({
       status: "implemented",
       summary: "Added the assigned marker.",
-      patch,
+      replacements: [{
+        old: "pub(super) fn selfcheck()",
+        new: `// fake-optimization-${this.executorCalls}\npub(super) fn selfcheck()`,
+      }],
     }, `executor-${this.calls}`);
   }
 }
@@ -156,17 +152,11 @@ describe("runtime primitives", () => {
     expect(result.errorItems).toEqual(["warning"]);
   });
 
-  test("requires executors to return a real git diff", () => {
-    const pattern = new RegExp(EXECUTOR_SCHEMA.properties.patch.pattern, "u");
-    expect(pattern.test("*** Begin Patch\n*** Update File: src/example.rs")).toBe(false);
-    expect(pattern.test([
-      "diff --git a/src/point_add/trailmix_ludicrous/square/product_register.rs b/src/point_add/trailmix_ludicrous/square/product_register.rs",
-      "--- a/src/point_add/trailmix_ludicrous/square/product_register.rs",
-      "+++ b/src/point_add/trailmix_ludicrous/square/product_register.rs",
-      "@@ -1,1 +1,2 @@",
-      " line",
-      "+line",
-    ].join("\n"))).toBe(true);
+  test("applies only exact, unique source replacements", () => {
+    expect(EXECUTOR_SCHEMA.required).toContain("replacements");
+    expect(applyExactReplacements("alpha\nbeta\n", [{ old: "beta", new: "gamma" }])).toBe("alpha\ngamma\n");
+    expect(() => applyExactReplacements("alpha alpha", [{ old: "alpha", new: "beta" }])).toThrow("matched 2");
+    expect(() => applyExactReplacements("alpha", [{ old: "alpha", new: "alpha" }])).toThrow("does not change");
   });
 
   test("judges network isolation from completed command output", () => {

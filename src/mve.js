@@ -80,13 +80,22 @@ const ALLOCATOR_SCHEMA = {
 const EXECUTOR_SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["status", "summary", "patch"],
+  required: ["status", "summary", "replacements"],
   properties: {
     status: { type: "string", enum: ["implemented", "no_patch", "blocked"] },
     summary: { type: "string" },
-    patch: {
-      type: "string",
-      pattern: "^(?:$|diff --git a/src/point_add/trailmix_ludicrous/square/product_register\\.rs b/src/point_add/trailmix_ludicrous/square/product_register\\.rs\\n)",
+    replacements: {
+      type: "array",
+      maxItems: 8,
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["old", "new"],
+        properties: {
+          old: { type: "string", minLength: 1 },
+          new: { type: "string" },
+        },
+      },
     },
   },
 };
@@ -971,16 +980,29 @@ function allocatorPrompt(packet, lastResult = null) {
 
 function executorPrompt(decision, sourcePrefix) {
   return [
-    "Implement one assigned experiment by returning a unified Git patch. Do not choose a different strategy or call tools.",
-    `The patch may edit only ${PRODUCT_REGISTER} before the protected harness marker.`,
-    `For an implemented change, patch must start exactly with "diff --git a/${PRODUCT_REGISTER} b/${PRODUCT_REGISTER}" and every hunk header must include real old/new line numbers, for example "@@ -10,3 +10,4 @@".`,
-    "The patch must be accepted by git apply. Never return *** Begin Patch, *** Update File, placeholder line numbers, Markdown fences, or prose inside patch.",
-    "The host applies and scores the patch. If blocked, return an empty patch.",
+    "Implement one assigned experiment using exact text replacements. Do not choose a different strategy or call tools.",
+    `Replacements may edit only ${PRODUCT_REGISTER} before the protected harness marker.`,
+    "For each replacement, copy old exactly from the supplied source and provide its complete new text. Each old value must occur exactly once after earlier replacements. The host applies the replacements and generates the Git diff.",
+    "If blocked, return an empty replacements array. Do not return patch syntax, Markdown fences, placeholder text, or prose inside old/new.",
     `Branch brief:\n${decision.branchBrief}`,
     `Hypothesis:\n${decision.hypothesis}`,
     `Falsifier:\n${decision.falsifier}`,
     `Editable source prefix; the sealed harness starts immediately after the final marker:\n${sourcePrefix}`,
   ].join("\n\n");
+}
+
+export function applyExactReplacements(source, replacements) {
+  let candidate = source;
+  for (const [index, replacement] of replacements.entries()) {
+    if (replacement.old === replacement.new) throw new Error(`replacement ${index} does not change the source`);
+    let occurrences = 0;
+    for (let offset = candidate.indexOf(replacement.old); offset >= 0; offset = candidate.indexOf(replacement.old, offset + 1)) {
+      occurrences += 1;
+    }
+    if (occurrences !== 1) throw new Error(`replacement ${index} matched ${occurrences} source regions`);
+    candidate = candidate.replace(replacement.old, replacement.new);
+  }
+  return candidate;
 }
 
 function codexToolEvents(result) {
@@ -1157,37 +1179,38 @@ async function executeDecision({
     await writeJson(savedPath, { executorMessage, invalid, ...refs, usage });
     if (invalid) return invalid;
   }
-  if (executorMessage.status !== "implemented" || executorMessage.patch.trim() === "") {
+  if (executorMessage.status !== "implemented" || executorMessage.replacements.length === 0) {
     return { validity: "invalid", reason: "no_patch", executorMessage, ...refs, usage };
   }
   if ((await changedFiles(workspace)).length > 0) {
     return { validity: "invalid", reason: "executor_touched_workspace", executorMessage, ...refs, usage };
   }
-  const patchPath = path.join(slotDirectory, "candidate.patch");
-  await atomicWrite(patchPath, executorMessage.patch);
-  const patchCheck = await runProcess("git", ["apply", "--check", patchPath], { cwd: workspace });
-  if (patchCheck.exitCode !== 0) {
+  let candidate;
+  try {
+    candidate = applyExactReplacements(source, executorMessage.replacements);
+  } catch (error) {
     return {
       validity: "invalid",
-      reason: "patch_did_not_apply",
-      patchError: patchCheck.stderr || patchCheck.stdout,
+      reason: "replacement_did_not_apply",
+      replacementError: error.message,
       executorMessage,
       ...refs,
       usage,
     };
   }
-  await checkedProcess("git", ["apply", patchPath], { cwd: workspace });
+  await atomicWrite(path.join(workspace, PRODUCT_REGISTER), candidate);
   const integrity = await checkCandidateIntegrity(workspace, harnessSuffix);
   if (!integrity.valid) {
     return { validity: "invalid", reason: integrity.reason, integrity, executorMessage, ...refs, usage };
   }
+  const diff = await checkedProcess("git", ["diff", "--binary", "HEAD"], { cwd: workspace });
+  await atomicWrite(path.join(slotDirectory, "candidate.patch"), diff.stdout);
   const scoring = await scorer.twice(workspace, path.join(slotDirectory, "target"));
   await writeJson(path.join(slotDirectory, "scoring.json"), scoring);
   if (scoring.validity !== "valid") {
     return { validity: "invalid", reason: scoring.reason, integrity, scoring, executorMessage, ...refs, usage };
   }
   const artifact = await archiveArtifact(workspace, blockDirectory);
-  const diff = await checkedProcess("git", ["diff", "--binary", "HEAD"], { cwd: workspace });
   await atomicWrite(path.join(slotDirectory, "candidate.diff"), diff.stdout);
   return {
     validity: "valid",
