@@ -1,0 +1,10 @@
+{
+  "name": "yukon-kg",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "mve": "bun run src/mve.js",
+    "smoke": "bun run src/smoke.js",
+    "test": "bun test"
+  }
+}
