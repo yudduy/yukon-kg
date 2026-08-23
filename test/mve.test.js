@@ -10,6 +10,7 @@ import {
   codexConfigArguments,
   enabledMcpServers,
   extractCodexResult,
+  networkCanaryEvidence,
   promptSurfaceViolations,
   runBlock,
   runProcess,
@@ -166,6 +167,19 @@ describe("runtime primitives", () => {
       " line",
       "+line",
     ].join("\n"))).toBe(true);
+  });
+
+  test("judges network isolation from completed command output", () => {
+    const event = (aggregatedOutput) => ({
+      type: "item.completed",
+      item: { type: "command_execution", aggregated_output: aggregatedOutput },
+    });
+    expect(networkCanaryEvidence([event("curl failed\nNETWORK_BLOCKED")])).toMatchObject({ blocked: true, open: false });
+    expect(networkCanaryEvidence([event("NETWORK_OPEN")])).toMatchObject({ blocked: false, open: true });
+    expect(networkCanaryEvidence([{
+      type: "item.started",
+      item: { type: "command_execution", command: "printf NETWORK_BLOCKED", aggregated_output: "" },
+    }])).toMatchObject({ blocked: false, open: false });
   });
 
   test("retries only infrastructure failures that occur before model output", async () => {

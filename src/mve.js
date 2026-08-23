@@ -717,6 +717,17 @@ function codexAttemptMetadata(result) {
   }));
 }
 
+export function networkCanaryEvidence(events) {
+  const outputs = events
+    .filter((event) => event.type === "item.completed" && event.item?.type === "command_execution")
+    .map((event) => event.item.aggregated_output ?? "");
+  return {
+    outputs,
+    blocked: outputs.some((output) => /(?:^|\n)NETWORK_BLOCKED(?:\n|$)/u.test(output)),
+    open: outputs.some((output) => /(?:^|\n)NETWORK_OPEN(?:\n|$)/u.test(output)),
+  };
+}
+
 export function promptSurfaceViolations(text) {
   const violations = FORBIDDEN_PROMPT_SURFACE
     .filter(({ pattern }) => pattern.test(text))
@@ -823,9 +834,9 @@ export async function runIsolationCanary({ runDirectory, codexRunner, schemas })
   } catch {
     violations.push("canary returned non-JSON output");
   }
-  const commandEvidence = canonicalStringify(result.events);
-  if (!commandEvidence.includes("NETWORK_BLOCKED")) violations.push("network block was not observed in command evidence");
-  if (message?.status !== "READY" || message?.model !== MODEL) violations.push("canary did not attest the pinned model and blocked network");
+  const networkEvidence = networkCanaryEvidence(result.events);
+  if (!networkEvidence.blocked || networkEvidence.open) violations.push("network block was not observed in completed command output");
+  if (message?.model !== MODEL) violations.push("canary did not attest the pinned model");
   let workerResult = null;
   try {
     workerResult = await codexRunner.invokeWithRetries({
@@ -856,6 +867,7 @@ export async function runIsolationCanary({ runDirectory, codexRunner, schemas })
     status: violations.length === 0 ? "PASS" : "FAIL",
     corrections: violations,
     model: MODEL,
+    networkEvidence,
     usage: result.usage,
     workerUsage: workerResult?.usage ?? null,
     attempts: codexAttemptMetadata(result),
