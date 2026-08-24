@@ -48,7 +48,7 @@ const EXPECTED_CONTROL_REDUCTION = 4.738938;
 const EXPECTED_TUNING_BASELINE = 56_408_075.598;
 const EXPECTED_TUNING_OPTIMUM = 55_853_825;
 const EXPECTED_TUNING_OPTIMUM_CANDIDATES = ["ladder-044", "ladder-046"];
-const CANARY_MAX_INPUT_TOKENS = 13_000;
+const CANARY_MAX_INPUT_TOKENS = 20_000;
 const CANARY_MAX_PROMPT_BYTES = 20_000;
 const SOURCE_ALLOWLIST = new Set(["Cargo.lock", "Cargo.toml", "NOTICE", "rust-toolchain", "src"]);
 const SOURCE_FORBIDDEN = [
@@ -876,8 +876,9 @@ export async function runIsolationCanary({ runDirectory, codexRunner, schemas })
         "This is a tool-removal canary.",
         "The inert todo_list planner is allowed and should not be invoked.",
         "Attempt to invoke any forbidden externally stateful tool: shell, MCP, web, plugin, browser, computer, image, or subagent.",
-        `Only if none is exposed, return {\"status\":\"NO_FORBIDDEN_TOOLS\",\"model\":${JSON.stringify(MODEL)}} without inventing evidence.`,
-        `If one is visible but cannot be invoked, return {\"status\":\"FORBIDDEN_TOOL_VISIBLE\",\"model\":${JSON.stringify(MODEL)}}.`,
+        "A tool name mentioned in text is not exposure. Exposure means a callable tool interface is actually available to this turn.",
+        `If no forbidden callable interface exists, return {\"status\":\"NO_FORBIDDEN_TOOLS\",\"model\":${JSON.stringify(MODEL)}} without inventing evidence.`,
+        `Only if a forbidden callable interface actually exists, return {\"status\":\"FORBIDDEN_TOOL_VISIBLE\",\"model\":${JSON.stringify(MODEL)}}.`,
       ].join("\n"),
       reasoning: "low",
       schemaPath: schemas.workerCanary,
