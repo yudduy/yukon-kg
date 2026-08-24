@@ -1,6 +1,6 @@
 # Yukon-KG Handoff MVE
 
-Requirements: Bun, Rust/Cargo, Git, the Codex CLI authenticated on this machine, and access to `gpt-5.6-luna`.
+Requirements: Bun, Git, the Codex CLI authenticated on this machine, and access to `gpt-5.6-luna`.
 
 ```bash
 bun run mve -- preflight
@@ -9,17 +9,15 @@ bun run mve -- resume <run-id>
 bun run mve -- report <run-id>
 ```
 
-`preflight` checks the isolated Codex profile, model identity, blocked network, pinned source, duplicate scorer, sealed positive control, and the complete difficulty landscape for the search task. `run` first performs one apparatus pilot. Only an informative pilot proceeds to three more calibration blocks, a frozen sample size, and matched confirmation. Long runs are idempotently resumable.
+`preflight` checks the isolated Codex profile, model identity, blocked network, duplicate scoring, and a paper-derived Mouselab planning task. An exact dynamic program supplies the mathematically best inspection and the expected loss from every other choice. `run` performs four calibration blocks, freezes the number of matched confirmation blocks between 8 and 24, and then completes the confirmation. Long runs are idempotently resumable.
 
-All generated prompts, events, source artifacts, diffs, scores, timing, and reports live under `.runs/h1-h2/<run-id>/` and are ignored by Git.
+All generated prompts, events, sealed planning problems, scores, timing, and reports live under `.runs/mouselab-handoff/<run-id>/` and are ignored by Git.
 
 Reports use four claim states:
 
-- `SUPPORTED`: corrected statistical and 0.5% practical-effect gates both pass.
-- `NOT_SUPPORTED_AT_MDE`: the simultaneous upper bound is below 0.5%.
+- `SUPPORTED`: corrected statistical inference passes and the mean reduction in decision loss is at least one expected reward point.
+- `NOT_SUPPORTED_AT_MDE`: the simultaneous upper bound is below one expected reward point.
 - `INCONCLUSIVE_AT_CAP`: the frozen experiment cannot decide.
 - `INVALID`: isolation, provenance, budget, or scorer integrity failed.
 
-The pilot also has a task check: `TASK_TOO_EASY` means every procedure found the known optimum, `TASK_TOO_HARD` means none achieved the preregistered 0.5% improvement, and `NO_CONDITION_SEPARATION` means the procedures tied. These outcomes require a new task and cannot be used as evidence for or against the handoff.
-
-A live Yukon strategy court is eligible only when the powered comparison shows that the complete blinded handoff with an explicit budget outperforms the continuing incumbent session.
+The ECDSA square experiment remains available as `bun run mve:ecdsa -- ...`; it is retained only for reproducing the older result. A live Yukon search is eligible only when the powered Mouselab comparison shows that the complete neutral handoff with an explicit budget reduces decision loss against the continuing session.

@@ -1265,6 +1265,18 @@ Interpretation:
 - If the fresh allocator with the full narrative matches the blinded allocator with an explicit budget, a simple session reset is sufficient and the elaborate handoff is unnecessary.
 - If none of the fresh procedures beats the continuing incumbent session, do not build a strategy-court layer from these papers.
 
+#### Exact-answer replacement experiment
+
+The ECDSA square task remained too easy for the tested Luna allocators, so it could not answer the handoff question. The replacement experiment uses a paper-derived Mouselab planning task: six routes each contain three hidden rewards, and an allocator has a limited number of inspections before the host selects the route with the highest posterior expected reward. Because the state space is finite, a host-side dynamic program computes the mathematically best next inspection and the exact expected reward lost by every alternative. This is a controlled synthetic adaptation of Mouselab-MDP, not a canonical published problem instance.
+
+The admitted task passed its sensitivity check. The exact policy had zero decision loss, a one-step myopic policy averaged `0.59765625` lost reward points, and random choices averaged `11.6767578125`. The preregistered minimum meaningful handoff effect was a reduction of one expected reward point. Four calibration blocks froze the confirmatory sample at the minimum of eight matched blocks. Calibration blocks were excluded from the final inference.
+
+Protocol version 3 completed the confirmatory run `2026-08-24T05-04-05-250Z-c26bb674` using only `gpt-5.6-luna`. It recorded 264 valid evaluations across 12 matched blocks: six shared inspections and four further inspections for each of four decision procedures per block. Every evaluation was scored twice. Isolation, equal-budget, packet, provenance, and duplicate-scoring gates passed; a post-run audit reconstructed and verified the 72 shared-prelude scoring artifacts.
+
+Across the eight confirmatory blocks, every procedure chose the exact best inspection on an average of `3.75` of its four decisions. The continuing session, fresh neutral evidence, and fresh neutral evidence with an explicit budget each had mean total decision loss `0.0703125`. The fresh session with the complete journal had mean loss `0.01611328125`; its observed advantage of `0.05419921875` came from one block, with raw one-sided `p = 0.5`, Holm-adjusted `p = 1`, and simultaneous upper bound `0.16259765625`. The explicit budget instruction produced exactly zero improvement over the otherwise identical neutral packet. The complete neutral handoff with that instruction produced exactly zero improvement over continuing the session.
+
+The result is an informative negative result for this task and budget: all three preregistered comparisons are `NOT_SUPPORTED_AT_MDE`, meaning the data rule out an average benefit as large as one expected reward point. It does not prove that handoffs never help on other tasks. It does show that the elaborate neutral handoff and explicit budget instruction added no meaningful value here, so this mechanism does not qualify for the live Yukon strategy test. The two earlier launches are excluded design/runtime runs: version 1 was stopped after revealing a homogeneous task that every procedure solved exactly, and version 2 was stopped before completing a calibration block because its reasoning setting made the run impractically slow.
+
 ### 11.5 Experiment B: live procedure test
 
 Only if Experiment A identifies a winning handoff, run a two-procedure live search from frozen main `d919bc6`:
