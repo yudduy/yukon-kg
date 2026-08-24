@@ -14,7 +14,9 @@ import {
   networkCanaryEvidence,
   promptSurfaceViolations,
   runBlock,
+  runTuningBlock,
   runProcess,
+  resumeRun,
   sealedHarnessSuffix,
 } from "../src/mve.js";
 
@@ -102,6 +104,55 @@ class FakeScorer {
     const source = await fs.readFile(file, "utf8");
     const optimizations = [...source.matchAll(/fake-optimization/gu)].length;
     const score = 1_000 - optimizations;
+    return {
+      validity: "valid",
+      score: {
+        emittedToffoli: score,
+        executedToffoli: score,
+        peakQubits: 1,
+        score,
+        reproductions: 2,
+      },
+      reproductions: [],
+    };
+  }
+}
+
+class FakeTuningCodexRunner {
+  constructor({ invalidCall = null } = {}) {
+    this.calls = 0;
+    this.invalidCall = invalidCall;
+  }
+
+  async invokeWithRetries(options) {
+    this.calls += 1;
+    const packetText = options.prompt.split("Decision packet:\n")[1].split("\n\nMost recent host result:")[0];
+    const packet = JSON.parse(packetText);
+    if (this.calls === this.invalidCall) return fakeCodexResult({ nope: true }, `tuning-${this.calls}`);
+    const condition = packet.condition;
+    const desired = condition === "blinded" && packet.evidence.length === 6
+      ? (packet.instruction.includes("eight fresh") ? "ladder-012" : "ladder-008")
+      : packet.candidates.at(-1).candidateId;
+    const candidate = packet.candidates.find((item) => item.candidateId === desired) ?? packet.candidates[0];
+    return fakeCodexResult({
+      candidateId: candidate.candidateId,
+      hypothesis: `The ${candidate.candidateId} setting changes the operation and qubit tradeoff.`,
+      falsifier: "The repeated host score does not improve.",
+      rationale: "The candidate isolates one configuration region.",
+      planUpdate: "Compare the next available configuration region.",
+    }, options.sessionId ?? `tuning-${this.calls}`);
+  }
+}
+
+class FakeTuningScorer {
+  constructor() {
+    this.calls = 0;
+  }
+
+  async twice(_workspace, _targetDirectory, environment = {}) {
+    this.calls += 1;
+    const ladder = Number(environment.SUB4_SQUARE_LADDER);
+    const score = ladder === 8 ? 900 : ladder === 12 ? 950 : ladder === 14 ? 970 : ladder === 10 ? 980 : 1_000 + ladder;
     return {
       validity: "valid",
       score: {
@@ -250,6 +301,12 @@ describe("runtime primitives", () => {
 });
 
 describe("full block state machine", () => {
+  test("rejects resuming the retired source-mutation protocol", async () => {
+    const runDirectory = await temporaryDirectory();
+    await fs.writeFile(path.join(runDirectory, "manifest.json"), JSON.stringify({ protocolVersion: "yukon-kg.handoff-mve.v1" }));
+    await expect(resumeRun(runDirectory)).rejects.toThrow("retired protocol");
+  });
+
   test("runs 6 + 4x8 evaluations and resumes without extra model calls", async () => {
     const source = await fixtureSource();
     const runDirectory = await temporaryDirectory();
@@ -331,5 +388,89 @@ describe("full block state machine", () => {
     await fs.rm(completedResult);
     await runBlock(options);
     expect(codexRunner.calls).toBe(calls + 2);
+  }, 30_000);
+
+  test("tuning search uses one allocator call per evaluation and resumes idempotently", async () => {
+    const source = await fixtureSource();
+    const runDirectory = await temporaryDirectory();
+    const codexRunner = new FakeTuningCodexRunner({ invalidCall: 3 });
+    const scorer = new FakeTuningScorer();
+    const schemas = {
+      allocator: path.join(runDirectory, "allocator.json"),
+      tuningAllocator: path.join(runDirectory, "tuning-allocator.json"),
+    };
+    await fs.writeFile(schemas.allocator, "{}");
+    await fs.writeFile(schemas.tuningAllocator, "{}");
+    const baselineArtifact = {
+      artifactId: "baseline",
+      path: source,
+      validity: "valid",
+      score: {
+        emittedToffoli: 1_000,
+        executedToffoli: 1_000,
+        peakQubits: 1,
+        score: 1_000,
+        reproductions: 2,
+      },
+    };
+    const options = {
+      blockId: "tuning-fixture-block",
+      runDirectory,
+      baselineArtifact,
+      optimumScore: 850,
+      codexRunner,
+      scorer,
+      schemas,
+    };
+    const first = await runTuningBlock(options);
+    expect(first.apparatusStatus).toBe("PASS");
+    expect(first.taskInformativeness.status).toBe("PASS");
+    expect(Object.values(first.conditions).map((condition) => condition.evaluations)).toEqual([8, 8, 8, 8]);
+    expect(codexRunner.calls).toBe(38);
+    expect(scorer.calls).toBe(37);
+    const invalidPrelude = JSON.parse(await fs.readFile(path.join(
+      runDirectory,
+      "blocks",
+      "tuning-fixture-block",
+      "prelude",
+      "2",
+      "record.json",
+    ), "utf8"));
+    expect(invalidPrelude.validity).toBe("invalid");
+    expect(invalidPrelude.reason).toBe("allocator_selected_unknown_candidate");
+    const calls = codexRunner.calls;
+    const second = await runTuningBlock(options);
+    expect(second).toEqual(first);
+    expect(codexRunner.calls).toBe(calls);
+
+    const interruptedRecord = path.join(
+      runDirectory,
+      "blocks",
+      "tuning-fixture-block",
+      "conditions",
+      "D",
+      "7",
+      "record.json",
+    );
+    const completedResult = path.join(runDirectory, "blocks", "tuning-fixture-block", "result.json");
+    await fs.rm(interruptedRecord);
+    await fs.rm(completedResult);
+    const resumed = await runTuningBlock(options);
+    expect(resumed.conditions).toEqual(first.conditions);
+    expect(resumed.pilotEffects).toEqual(first.pilotEffects);
+    expect(codexRunner.calls).toBe(calls);
+
+    const slotDirectory = path.dirname(interruptedRecord);
+    for (const filename of ["decision.json", "allocator-message.json"]) {
+      const filenamePath = path.join(slotDirectory, filename);
+      const saved = JSON.parse(await fs.readFile(filenamePath, "utf8"));
+      saved.promptHash = "stale-packet-hash";
+      await fs.writeFile(filenamePath, JSON.stringify(saved));
+    }
+    await fs.rm(interruptedRecord);
+    await fs.rm(completedResult);
+    await runTuningBlock(options);
+    expect(codexRunner.calls).toBe(calls + 1);
+    expect(scorer.calls).toBe(37);
   }, 30_000);
 });

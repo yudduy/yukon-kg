@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-export const PROTOCOL_VERSION = "yukon-kg.handoff-mve.v1";
+export const PROTOCOL_VERSION = "yukon-kg.handoff-mve.v2";
 export const MODEL = "gpt-5.3-codex-spark";
 export const SEARCH_COMMIT = "51c6c31c722cc3a6c68867272e5959b4684c4142";
 export const POSITIVE_CONTROL_COMMIT = "d919bc64a3b6a236e17870a69993fd76a21a8092";
@@ -13,29 +13,80 @@ export const CONFIRMATORY_MIN_BLOCKS = 8;
 export const CONFIRMATORY_MAX_BLOCKS = 24;
 export const POWER_DRAWS = 10_000;
 
+export const TUNING_BASELINE = Object.freeze({
+  candidateId: "ladder-064",
+  chunkMin: 200,
+  ladder: 64,
+});
+
+function tuningRegion(ladder) {
+  if (ladder <= 36) return "substantially lower carry-ladder budget";
+  if (ladder <= 62) return "nearby lower carry-ladder budget";
+  if (ladder <= 96) return "nearby higher carry-ladder budget";
+  return "substantially higher carry-ladder budget";
+}
+
+export const TUNING_CANDIDATES = Object.freeze(
+  Array.from({ length: 93 }, (_, index) => 8 + 2 * index)
+    .filter((ladder) => ladder !== TUNING_BASELINE.ladder)
+    .map((ladder) => Object.freeze({
+      candidateId: `ladder-${String(ladder).padStart(3, "0")}`,
+      chunkMin: TUNING_BASELINE.chunkMin,
+      ladder,
+      region: tuningRegion(ladder),
+    })),
+);
+
+export const TUNING_ALTERNATIVES = Object.freeze([
+  {
+    id: "substantially-lower",
+    interventionFamily: "substantially lower carry-ladder budget",
+    hypothesis: "A much smaller live carry ladder can reduce peak qubits enough to offset extra executed operations.",
+    falsifier: "Measured score does not improve over the incumbent configuration.",
+  },
+  {
+    id: "nearby-lower",
+    interventionFamily: "nearby lower carry-ladder budget",
+    hypothesis: "A moderately smaller live carry ladder can improve the operation-count and qubit tradeoff.",
+    falsifier: "Measured score does not improve over the incumbent configuration.",
+  },
+  {
+    id: "nearby-higher",
+    interventionFamily: "nearby higher carry-ladder budget",
+    hypothesis: "A moderately larger live carry ladder can reduce executed operations enough to offset extra qubits.",
+    falsifier: "Measured score does not improve over the incumbent configuration.",
+  },
+  {
+    id: "substantially-higher",
+    interventionFamily: "substantially higher carry-ladder budget",
+    hypothesis: "A much larger live carry ladder can reduce chunk-boundary work enough to improve the combined score.",
+    falsifier: "Measured score does not improve over the incumbent configuration.",
+  },
+]);
+
 export const CONDITION_DEFINITIONS = Object.freeze({
   A: {
-    label: "incumbent",
-    instruction: "Select the next discriminating experiment using the complete incumbent context.",
+    label: "incumbent session",
+    instruction: "Select the next discriminating configuration using the complete incumbent session context.",
   },
   B: {
-    label: "narrative handoff",
-    instruction: "Select the next discriminating experiment from the complete journal, rationales, failures, and plan.",
+    label: "fresh allocator with complete narrative",
+    instruction: "Select the next discriminating configuration from the complete journal, rationales, failures, and plan.",
   },
   C: {
-    label: "blinded review",
-    instruction: "Review the alternatives symmetrically and select the next discriminating experiment.",
+    label: "fresh blinded reviewer",
+    instruction: "Review the alternatives symmetrically and select the next discriminating configuration.",
   },
   D: {
-    label: "blinded allocation",
+    label: "fresh blinded allocator with explicit budget",
     instruction: "You have eight fresh evaluations; allocate them among these options.",
   },
 });
 
 export const PRIMARY_CONTRASTS = Object.freeze({
-  h1: { control: "A", treatment: "B", label: "H1: B > A" },
-  h2: { control: "C", treatment: "D", label: "H2: D > C" },
-  product: { control: "A", treatment: "D", label: "Product gate: D > A" },
+  h1: { control: "A", treatment: "B", label: "Fresh allocator with complete narrative vs incumbent session" },
+  h2: { control: "C", treatment: "D", label: "Fresh blinded allocator with explicit budget vs fresh blinded reviewer" },
+  product: { control: "A", treatment: "D", label: "Complete handoff vs incumbent session" },
 });
 
 const SCORE_PATTERN = /product-register square:\s*(\d+)\s+emitted\s*\/\s*([0-9]+(?:\.[0-9]+)?)\s+executed Toffoli,\s*(\d+)\s+peak qubits/u;
@@ -113,20 +164,22 @@ function neutralEvidenceRecord(record) {
     executedToffoli: record.score?.executedToffoli ?? null,
     peakQubits: record.score?.peakQubits ?? null,
     score: record.score?.score ?? null,
+    ...(record.candidateId ? { candidateId: record.candidateId } : {}),
+    ...(record.configuration ? { configuration: record.configuration } : {}),
   };
 }
 
 function packetCore(state) {
   return {
     protocolVersion: PROTOCOL_VERSION,
-    task: "Reduce executed Toffoli multiplied by peak qubits in the isolated product-square self-test.",
-    contract: {
+    task: state.task ?? "Reduce executed Toffoli multiplied by peak qubits in the isolated product-square self-test.",
+    contract: state.contract ?? {
       command: "SUB4_PRODUCT_SQUARE_SELFTEST=1 cargo run --release --bin build_circuit",
       endpoint: "best valid executed Toffoli multiplied by peak qubits",
       remainingEvaluations: state.remainingEvaluations,
     },
-    forkArtifactId: state.forkArtifactId,
-    frontier: state.frontier.map(({ artifactId, score }) => ({ artifactId, score })),
+    ...(state.forkArtifactId ? { forkArtifactId: state.forkArtifactId } : {}),
+    frontier: (state.frontier ?? []).map(({ artifactId, score }) => ({ artifactId, score })),
     evidence: state.evidence.map(neutralEvidenceRecord),
     alternatives: state.alternatives.map((item) => ({
       id: item.id,
@@ -134,6 +187,7 @@ function packetCore(state) {
       hypothesis: item.hypothesis,
       falsifier: item.falsifier,
     })),
+    ...(state.candidates ? { candidates: state.candidates.map((candidate) => ({ ...candidate })) } : {}),
   };
 }
 
@@ -185,6 +239,62 @@ export function packetDifference(left, right) {
 export function pairedImprovementPercent(controlScore, treatmentScore) {
   if (!(controlScore > 0) || !(treatmentScore > 0)) throw new Error("scores must be positive");
   return 100 * (controlScore - treatmentScore) / controlScore;
+}
+
+export function assessTuningLandscape(baselineScore, measurements, {
+  mdePercent = MDE_PERCENT,
+} = {}) {
+  const valid = measurements.filter((measurement) => measurement.validity === "valid");
+  const distinctScores = new Set(valid.map((measurement) => measurement.score.score)).size;
+  const improvements = valid.map((measurement) => pairedImprovementPercent(
+    baselineScore,
+    measurement.score.score,
+  ));
+  const bestImprovementPercent = improvements.length > 0 ? Math.max(...improvements) : 0;
+  const meaningful = improvements.filter((improvement) => improvement >= mdePercent).length;
+  const meaningfulFraction = valid.length === 0 ? 0 : meaningful / valid.length;
+  const bestMeasurement = valid.reduce((best, measurement) => (
+    !best || measurement.score.score < best.score.score ? measurement : best
+  ), null);
+  const corrections = [];
+  if (measurements.length <= PRELUDE_EVALUATIONS + ARM_EVALUATIONS) {
+    corrections.push("candidate set can be exhausted within one search");
+  }
+  if (measurements.length === 0 || valid.length / measurements.length < 0.9) corrections.push("more than 10% of configurations are invalid");
+  if (distinctScores < 8) corrections.push("configuration landscape has fewer than eight distinct scores");
+  if (bestImprovementPercent < mdePercent) corrections.push("no configuration reaches the minimum meaningful improvement");
+  if (bestImprovementPercent > 5) corrections.push("best configuration is more than 5% better and is too far from the incumbent");
+  if (meaningfulFraction < 0.05) corrections.push("fewer than 5% of valid configurations are meaningfully better");
+  if (meaningfulFraction > 0.4) corrections.push("more than 40% of valid configurations are meaningfully better");
+  return {
+    status: corrections.length === 0 ? "PASS" : "FAIL",
+    corrections,
+    configurations: measurements.length,
+    validConfigurations: valid.length,
+    distinctScores,
+    bestScore: bestMeasurement?.score.score ?? null,
+    bestCandidateId: bestMeasurement?.candidateId ?? null,
+    bestImprovementPercent,
+    meaningfulConfigurations: meaningful,
+    meaningfulFraction,
+  };
+}
+
+export function assessPilotInformativeness({ baselineScore, optimumScore, conditions }, {
+  mdePercent = MDE_PERCENT,
+} = {}) {
+  const scores = Object.values(conditions).map((condition) => condition.bestScore);
+  const improvements = scores.map((score) => pairedImprovementPercent(baselineScore, score));
+  if (scores.every((score) => score === optimumScore)) {
+    return { status: "TASK_TOO_EASY", improvements };
+  }
+  if (Math.max(...improvements) < mdePercent) {
+    return { status: "TASK_TOO_HARD", improvements };
+  }
+  if (new Set(scores).size === 1) {
+    return { status: "NO_CONDITION_SEPARATION", improvements };
+  }
+  return { status: "PASS", improvements };
 }
 
 export function mean(values) {

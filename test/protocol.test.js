@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test";
 import {
   MDE_PERCENT,
   analyzeConfirmatoryBlocks,
+  assessPilotInformativeness,
+  assessTuningLandscape,
   assertBlindedPacket,
   canonicalStringify,
   compileConditionPacket,
@@ -13,6 +15,7 @@ import {
   parseSquareScore,
   sha256,
   verifyDuplicateScores,
+  TUNING_CANDIDATES,
 } from "../src/protocol.js";
 
 function packetState() {
@@ -27,6 +30,10 @@ function packetState() {
       hypothesis: "A shorter carry ladder reduces the endpoint.",
       falsifier: "The duplicate endpoint does not decrease.",
     }],
+    candidates: [
+      { candidateId: "ladder-008", chunkMin: 200, ladder: 8, region: "substantially lower carry-ladder budget" },
+      { candidateId: "ladder-010", chunkMin: 200, ladder: 10, region: "substantially lower carry-ladder budget" },
+    ],
     evidence: [{
       evaluationId: "prelude-P-0",
       baseArtifactId: "artifact-1",
@@ -103,6 +110,36 @@ describe("condition packets", () => {
       .toThrow("first-person language");
     expect(() => assertBlindedPacket({ statement: "Use SUB4_SQUARE_KARATSUBA2." }))
       .toThrow("sealed toggle");
+  });
+
+  test("tuning packets expose a large reachable candidate landscape", () => {
+    expect(TUNING_CANDIDATES).toHaveLength(92);
+    const measurements = TUNING_CANDIDATES.map((candidate, index) => ({
+      candidateId: candidate.candidateId,
+      validity: "valid",
+      score: {
+        score: index < 8 ? 99_000 - index * 100 : 100_000 + index,
+      },
+    }));
+    const gate = assessTuningLandscape(100_000, measurements);
+    expect(gate.status).toBe("PASS");
+    expect(gate.distinctScores).toBeGreaterThanOrEqual(8);
+    expect(gate.bestImprovementPercent).toBeGreaterThanOrEqual(MDE_PERCENT);
+  });
+
+  test("pilot gate rejects an uninformative search", () => {
+    const tooEasy = assessPilotInformativeness({
+      baselineScore: 100,
+      optimumScore: 90,
+      conditions: { A: { bestScore: 90 }, B: { bestScore: 90 }, C: { bestScore: 90 }, D: { bestScore: 90 } },
+    });
+    expect(tooEasy.status).toBe("TASK_TOO_EASY");
+    const tooHard = assessPilotInformativeness({
+      baselineScore: 100,
+      optimumScore: 90,
+      conditions: { A: { bestScore: 100 }, B: { bestScore: 100 }, C: { bestScore: 100 }, D: { bestScore: 100 } },
+    });
+    expect(tooHard.status).toBe("TASK_TOO_HARD");
   });
 });
 

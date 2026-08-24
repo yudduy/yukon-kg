@@ -18,7 +18,12 @@ import {
   PROTOCOL_VERSION,
   REPOSITORY_URL,
   SEARCH_COMMIT,
+  TUNING_ALTERNATIVES,
+  TUNING_BASELINE,
+  TUNING_CANDIDATES,
   analyzeConfirmatoryBlocks,
+  assessPilotInformativeness,
+  assessTuningLandscape,
   bestValidArtifact,
   canonicalStringify,
   compileConditionPacket,
@@ -40,6 +45,7 @@ const EXPECTED_BASELINE_SCORE = 66_878_230.169;
 const EXPECTED_CONTROL_OFF = 74_736_716.125;
 const EXPECTED_CONTROL_ON = 71_194_989.69;
 const EXPECTED_CONTROL_REDUCTION = 4.738938;
+const EXPECTED_TUNING_BASELINE = 56_408_075.598;
 const CANARY_MAX_INPUT_TOKENS = 13_000;
 const CANARY_MAX_PROMPT_BYTES = 20_000;
 const SOURCE_ALLOWLIST = new Set(["Cargo.lock", "Cargo.toml", "NOTICE", "rust-toolchain", "src"]);
@@ -73,6 +79,18 @@ const ALLOCATOR_SCHEMA = {
     hypothesis: { type: "string", minLength: 1 },
     falsifier: { type: "string", minLength: 1 },
     branchBrief: { type: "string", minLength: 1 },
+    rationale: { type: "string", minLength: 1 },
+    planUpdate: { type: "string", minLength: 1 },
+  },
+};
+const TUNING_ALLOCATOR_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["candidateId", "hypothesis", "falsifier", "rationale", "planUpdate"],
+  properties: {
+    candidateId: { type: "string", pattern: "^ladder-[0-9]{3}$" },
+    hypothesis: { type: "string", minLength: 1 },
+    falsifier: { type: "string", minLength: 1 },
     rationale: { type: "string", minLength: 1 },
     planUpdate: { type: "string", minLength: 1 },
   },
@@ -687,11 +705,13 @@ async function writeSchemas(runDirectory) {
   await ensureDirectory(schemaDirectory);
   const paths = {
     allocator: path.join(schemaDirectory, "allocator.json"),
+    tuningAllocator: path.join(schemaDirectory, "tuning-allocator.json"),
     executor: path.join(schemaDirectory, "executor.json"),
     canary: path.join(schemaDirectory, "canary.json"),
     workerCanary: path.join(schemaDirectory, "worker-canary.json"),
   };
   await writeJson(paths.allocator, ALLOCATOR_SCHEMA);
+  await writeJson(paths.tuningAllocator, TUNING_ALLOCATOR_SCHEMA);
   await writeJson(paths.executor, EXECUTOR_SCHEMA);
   await writeJson(paths.canary, CANARY_SCHEMA);
   await writeJson(paths.workerCanary, WORKER_CANARY_SCHEMA);
@@ -909,6 +929,9 @@ export async function runScorerPreflight({ runDirectory, scorer }) {
   let off = null;
   let on = null;
   let reduction = null;
+  let taskBaseline = null;
+  let taskMeasurements = [];
+  let taskLandscape = null;
   let buildCache = null;
   try {
     await ensureMirror();
@@ -924,6 +947,33 @@ export async function runScorerPreflight({ runDirectory, scorer }) {
       await publishBuildTemplate(baselineTarget, buildCache.templateDirectory);
     }
     scorer.setBuildTemplate?.(buildCache.templateDirectory);
+    const tuningTarget = path.join(preflightDirectory, "targets", "tuning-landscape");
+    taskBaseline = await scorer.twice(baseline.path, tuningTarget, {
+      SUB4_SQUARE_CHUNK_MIN: String(TUNING_BASELINE.chunkMin),
+      SUB4_SQUARE_LADDER: String(TUNING_BASELINE.ladder),
+    });
+    if (taskBaseline.validity !== "valid") throw new Error(`tuning baseline scorer failed: ${taskBaseline.reason}`);
+    await expectScore("tuning baseline", taskBaseline.score.score, EXPECTED_TUNING_BASELINE);
+    for (const candidate of TUNING_CANDIDATES) {
+      const scoring = await scorer.twice(baseline.path, tuningTarget, {
+        SUB4_SQUARE_CHUNK_MIN: String(candidate.chunkMin),
+        SUB4_SQUARE_LADDER: String(candidate.ladder),
+      });
+      taskMeasurements.push({
+        candidateId: candidate.candidateId,
+        configuration: { chunkMin: candidate.chunkMin, ladder: candidate.ladder },
+        validity: scoring.validity,
+        reason: scoring.reason ?? null,
+        score: scoring.score ?? null,
+      });
+    }
+    taskLandscape = assessTuningLandscape(taskBaseline.score.score, taskMeasurements);
+    await writeJson(path.join(preflightDirectory, "task-landscape.json"), {
+      baseline: { candidate: TUNING_BASELINE, scoring: taskBaseline },
+      candidates: taskMeasurements,
+      gate: taskLandscape,
+    });
+    if (taskLandscape.status !== "PASS") throw new Error(`tuning landscape admission failed: ${taskLandscape.corrections.join("; ")}`);
     off = await scorer.twice(control.path, path.join(preflightDirectory, "targets", "control-off"), {
       SUB4_SQUARE_KARATSUBA2: "0",
     });
@@ -936,24 +986,30 @@ export async function runScorerPreflight({ runDirectory, scorer }) {
     reduction = pairedImprovementPercent(off.score.score, on.score.score);
     await expectScore("positive control reduction", reduction, EXPECTED_CONTROL_REDUCTION, 0.000001);
   } catch (error) {
-    await writeJson(path.join(preflightDirectory, "scorer-raw.json"), { baseline: baselineResult, off, on });
+    await writeJson(path.join(preflightDirectory, "scorer-raw.json"), { baseline: baselineResult, taskBaseline, taskMeasurements, off, on });
     const report = {
       gate: "host_scorer",
       status: "FAIL",
       corrections: [error.message],
       source: baseline ? { commit: SEARCH_COMMIT, digest: baseline.digest } : null,
       positiveControl: control ? { commit: POSITIVE_CONTROL_COMMIT, digest: control.digest } : null,
+      task: taskLandscape ?? { status: "NOT_RUN", measurements: taskMeasurements },
       buildCache,
     };
     await writeJson(path.join(preflightDirectory, "host-scorer.json"), report);
     return { report, baseline };
   }
-  await writeJson(path.join(preflightDirectory, "scorer-raw.json"), { baseline: baselineResult, off, on });
+  await writeJson(path.join(preflightDirectory, "scorer-raw.json"), { baseline: baselineResult, taskBaseline, taskMeasurements, off, on });
   const report = {
     gate: "host_scorer",
     status: "PASS",
     corrections: [],
     source: { commit: SEARCH_COMMIT, digest: baseline.digest, score: baselineResult.score },
+    task: {
+      baseline: { candidate: TUNING_BASELINE, score: taskBaseline.score },
+      landscape: taskLandscape,
+      measurements: taskMeasurements,
+    },
     buildCache,
     positiveControl: {
       commit: POSITIVE_CONTROL_COMMIT,
@@ -963,7 +1019,7 @@ export async function runScorerPreflight({ runDirectory, scorer }) {
     },
   };
   await writeJson(path.join(preflightDirectory, "host-scorer.json"), report);
-  return { report, baseline };
+  return { report, baseline, taskBaseline };
 }
 
 function allocatorPrompt(packet, lastResult = null) {
@@ -973,6 +1029,18 @@ function allocatorPrompt(packet, lastResult = null) {
     "The baseArtifactId must be one of the frontier artifact IDs in the packet.",
     "Write the intervention family, hypothesis, falsifier, and branch brief in impersonal third-person language and do not use the word continue.",
     "Return only the required structured decision.",
+    `Decision packet:\n${canonicalStringify(packet)}`,
+    ...(lastResult ? [`Most recent host result:\n${canonicalStringify(lastResult)}`] : []),
+  ].join("\n\n");
+}
+
+function tuningAllocatorPrompt(packet, lastResult = null) {
+  return [
+    "You are the allocator only. Do not edit source, run commands, use the network, or inspect unrelated files.",
+    "Select exactly one candidateId from the available candidates in the decision packet.",
+    "The host will apply the candidate's two environment settings and score the fixed product-square self-test twice.",
+    "Lower executed Toffoli multiplied by peak qubits is better. Do not select the incumbent or a candidate absent from the packet.",
+    "State a falsifiable hypothesis, the reason for this choice, and how the plan should change after the measurement. Use plain third-person language.",
     `Decision packet:\n${canonicalStringify(packet)}`,
     ...(lastResult ? [`Most recent host result:\n${canonicalStringify(lastResult)}`] : []),
   ].join("\n\n");
@@ -1118,6 +1186,51 @@ async function decide({ codexRunner, schemas, allocatorDirectory, packet, sessio
   return outcome;
 }
 
+async function decideTuning({ codexRunner, schemas, allocatorDirectory, packet, sessionId, reasoning, slotDirectory, lastResult }) {
+  await ensureDirectory(allocatorDirectory);
+  const prompt = tuningAllocatorPrompt(packet, lastResult);
+  const savedPath = path.join(slotDirectory, "allocator-message.json");
+  const saved = await readJsonIfPresent(savedPath);
+  if (saved?.promptHash === sha256(prompt)) return saved;
+  const result = await codexRunner.invokeWithRetries({
+    cwd: allocatorDirectory,
+    prompt,
+    reasoning,
+    schemaPath: schemas.tuningAllocator ?? schemas.allocator,
+    sessionId,
+    sandbox: "read-only",
+  });
+  const refs = await archivePromptAndResponse(slotDirectory, prompt, result);
+  const allocatorSessionId = sessionId ?? result.threadId;
+  let decision = null;
+  let invalid = null;
+  if (result.process.exitCode !== 0) {
+    invalid = { reason: "allocator_model_failure", protocolViolation: false };
+  } else if (codexToolEvents(result).length > 0) {
+    invalid = { reason: "allocator_used_forbidden_tool", protocolViolation: true };
+  } else {
+    try {
+      decision = parseStructuredMessage(result, "tuning allocator");
+    } catch {
+      invalid = { reason: "allocator_invalid_structured_output", protocolViolation: false };
+    }
+  }
+  if (decision && !packet.candidates?.some((candidate) => candidate.candidateId === decision.candidateId)) {
+    invalid = { reason: "allocator_selected_unknown_candidate", protocolViolation: false };
+    decision = null;
+  }
+  const outcome = { decision, invalid, sessionId: allocatorSessionId, ...refs, usage: result.usage };
+  await writeJson(savedPath, outcome);
+  if (invalid) return outcome;
+  await writeJson(path.join(slotDirectory, "decision.json"), {
+    ...decision,
+    ...refs,
+    usage: result.usage,
+    allocatorSessionId,
+  });
+  return outcome;
+}
+
 async function executeDecision({
   codexRunner,
   schemas,
@@ -1238,6 +1351,47 @@ function evidenceFromRecord(record) {
     score: record.score,
     rationale: record.rationale,
     planUpdate: record.planUpdate,
+  };
+}
+
+function tuningEvidenceFromRecord(record) {
+  return {
+    evaluationId: record.evaluationId,
+    baseArtifactId: record.baseArtifactId,
+    candidateArtifactId: record.candidateArtifactId ?? null,
+    candidateId: record.candidateId ?? null,
+    configuration: record.configuration ?? null,
+    interventionFamily: record.interventionFamily,
+    hypothesis: record.hypothesis,
+    falsifier: record.falsifier,
+    validity: record.validity,
+    protocolViolation: record.protocolViolation ?? false,
+    score: record.score,
+    rationale: record.rationale,
+    planUpdate: record.planUpdate,
+  };
+}
+
+function tuningPacketState({ baseline, evidence, remainingEvaluations, incumbentPlan }) {
+  const used = new Set(evidence.map((record) => record.candidateId).filter(Boolean));
+  return {
+    forkArtifactId: baseline.artifactId,
+    frontier: [{ artifactId: baseline.artifactId, score: baseline.score.score }],
+    evidence,
+    alternatives: TUNING_ALTERNATIVES,
+    candidates: TUNING_CANDIDATES.filter((candidate) => !used.has(candidate.candidateId)),
+    remainingEvaluations,
+    incumbentPlan,
+    task: "Choose one carry-ladder configuration for the fixed product-square self-test. The host will set SUB4_SQUARE_CHUNK_MIN=200 and the selected SUB4_SQUARE_LADDER, execute the deterministic self-test twice, and minimize executed Toffoli multiplied by peak qubits.",
+    contract: {
+      environment: {
+        SUB4_SQUARE_CHUNK_MIN: String(TUNING_BASELINE.chunkMin),
+        SUB4_SQUARE_LADDER: "selected candidate ladder",
+        SUB4_PRODUCT_SQUARE_SELFTEST: "1",
+      },
+      endpoint: "best valid executed Toffoli multiplied by peak qubits, reproduced exactly twice",
+      remainingEvaluations,
+    },
   };
 }
 
@@ -1525,6 +1679,261 @@ export async function runBlock({
   return result;
 }
 
+export async function runTuningEvaluation({
+  phase,
+  condition,
+  index,
+  sessionId,
+  evidence,
+  baselineArtifact,
+  incumbentPlan,
+  allocatorDirectory,
+  blockDirectory,
+  codexRunner,
+  scorer,
+  schemas,
+}) {
+  const slotDirectory = phase === "prelude"
+    ? path.join(blockDirectory, "prelude", String(index))
+    : path.join(blockDirectory, "conditions", condition, String(index));
+  const recordPath = path.join(slotDirectory, "record.json");
+  const existing = await readJsonIfPresent(recordPath);
+  if (existing) return { record: existing, sessionId: existing.allocatorSessionId };
+  await ensureDirectory(slotDirectory);
+  const total = phase === "prelude" ? PRELUDE_EVALUATIONS : ARM_EVALUATIONS;
+  const packetStateValue = tuningPacketState({
+    baseline: baselineArtifact,
+    evidence,
+    remainingEvaluations: total - index,
+    incumbentPlan,
+  });
+  const packet = phase === "prelude"
+    ? { ...compileConditionPacket("A", packetStateValue), condition: "shared prelude" }
+    : compileConditionPacket(condition, packetStateValue);
+  await writeJson(path.join(slotDirectory, "packet.json"), packet);
+  const lastResult = evidence.at(-1) ?? null;
+  const decisionResult = await decideTuning({
+    codexRunner,
+    schemas,
+    allocatorDirectory,
+    packet,
+    sessionId,
+    reasoning: phase === "prelude" ? "high" : "medium",
+    slotDirectory,
+    lastResult,
+  });
+  if (decisionResult.invalid) {
+    const record = {
+      protocolVersion: PROTOCOL_VERSION,
+      evaluationId: `${phase}-${condition}-${index}`,
+      phase,
+      condition,
+      index,
+      allocatorSessionId: decisionResult.sessionId,
+      baseArtifactId: baselineArtifact.artifactId,
+      candidateArtifactId: null,
+      candidateId: null,
+      configuration: null,
+      interventionFamily: "decision failure",
+      hypothesis: "The allocator must return one admissible tuning candidate.",
+      falsifier: "No admissible structured candidate is returned.",
+      rationale: decisionResult.invalid.reason,
+      planUpdate: incumbentPlan,
+      validity: "invalid",
+      protocolViolation: decisionResult.invalid.protocolViolation,
+      reason: decisionResult.invalid.reason,
+      score: null,
+      promptHash: decisionResult.promptHash,
+      responseHash: decisionResult.responseHash,
+      createdAt: nowIso(),
+    };
+    await writeJson(recordPath, record);
+    return { record, sessionId: decisionResult.sessionId };
+  }
+  const decision = decisionResult.decision;
+  const candidate = packet.candidates.find((item) => item.candidateId === decision.candidateId);
+  if (!candidate) {
+    const record = {
+      protocolVersion: PROTOCOL_VERSION,
+      evaluationId: `${phase}-${condition}-${index}`,
+      phase,
+      condition,
+      index,
+      allocatorSessionId: decisionResult.sessionId,
+      baseArtifactId: baselineArtifact.artifactId,
+      candidateArtifactId: null,
+      candidateId: decision.candidateId ?? null,
+      configuration: null,
+      interventionFamily: "decision failure",
+      hypothesis: decision.hypothesis,
+      falsifier: decision.falsifier,
+      rationale: "allocator selected a candidate that was no longer available",
+      planUpdate: decision.planUpdate,
+      validity: "invalid",
+      protocolViolation: false,
+      reason: "allocator_selected_unavailable_candidate",
+      score: null,
+      promptHash: decisionResult.promptHash,
+      responseHash: decisionResult.responseHash,
+      createdAt: nowIso(),
+    };
+    await writeJson(recordPath, record);
+    return { record, sessionId: decisionResult.sessionId };
+  }
+  const configuration = {
+    SUB4_SQUARE_CHUNK_MIN: candidate.chunkMin,
+    SUB4_SQUARE_LADDER: candidate.ladder,
+  };
+  const workspace = path.join(slotDirectory, "workspace");
+  await copySource(baselineArtifact.path, workspace);
+  const scoringInput = Object.fromEntries(Object.entries(configuration).map(([key, value]) => [key, String(value)]));
+  const savedScoring = await readJsonIfPresent(path.join(slotDirectory, "scoring.json"));
+  const scoring = savedScoring?.configuration
+    && canonicalStringify(savedScoring.configuration) === canonicalStringify(configuration)
+    ? savedScoring
+    : await scorer.twice(workspace, path.join(slotDirectory, "target"), scoringInput);
+  await writeJson(path.join(slotDirectory, "scoring.json"), { ...scoring, configuration });
+  const record = {
+    protocolVersion: PROTOCOL_VERSION,
+    evaluationId: `${phase}-${condition}-${index}`,
+    phase,
+    condition,
+    index,
+    allocatorSessionId: decisionResult.sessionId,
+    baseArtifactId: baselineArtifact.artifactId,
+    candidateArtifactId: `config-${candidate.candidateId}`,
+    candidateId: candidate.candidateId,
+    configuration,
+    interventionFamily: candidate.region,
+    hypothesis: decision.hypothesis,
+    falsifier: decision.falsifier,
+    rationale: decision.rationale,
+    planUpdate: decision.planUpdate,
+    validity: scoring.validity,
+    protocolViolation: false,
+    reason: scoring.validity === "valid" ? null : scoring.reason,
+    score: scoring.validity === "valid" ? scoring.score : null,
+    scoring,
+    promptHash: decisionResult.promptHash,
+    responseHash: decisionResult.responseHash,
+    createdAt: nowIso(),
+  };
+  await writeJson(recordPath, record);
+  return { record, sessionId: decisionResult.sessionId };
+}
+
+export async function runTuningBlock({
+  blockId,
+  runDirectory,
+  baselineArtifact,
+  optimumScore = null,
+  codexRunner,
+  scorer,
+  schemas,
+}) {
+  const blockDirectory = path.join(runDirectory, "blocks", blockId);
+  const resultPath = path.join(blockDirectory, "result.json");
+  const existing = await readJsonIfPresent(resultPath);
+  if (existing) return existing;
+  await ensureDirectory(blockDirectory);
+  const preludeEvidence = [];
+  let preludeSessionId = null;
+  let incumbentPlan = "Measure the carry-ladder settings that most clearly distinguish the operation and qubit tradeoff.";
+  const preludeAllocatorDirectory = path.join(blockDirectory, "allocators", "prelude");
+  for (let index = 0; index < PRELUDE_EVALUATIONS; index += 1) {
+    const outcome = await runTuningEvaluation({
+      phase: "prelude",
+      condition: "P",
+      index,
+      sessionId: preludeSessionId,
+      evidence: preludeEvidence,
+      baselineArtifact,
+      incumbentPlan,
+      allocatorDirectory: preludeAllocatorDirectory,
+      blockDirectory,
+      codexRunner,
+      scorer,
+      schemas,
+    });
+    preludeSessionId = outcome.sessionId;
+    incumbentPlan = outcome.record.planUpdate || incumbentPlan;
+    preludeEvidence.push(tuningEvidenceFromRecord(outcome.record));
+  }
+  const runCondition = async (condition) => {
+    const evidence = [...preludeEvidence];
+    let sessionId = condition === "A" ? preludeSessionId : null;
+    const allocatorDirectory = condition === "A"
+      ? preludeAllocatorDirectory
+      : path.join(blockDirectory, "allocators", condition);
+    for (let index = 0; index < ARM_EVALUATIONS; index += 1) {
+      const outcome = await runTuningEvaluation({
+        phase: "condition",
+        condition,
+        index,
+        sessionId,
+        evidence,
+        baselineArtifact,
+        incumbentPlan,
+        allocatorDirectory,
+        blockDirectory,
+        codexRunner,
+        scorer,
+        schemas,
+      });
+      sessionId = outcome.sessionId;
+      evidence.push(tuningEvidenceFromRecord(outcome.record));
+    }
+    const postFork = evidence.slice(PRELUDE_EVALUATIONS);
+    const valid = [...preludeEvidence, ...postFork].filter((record) => record.validity === "valid" && record.score?.score > 0);
+    const best = valid.reduce((bestRecord, record) => record.score.score < bestRecord.score.score ? record : bestRecord, {
+      candidateId: TUNING_BASELINE.candidateId,
+      score: baselineArtifact.score,
+    });
+    return {
+      condition,
+      evaluations: postFork.length,
+      validEvaluations: postFork.filter((record) => record.validity === "valid").length,
+      protocolViolations: postFork.filter((record) => record.protocolViolation).length,
+      bestArtifactId: best.candidateId === TUNING_BASELINE.candidateId ? baselineArtifact.artifactId : `config-${best.candidateId}`,
+      bestCandidateId: best.candidateId,
+      bestScore: best.score.score,
+      bestScoreComponents: best.score,
+      distinctCandidates: new Set(postFork.map((record) => record.candidateId).filter(Boolean)).size,
+      distinctInterventionFamilies: new Set(postFork.map((record) => record.interventionFamily)).size,
+    };
+  };
+  const conditionEntries = await Promise.all(Object.keys(CONDITION_DEFINITIONS).map(async (condition) => [condition, await runCondition(condition)]));
+  const conditions = Object.fromEntries(conditionEntries);
+  const apparatusStatus = preludeEvidence.length === PRELUDE_EVALUATIONS
+    && !preludeEvidence.some((record) => record.protocolViolation)
+    && Object.values(conditions).every((condition) => condition.evaluations === ARM_EVALUATIONS && condition.protocolViolations === 0)
+    ? "PASS"
+    : "INVALID";
+  const taskInformativeness = Number.isFinite(optimumScore)
+    ? assessPilotInformativeness({ baselineScore: baselineArtifact.score.score, optimumScore, conditions })
+    : null;
+  const result = {
+    protocolVersion: PROTOCOL_VERSION,
+    blockId,
+    apparatusStatus,
+    baselineScore: baselineArtifact.score.score,
+    optimumScore,
+    forkArtifactId: baselineArtifact.artifactId,
+    forkScore: baselineArtifact.score.score,
+    conditions,
+    pilotEffects: {
+      h1: pairedImprovementPercent(conditions.A.bestScore, conditions.B.bestScore),
+      h2: pairedImprovementPercent(conditions.C.bestScore, conditions.D.bestScore),
+      product: pairedImprovementPercent(conditions.A.bestScore, conditions.D.bestScore),
+      informationRemoval: pairedImprovementPercent(conditions.B.bestScore, conditions.C.bestScore),
+    },
+    taskInformativeness,
+    completedAt: nowIso(),
+  };
+  await writeJson(resultPath, result);
+  return result;
+}
+
 async function mapConcurrent(values, limit, operation) {
   const semaphore = new Semaphore(limit);
   return Promise.all(values.map((value) => semaphore.use(() => operation(value))));
@@ -1559,11 +1968,16 @@ function manifestFor(id) {
     model: MODEL,
     reasoning: {
       preludeAllocator: "high",
-      preludeExecutor: "high",
       postForkAllocator: "medium",
-      postForkExecutor: "medium",
     },
-    toolPolicy: { allocator: "none", executor: "none", canary: "shell only" },
+    task: {
+      name: "host-scored carry-ladder tuning search",
+      baseline: TUNING_BASELINE,
+      candidates: TUNING_CANDIDATES.length,
+      modelCallsPerEvaluation: 1,
+      scorerRepetitionsPerValidEvaluation: 2,
+    },
+    toolPolicy: { allocator: "none", hostScorer: "cargo only", canary: "shell only" },
     budgets: { prelude: PRELUDE_EVALUATIONS, perCondition: ARM_EVALUATIONS },
     timeoutsMs: { codex: 10 * 60_000, scorer: 15 * 60_000 },
     concurrency: { blocks: 2, codex: 8, scorers: 4 },
@@ -1620,6 +2034,7 @@ async function preflight(runDirectory, dependencies = {}) {
   return {
     ...report,
     baseline: scorerResult.baseline,
+    taskBaseline: scorerResult.taskBaseline,
     schemas,
     codexRunner,
     hostScorer,
@@ -1633,7 +2048,7 @@ async function baselineArtifactFromPreflight(runDirectory) {
     artifactId: report.source.digest,
     path: path.join(runDirectory, "preflight", "source-51c6c31"),
     validity: "valid",
-    score: report.source.score,
+    score: report.task.baseline.score,
   };
 }
 
@@ -1644,29 +2059,48 @@ async function fullRun(runDirectory) {
     artifactId: admission.scorerReport.source.digest,
     path: admission.baseline.path,
     validity: "valid",
-    score: admission.scorerReport.source.score,
+    score: admission.scorerReport.task.baseline.score,
   };
-  const harnessSuffix = await sealedHarnessSuffix(baselineArtifact.path);
   const calibrationIds = Array.from({ length: CALIBRATION_BLOCKS }, (_, index) => `calibration-${index}`);
   const calibration = [];
-  calibration.push(await runBlock({
+  calibration.push(await runTuningBlock({
     blockId: calibrationIds[0],
     runDirectory,
     baselineArtifact,
+    optimumScore: admission.scorerReport.task.landscape.bestScore,
     codexRunner: admission.codexRunner,
     scorer: admission.hostScorer,
     schemas: admission.schemas,
-    harnessSuffix,
   }));
+  if (calibration[0].apparatusStatus !== "PASS" || calibration[0].taskInformativeness?.status !== "PASS") {
+    const result = {
+      protocolVersion: PROTOCOL_VERSION,
+      runId: path.basename(runDirectory),
+      apparatus: calibration[0].apparatusStatus === "PASS" ? "TASK_UNINFORMATIVE" : "INVALID",
+      pilot: calibration[0],
+      calibration: [calibration[0].blockId],
+      confirmatoryBlocks: 0,
+      proceedToLiveCourt: false,
+      correction: calibration[0].taskInformativeness?.status === "TASK_TOO_EASY"
+        ? "expand the tuning landscape or increase the budget"
+        : calibration[0].taskInformativeness?.status === "TASK_TOO_HARD"
+          ? "choose a task with reachable minimum-meaningful improvements"
+          : calibration[0].taskInformativeness?.status === "NO_CONDITION_SEPARATION"
+            ? "change the task or handoff packet so conditions can make different choices"
+            : "inspect pilot slot records",
+    };
+    await writeJson(path.join(runDirectory, "result.json"), result);
+    return result;
+  }
   await rejectInvalidBlocks(runDirectory, calibration);
-  calibration.push(...await mapConcurrent(calibrationIds.slice(1), 2, (blockId) => runBlock({
+  calibration.push(...await mapConcurrent(calibrationIds.slice(1), 2, (blockId) => runTuningBlock({
     blockId,
     runDirectory,
     baselineArtifact,
+    optimumScore: admission.scorerReport.task.landscape.bestScore,
     codexRunner: admission.codexRunner,
     scorer: admission.hostScorer,
     schemas: admission.schemas,
-    harnessSuffix,
   })));
   await rejectInvalidBlocks(runDirectory, calibration);
   const calibrationByContrast = Object.fromEntries(
@@ -1675,14 +2109,14 @@ async function fullRun(runDirectory) {
   const power = estimateConfirmatoryBlocks(calibrationByContrast, { seed: path.basename(runDirectory) });
   await writeJson(path.join(runDirectory, "power.json"), power);
   const confirmatoryIds = Array.from({ length: power.blocks }, (_, index) => `confirmatory-${index}`);
-  const confirmatory = await mapConcurrent(confirmatoryIds, 2, (blockId) => runBlock({
+  const confirmatory = await mapConcurrent(confirmatoryIds, 2, (blockId) => runTuningBlock({
     blockId,
     runDirectory,
     baselineArtifact,
+    optimumScore: admission.scorerReport.task.landscape.bestScore,
     codexRunner: admission.codexRunner,
     scorer: admission.hostScorer,
     schemas: admission.schemas,
-    harnessSuffix,
   }));
   await rejectInvalidBlocks(runDirectory, calibration, confirmatory);
   const analysis = analyzeConfirmatoryBlocks(confirmatory, { seed: path.basename(runDirectory) });
@@ -1701,17 +2135,54 @@ async function fullRun(runDirectory) {
 }
 
 async function resumeRun(runDirectory) {
+  const manifest = await readJsonIfPresent(path.join(runDirectory, "manifest.json"));
+  if (manifest?.protocolVersion && manifest.protocolVersion !== PROTOCOL_VERSION) {
+    throw new Error(`cannot resume retired protocol ${manifest.protocolVersion}; start a new v2 tuning-search run`);
+  }
+  const completed = await readJsonIfPresent(path.join(runDirectory, "result.json"));
+  if (completed) return completed;
   const preflightReport = await readJsonIfPresent(path.join(runDirectory, "preflight", "report.json"));
   if (!preflightReport || preflightReport.status !== "PASS") return fullRun(runDirectory);
   const baselineArtifact = await baselineArtifactFromPreflight(runDirectory);
   const schemas = await writeSchemas(runDirectory);
   const codexRunner = new CodexRunner();
   const scorer = new HostScorer({ templateDirectory: preflightReport.scorer?.buildCache?.templateDirectory });
-  const harnessSuffix = await sealedHarnessSuffix(baselineArtifact.path);
   const calibrationIds = Array.from({ length: CALIBRATION_BLOCKS }, (_, index) => `calibration-${index}`);
   const calibration = [];
-  for (const blockId of calibrationIds) {
-    calibration.push(await runBlock({ blockId, runDirectory, baselineArtifact, codexRunner, scorer, schemas, harnessSuffix }));
+  calibration.push(await runTuningBlock({
+    blockId: calibrationIds[0],
+    runDirectory,
+    baselineArtifact,
+    optimumScore: preflightReport.scorer.task.landscape.bestScore,
+    codexRunner,
+    scorer,
+    schemas,
+  }));
+  if (calibration[0].apparatusStatus !== "PASS" || calibration[0].taskInformativeness?.status !== "PASS") {
+    const result = {
+      protocolVersion: PROTOCOL_VERSION,
+      runId: path.basename(runDirectory),
+      apparatus: calibration[0].apparatusStatus === "PASS" ? "TASK_UNINFORMATIVE" : "INVALID",
+      pilot: calibration[0],
+      calibration: [calibration[0].blockId],
+      confirmatoryBlocks: 0,
+      proceedToLiveCourt: false,
+      correction: "inspect the pilot task-informativeness gate",
+    };
+    await writeJson(path.join(runDirectory, "result.json"), result);
+    return result;
+  }
+  await rejectInvalidBlocks(runDirectory, calibration);
+  for (const blockId of calibrationIds.slice(1)) {
+    calibration.push(await runTuningBlock({
+      blockId,
+      runDirectory,
+      baselineArtifact,
+      optimumScore: preflightReport.scorer.task.landscape.bestScore,
+      codexRunner,
+      scorer,
+      schemas,
+    }));
     await rejectInvalidBlocks(runDirectory, calibration);
   }
   const powerPath = path.join(runDirectory, "power.json");
@@ -1723,7 +2194,15 @@ async function resumeRun(runDirectory) {
   const confirmatory = await mapConcurrent(
     Array.from({ length: power.blocks }, (_, index) => `confirmatory-${index}`),
     2,
-    (blockId) => runBlock({ blockId, runDirectory, baselineArtifact, codexRunner, scorer, schemas, harnessSuffix }),
+    (blockId) => runTuningBlock({
+      blockId,
+      runDirectory,
+      baselineArtifact,
+      optimumScore: preflightReport.scorer.task.landscape.bestScore,
+      codexRunner,
+      scorer,
+      schemas,
+    }),
   );
   await rejectInvalidBlocks(runDirectory, calibration, confirmatory);
   const result = {
@@ -1757,6 +2236,15 @@ function passFailMatrix(runDirectory, preflightReport, result) {
       area: "Host scorer",
       verdict: preflightReport?.scorer?.status ?? "NOT_RUN",
       correction: preflightReport?.scorer?.corrections?.join("; ") || "none",
+    },
+    {
+      area: "Task informativeness",
+      verdict: result?.pilot?.taskInformativeness?.status
+        ?? preflightReport?.scorer?.task?.landscape?.status
+        ?? "NOT_RUN",
+      correction: result?.correction
+        ?? preflightReport?.scorer?.task?.landscape?.corrections?.join("; ")
+        ?? "none",
     },
     {
       area: "Pilot apparatus",
@@ -1838,6 +2326,7 @@ export {
   ALLOCATOR_SCHEMA,
   CANARY_SCHEMA,
   EXECUTOR_SCHEMA,
+  TUNING_ALLOCATOR_SCHEMA,
   WORKER_CANARY_SCHEMA,
   ROOT,
   RUNS_ROOT,
