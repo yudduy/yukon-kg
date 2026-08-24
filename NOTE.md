@@ -1235,6 +1235,8 @@ Version 7 also stopped as too easy: all four procedures followed the same expose
 
 The first version-8 launch was rejected before scoring because the worker canary observed an actual `spawn_agent` call. The desktop host's `CODEX_THREAD_ID`, `CODEX_SESSION_ID`, and origin override had propagated the parent collaboration context into the child CLI despite the feature flag. Version 9 strips those host-context variables from every Codex/debug invocation and redundantly disables fanout, both multi-agent implementations, deferred execution, and agent identity. Version 8 contains no experimental evidence.
 
+Version 9 passed isolation, scorer, provenance, and all 22 pilot evaluation checks. Anonymization produced one genuine early allocation difference: the explicit-budget allocator first selected hidden ladder value 18 and regressed, while the other three procedures first selected hidden value 48 and improved. The explicit-budget allocator recovered on its next choice, and by the third post-fork measurement all four procedures had selected hidden value 44 and reached the exact `55,853,825` optimum. The primary four-measurement endpoint therefore tied at a `0.982573%` improvement for every procedure and the task gate again returned `TASK_TOO_EASY`. No calibration or confirmatory block ran, no H1/H2/product comparison was tested, and the live Yukon strategy court remains ineligible. The square-configuration task is now exhausted as a handoff test; the next experiment needs delayed branch value or another task where the final budget does not erase allocation differences.
+
 For each matched seed block:
 
 1. Let one persistent allocator choose six configurations and form an incumbent plan. The host scores every choice twice.
