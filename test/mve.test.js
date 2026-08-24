@@ -312,6 +312,14 @@ describe("full block state machine", () => {
       verdict: "TASK_UNINFORMATIVE",
     });
     expect(report.proceedToLiveCourt).toBe(false);
+
+    const incompleteDirectory = await temporaryDirectory();
+    await fs.writeFile(path.join(incompleteDirectory, "manifest.json"), JSON.stringify({ protocolVersion: "yukon-kg.handoff-mve.v5" }));
+    const incompleteReport = await reportRun(incompleteDirectory);
+    expect(incompleteReport.rows[0]).toMatchObject({
+      area: "Retired incomplete protocol",
+      verdict: "INVALID",
+    });
   });
 
   test("runs 6 + 4x8 evaluations and resumes without extra model calls", async () => {

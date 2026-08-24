@@ -1054,7 +1054,7 @@ function tuningAllocatorPrompt(packet, lastResult = null) {
     "Select exactly one candidateId from the available candidates in the decision packet.",
     "The host will apply the candidate's two environment settings and score the fixed product-square self-test twice.",
     "Lower executed Toffoli multiplied by peak qubits is better. Do not select the incumbent or a candidate absent from the packet.",
-    "State a falsifiable hypothesis, the reason for this choice, and how the plan should change after the measurement. Use plain third-person language.",
+    "State a falsifiable hypothesis, the reason for this choice, and how the plan should change after the measurement. Use plain third-person language and do not use any form of the word continue.",
     `Decision packet:\n${canonicalStringify(packet)}`,
     ...(lastResult ? [`Most recent host result:\n${canonicalStringify(lastResult)}`] : []),
   ].join("\n\n");
@@ -2285,14 +2285,17 @@ async function reportRun(runDirectory) {
   const manifest = await readJsonIfPresent(path.join(runDirectory, "manifest.json"));
   if (manifest?.protocolVersion && manifest.protocolVersion !== PROTOCOL_VERSION) {
     const pilot = await readJsonIfPresent(path.join(runDirectory, "blocks", "calibration-0", "result.json"));
+    const sourceMutationPilot = manifest.protocolVersion === "yukon-kg.handoff-mve.v1";
     return {
       runDirectory,
       protocolVersion: manifest.protocolVersion,
       rows: [
         {
-          area: "Retired source-mutation pilot",
-          verdict: "TASK_UNINFORMATIVE",
-          correction: `Do not use this run as evidence for or against the handoff; use a new ${PROTOCOL_VERSION} Luna tuning-search run.`,
+          area: sourceMutationPilot ? "Retired source-mutation pilot" : "Retired incomplete protocol",
+          verdict: sourceMutationPilot ? "TASK_UNINFORMATIVE" : "INVALID",
+          correction: sourceMutationPilot
+            ? `Do not use this run as evidence for or against the handoff; use a new ${PROTOCOL_VERSION} Luna tuning-search run.`
+            : `This run did not complete under the current protocol and contributes no experimental evidence; use ${PROTOCOL_VERSION}.`,
         },
         {
           area: "Historical mechanical checks",

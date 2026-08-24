@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-export const PROTOCOL_VERSION = "yukon-kg.handoff-mve.v5";
+export const PROTOCOL_VERSION = "yukon-kg.handoff-mve.v6";
 export const MODEL = "gpt-5.6-luna";
 export const SEARCH_COMMIT = "51c6c31c722cc3a6c68867272e5959b4684c4142";
 export const POSITIVE_CONTROL_COMMIT = "d919bc64a3b6a236e17870a69993fd76a21a8092";
@@ -169,6 +169,26 @@ function neutralEvidenceRecord(record) {
   };
 }
 
+function blindedEvidenceRecord(record) {
+  const neutral = neutralEvidenceRecord(record);
+  const matchCase = (replacement) => (match) => (
+    match[0] === match[0].toUpperCase()
+      ? replacement[0].toUpperCase() + replacement.slice(1)
+      : replacement
+  );
+  const redactContinuation = (text) => text
+    .replace(/\bcontinuation\b/giu, matchCase("persistence"))
+    .replace(/\bcontinuing\b/giu, matchCase("proceeding"))
+    .replace(/\bcontinued\b/giu, matchCase("proceeded"))
+    .replace(/\bcontinues\b/giu, matchCase("proceeds"))
+    .replace(/\bcontinue\b/giu, matchCase("proceed"));
+  return {
+    ...neutral,
+    hypothesis: redactContinuation(neutral.hypothesis),
+    falsifier: redactContinuation(neutral.falsifier),
+  };
+}
+
 function packetCore(state) {
   return {
     protocolVersion: PROTOCOL_VERSION,
@@ -213,6 +233,7 @@ export function compileConditionPacket(condition, state) {
   }
   const packet = {
     ...core,
+    evidence: state.evidence.map(blindedEvidenceRecord),
     condition: "blinded",
     instruction: CONDITION_DEFINITIONS[condition].instruction,
   };

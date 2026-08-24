@@ -1227,6 +1227,8 @@ Use `gpt-5.6-luna` for every allocator call: high reasoning for the shared six-e
 
 The Luna isolation profile admits at most 32,000 input tokens; its current live profile makes the previous Spark-specific 13,000-token ceiling inapplicable. Experimental allocators receive no shell schema. Tool exposure is decided from actual callable-interface JSON events, not a model self-report or tool names mentioned in generic instructions; retain that self-report as a diagnostic.
 
+Protocol versions 3 through 5 were infrastructure shakedowns only. They either failed before the scorer or stopped at the first fork when model-generated continuation wording reached the blinded redaction gate. They contribute no experimental evidence. Version 6 deterministically rewrites that wording in blinded evidence while preserving the original narrative for the narrative-handoff procedure.
+
 For each matched seed block:
 
 1. Let one persistent allocator choose six configurations and form an incumbent plan. The host scores every choice twice.

@@ -96,11 +96,13 @@ describe("square scorer", () => {
 describe("condition packets", () => {
   test("C and D differ only in the allocation instruction", () => {
     const state = packetState();
+    state.evidence[0].hypothesis = "Continuing lower should improve the score.";
     const c = compileConditionPacket("C", state);
     const d = compileConditionPacket("D", state);
     expect(packetDifference(c, d)).toEqual(["instruction"]);
     expect(c.evidence).toEqual(d.evidence);
     expect(c.alternatives).toEqual(d.alternatives);
+    expect(c.evidence[0].hypothesis).toBe("Proceeding lower should improve the score.");
   });
 
   test("B retains narrative while blinded packets reject leakage", () => {
