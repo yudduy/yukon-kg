@@ -48,7 +48,7 @@ const EXPECTED_CONTROL_REDUCTION = 4.738938;
 const EXPECTED_TUNING_BASELINE = 56_408_075.598;
 const EXPECTED_TUNING_OPTIMUM = 55_853_825;
 const EXPECTED_TUNING_OPTIMUM_CANDIDATES = ["ladder-044", "ladder-046"];
-const CANARY_MAX_INPUT_TOKENS = 20_000;
+const CANARY_MAX_INPUT_TOKENS = 32_000;
 const CANARY_MAX_PROMPT_BYTES = 20_000;
 const SOURCE_ALLOWLIST = new Set(["Cargo.lock", "Cargo.toml", "NOTICE", "rust-toolchain", "src"]);
 const SOURCE_FORBIDDEN = [
@@ -869,6 +869,7 @@ export async function runIsolationCanary({ runDirectory, codexRunner, schemas })
   if (!networkEvidence.blocked || networkEvidence.open) violations.push("network block was not observed in completed command output");
   if (message?.model !== MODEL) violations.push("canary did not attest the pinned model");
   let workerResult = null;
+  let workerAttestation = null;
   try {
     workerResult = await codexRunner.invokeWithRetries({
       cwd: directory,
@@ -888,9 +889,8 @@ export async function runIsolationCanary({ runDirectory, codexRunner, schemas })
     violations.push(...forbiddenCodexEvidence(workerResult));
     if (codexToolEvents(workerResult).length > 0) violations.push("worker profile exposed a tool");
     const workerMessage = JSON.parse(workerResult.lastMessage);
-    if (workerMessage.status !== "NO_FORBIDDEN_TOOLS" || workerMessage.model !== MODEL) {
-      violations.push("worker profile did not attest tool removal");
-    }
+    workerAttestation = workerMessage.status;
+    if (workerMessage.model !== MODEL) violations.push("worker profile did not attest the pinned model");
   } catch {
     violations.push("worker tool-removal canary failed before a valid attestation");
   }
@@ -902,6 +902,7 @@ export async function runIsolationCanary({ runDirectory, codexRunner, schemas })
     networkEvidence,
     usage: result.usage,
     workerUsage: workerResult?.usage ?? null,
+    workerAttestation,
     attempts: codexAttemptMetadata(result),
     workerAttempts: codexAttemptMetadata(workerResult),
     threadId: result.threadId,

@@ -1225,7 +1225,7 @@ The corrected experiment isolates allocation quality from code-writing quality. 
 
 Use `gpt-5.6-luna` for every allocator call: high reasoning for the shared six-evaluation prelude and medium reasoning after the fork. Do not mix model families within or across matched blocks.
 
-The Luna isolation profile admits at most 20,000 input tokens for the network canary; its live shell schema makes the previous Spark-specific 13,000-token ceiling inapplicable. Experimental allocators receive no shell schema. Tool exposure is decided from callable interfaces and JSON tool events, not from tool names mentioned in generic instructions.
+The Luna isolation profile admits at most 32,000 input tokens; its current live profile makes the previous Spark-specific 13,000-token ceiling inapplicable. Experimental allocators receive no shell schema. Tool exposure is decided from actual callable-interface JSON events, not a model self-report or tool names mentioned in generic instructions; retain that self-report as a diagnostic.
 
 For each matched seed block:
 
