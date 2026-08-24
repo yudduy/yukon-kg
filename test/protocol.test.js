@@ -21,7 +21,7 @@ import {
 function packetState() {
   return {
     forkArtifactId: "fork-1",
-    remainingEvaluations: 8,
+    remainingEvaluations: 4,
     incumbentPlan: "Measure a separate local rewrite.",
     frontier: [{ artifactId: "artifact-1", score: 100 }],
     alternatives: [{

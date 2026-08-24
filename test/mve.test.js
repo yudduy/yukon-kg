@@ -132,7 +132,7 @@ class FakeTuningCodexRunner {
     if (this.calls === this.invalidCall) return fakeCodexResult({ nope: true }, `tuning-${this.calls}`);
     const condition = packet.condition;
     const desired = condition === "blinded" && packet.evidence.length === 6
-      ? (packet.instruction.includes("eight fresh") ? "ladder-012" : "ladder-008")
+      ? (packet.instruction.includes("four fresh") ? "ladder-012" : "ladder-008")
       : packet.candidates.at(-1).candidateId;
     const candidate = packet.candidates.find((item) => item.candidateId === desired) ?? packet.candidates[0];
     return fakeCodexResult({
@@ -322,7 +322,7 @@ describe("full block state machine", () => {
     });
   });
 
-  test("runs 6 + 4x8 evaluations and resumes without extra model calls", async () => {
+  test("runs 6 + 4x4 evaluations and resumes without extra model calls", async () => {
     const source = await fixtureSource();
     const runDirectory = await temporaryDirectory();
     const codexRunner = new FakeCodexRunner({ invalidExecutorCall: 3 });
@@ -357,9 +357,9 @@ describe("full block state machine", () => {
     };
     const first = await runBlock(options);
     expect(first.apparatusStatus).toBe("PASS");
-    expect(Object.values(first.conditions).map((condition) => condition.evaluations)).toEqual([8, 8, 8, 8]);
-    expect(codexRunner.calls).toBe(76);
-    expect(codexRunner.executorCalls).toBe(38);
+    expect(Object.values(first.conditions).map((condition) => condition.evaluations)).toEqual([4, 4, 4, 4]);
+    expect(codexRunner.calls).toBe(44);
+    expect(codexRunner.executorCalls).toBe(22);
     const invalidPrelude = JSON.parse(await fs.readFile(path.join(
       runDirectory,
       "blocks",
@@ -381,7 +381,7 @@ describe("full block state machine", () => {
       "fixture-block",
       "conditions",
       "D",
-      "7",
+      "3",
       "record.json",
     );
     const completedResult = path.join(runDirectory, "blocks", "fixture-block", "result.json");
@@ -440,9 +440,9 @@ describe("full block state machine", () => {
     const first = await runTuningBlock(options);
     expect(first.apparatusStatus).toBe("PASS");
     expect(first.taskInformativeness.status).toBe("PASS");
-    expect(Object.values(first.conditions).map((condition) => condition.evaluations)).toEqual([8, 8, 8, 8]);
-    expect(codexRunner.calls).toBe(38);
-    expect(scorer.calls).toBe(37);
+    expect(Object.values(first.conditions).map((condition) => condition.evaluations)).toEqual([4, 4, 4, 4]);
+    expect(codexRunner.calls).toBe(22);
+    expect(scorer.calls).toBe(21);
     const invalidPrelude = JSON.parse(await fs.readFile(path.join(
       runDirectory,
       "blocks",
@@ -464,7 +464,7 @@ describe("full block state machine", () => {
       "tuning-fixture-block",
       "conditions",
       "D",
-      "7",
+      "3",
       "record.json",
     );
     const completedResult = path.join(runDirectory, "blocks", "tuning-fixture-block", "result.json");
@@ -486,6 +486,6 @@ describe("full block state machine", () => {
     await fs.rm(completedResult);
     await runTuningBlock(options);
     expect(codexRunner.calls).toBe(calls + 1);
-    expect(scorer.calls).toBe(37);
+    expect(scorer.calls).toBe(21);
   }, 30_000);
 });

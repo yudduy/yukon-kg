@@ -2096,7 +2096,7 @@ async function fullRun(runDirectory) {
       confirmatoryBlocks: 0,
       proceedToLiveCourt: false,
       correction: calibration[0].taskInformativeness?.status === "TASK_TOO_EASY"
-        ? "expand the tuning landscape or increase the budget"
+        ? "shorten the post-fork budget or choose a branching task"
         : calibration[0].taskInformativeness?.status === "TASK_TOO_HARD"
           ? "choose a task with reachable minimum-meaningful improvements"
           : calibration[0].taskInformativeness?.status === "NO_CONDITION_SEPARATION"

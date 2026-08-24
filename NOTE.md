@@ -1227,24 +1227,26 @@ Use `gpt-5.6-luna` for every allocator call: high reasoning for the shared six-e
 
 The Luna isolation profile admits at most 32,000 input tokens; its current live profile makes the previous Spark-specific 13,000-token ceiling inapplicable. Experimental allocators receive no shell schema. Tool exposure is decided from actual callable-interface JSON events, not a model self-report or tool names mentioned in generic instructions; retain that self-report as a diagnostic.
 
-Protocol versions 3 through 5 were infrastructure shakedowns only. They either failed before the scorer or stopped at the first fork when model-generated continuation wording reached the blinded redaction gate. They contribute no experimental evidence. Version 6 deterministically rewrites that wording in blinded evidence while preserving the original narrative for the narrative-handoff procedure.
+Protocol versions 3 through 5 were infrastructure shakedowns only. They either failed before the scorer or stopped at the first fork when model-generated continuation wording reached the blinded redaction gate. They contribute no experimental evidence. Version 6 deterministically rewrote that wording in blinded evidence while preserving the original narrative for the narrative-handoff procedure.
+
+Version 6 then completed a mechanically valid 38-evaluation Luna pilot. Every procedure reached the exact optimum of `55,853,825`, so the preregistered endpoint correctly classified the task as too easy and no causal comparison was made. The trajectories were still valid task-design evidence: the blinded reviewer and explicit-budget allocator reached the optimum after four post-fork measurements, the incumbent after five, and the fresh narrative allocator after seven while returning three invalid decisions. Version 7 therefore freezes four post-fork evaluations per procedure. This is a prospective budget correction based only on the excluded pilot; all version-6 outcomes remain outside calibration and confirmation.
 
 For each matched seed block:
 
 1. Let one persistent allocator choose six configurations and form an incumbent plan. The host scores every choice twice.
 2. Give the same six measurements and the same remaining configuration choices to four isolated decision procedures.
-3. Allocate eight further configuration evaluations per procedure with identical model, output-token budget and wall-clock cap. No executor model edits source.
+3. Allocate four further configuration evaluations per procedure with identical model, output-token budget and wall-clock cap. No executor model edits source.
 
 | Condition | Decision context at the fork |
 |---|---|
 | A, incumbent | Resume the production session with its complete context |
 | B, narrative handoff | Fresh session receives the complete journal, rationales and incumbent plan |
 | C, blinded review | Fresh session receives task, artifact hash, third-person configuration-result table and neutral alternatives; asked to select the next discriminating measurement |
-| D, blinded allocation | Same as C, but told "You have eight fresh evaluations; allocate them among these options" |
+| D, blinded allocation | Same as C, but told "You have four fresh evaluations; allocate them among these options" |
 
 The blinded packet withholds author identity, first-person language, sunk-cost totals, plan rationale and the verb "continue." It includes the same four neutral configuration regions in the same order. The host, not another model, applies and scores the selected configuration.
 
-Primary endpoint: best valid square-specific `executed Toffoli x peak qubits` after the eight post-fork evaluations. Secondary endpoints: probability of at least a preregistered 0.5% reduction, number of distinct intervention families tested, discriminating-experiment rate, and budget fraction returned to the incumbent. Do not reward switching itself.
+Primary endpoint: best valid square-specific `executed Toffoli x peak qubits` after the four post-fork evaluations. Secondary endpoints: probability of at least a preregistered 0.5% reduction, number of distinct intervention families tested, discriminating-experiment rate, and budget fraction returned to the incumbent. Do not reward switching itself.
 
 Set the 0.5% minimum meaningful effect before a four-block variance pilot. Use that pilot only to simulate the number of matched blocks required for 80% power; then freeze sample size and analyze paired block differences with exact sign-flip randomization inference. Apply Holm correction to three confirmatory comparisons: the fresh narrative allocator against the continuing incumbent session, the blinded allocator with an explicit budget against the otherwise identical blinded reviewer, and the complete blinded handoff against the continuing incumbent. Compare the blinded reviewer with the fresh narrative allocator only as a descriptive check on information removal. The unit of replication is the complete post-fork search, not an individual self-test.
 
@@ -1252,7 +1254,7 @@ The first block must pass two separate gates. The apparatus gate checks isolatio
 
 Interpretation:
 
-- The fresh allocator with the full narrative is compared with the continuing incumbent session to test whether a new context helps. The blinded allocator with an explicit eight-evaluation budget is compared with the otherwise identical blinded reviewer to test the budget instruction. The complete blinded handoff must beat the continuing incumbent in the powered experiment before a live strategy court. The blinded reviewer versus the fresh narrative handoff remains descriptive only.
+- The fresh allocator with the full narrative is compared with the continuing incumbent session to test whether a new context helps. The blinded allocator with an explicit four-evaluation budget is compared with the otherwise identical blinded reviewer to test the budget instruction. The complete blinded handoff must beat the continuing incumbent in the powered experiment before a live strategy court. The blinded reviewer versus the fresh narrative handoff remains descriptive only.
 - Higher switch rate without score gain is thrashing, not success.
 - If the fresh allocator with the full narrative matches the blinded allocator with an explicit budget, a simple session reset is sufficient and the elaborate handoff is unnecessary.
 - If none of the fresh procedures beats the continuing incumbent session, do not build a strategy-court layer from these papers.

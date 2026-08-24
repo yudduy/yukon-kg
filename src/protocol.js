@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-export const PROTOCOL_VERSION = "yukon-kg.handoff-mve.v6";
+export const PROTOCOL_VERSION = "yukon-kg.handoff-mve.v7";
 export const MODEL = "gpt-5.6-luna";
 export const SEARCH_COMMIT = "51c6c31c722cc3a6c68867272e5959b4684c4142";
 export const POSITIVE_CONTROL_COMMIT = "d919bc64a3b6a236e17870a69993fd76a21a8092";
@@ -8,7 +8,7 @@ export const REPOSITORY_URL = "https://github.com/Layr-Labs/ecdsafail-challenge"
 export const MDE_PERCENT = 0.5;
 export const CALIBRATION_BLOCKS = 4;
 export const PRELUDE_EVALUATIONS = 6;
-export const ARM_EVALUATIONS = 8;
+export const ARM_EVALUATIONS = 4;
 export const CONFIRMATORY_MIN_BLOCKS = 8;
 export const CONFIRMATORY_MAX_BLOCKS = 24;
 export const POWER_DRAWS = 10_000;
@@ -79,7 +79,7 @@ export const CONDITION_DEFINITIONS = Object.freeze({
   },
   D: {
     label: "fresh blinded allocator with explicit budget",
-    instruction: "You have eight fresh evaluations; allocate them among these options.",
+    instruction: "You have four fresh evaluations; allocate them among these options.",
   },
 });
 
