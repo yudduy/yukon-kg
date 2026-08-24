@@ -1219,31 +1219,37 @@ Historical replay may verify reconstruction and score a fixed decision snapshot.
 
 Use historical commit `51c6c31`, immediately before `d919bc6`, and restrict the work to the isolated product-square self-test. This avoids the circuit's nonce-lottery coupling while retaining a real algorithmic branch. Do **not** treat the raw parent-to-child commit transition as the intervention: `d919bc6` changes seven files and moves the peak-qubit regime. Use it only as a sealed scorer positive control through its within-artifact `SUB4_SQUARE_KARATSUBA2=0|1` toggle, which reproduces `74,736,716.125` versus `71,194,989.690` on the square endpoint, a 4.738938% reduction. Agents start from a history-free `51c6c31` snapshot and never receive this toggle or result.
 
+The first implementation asked allocators to propose arbitrary source changes and then asked another model to implement each proposal. Its 2026-08-23 pilot completed all 38 budgeted evaluations and passed the mechanical isolation and scoring checks, but it did not provide an informative task. The four procedures all finished at exactly `66,878,230.169`. The incumbent, narrative-handoff and blinded-review procedures each used only one supposed intervention family; the blinded-allocation procedure used two labels for variants of the same host-side cleanup. Those edits mostly changed Rust allocation or copying even though the score measures generated quantum operations and peak qubits. The packet also built its alternatives only from earlier proposals, so the supposedly symmetric choice often contained just one option. This is measurable poor search behavior, but the harness helped cause it. The result is therefore **task uninformative**, not evidence that the handoff works or fails.
+
+The corrected experiment isolates allocation quality from code-writing quality. The model chooses one real configuration on each evaluation; the host applies and scores it directly. Keep `SUB4_SQUARE_CHUNK_MIN=200` fixed and let the allocator choose an even `SUB4_SQUARE_LADDER` value from 8 through 192, excluding the incumbent value 64. The incumbent configuration scores `56,408,075.598`. A complete host sweep must be admitted before model work: at least 90% of configurations must be valid, there must be at least eight distinct scores, the best improvement must be between 0.5% and 5%, and between 5% and 40% of valid choices must clear 0.5%. The measured setup meets that design target: the best values, 44 and 46, score `55,853,825.000`, a 0.982% improvement, while only a minority of the 92 available choices are meaningfully better.
+
 For each matched seed block:
 
-1. Let one worker perform a fixed six self-test experiments and form an incumbent plan.
-2. Copy the exact code state into four isolated worktrees.
-3. Allocate eight further self-test evaluations per condition with identical model, tools, output-token budget and wall-clock cap.
+1. Let one persistent allocator choose six configurations and form an incumbent plan. The host scores every choice twice.
+2. Give the same six measurements and the same remaining configuration choices to four isolated decision procedures.
+3. Allocate eight further configuration evaluations per procedure with identical model, output-token budget and wall-clock cap. No executor model edits source.
 
 | Condition | Decision context at the fork |
 |---|---|
 | A, incumbent | Resume the production session with its complete context |
 | B, narrative handoff | Fresh session receives the complete journal, rationales and incumbent plan |
-| C, blinded review | Fresh session receives task, artifact hash, third-person configuration-result table and neutral alternatives; asked whether to continue or switch |
+| C, blinded review | Fresh session receives task, artifact hash, third-person configuration-result table and neutral alternatives; asked to select the next discriminating measurement |
 | D, blinded allocation | Same as C, but told "You have eight fresh evaluations; allocate them among these options" |
 
-The blinded packet withholds author identity, first-person language, sunk-cost totals, plan rationale and the verb "continue." It includes failed alternatives and the incumbent symmetrically. The executor, not the allocator, implements the selected test.
+The blinded packet withholds author identity, first-person language, sunk-cost totals, plan rationale and the verb "continue." It includes the same four neutral configuration regions in the same order. The host, not another model, applies and scores the selected configuration.
 
 Primary endpoint: best valid square-specific `executed Toffoli x peak qubits` after the eight post-fork evaluations. Secondary endpoints: probability of at least a preregistered 0.5% reduction, number of distinct intervention families tested, discriminating-experiment rate, and budget fraction returned to the incumbent. Do not reward switching itself.
 
-Set the 0.5% minimum meaningful effect before a four-block variance pilot. Use that pilot only to simulate the number of matched blocks required for 80% power; then freeze sample size and analyze paired block differences with exact sign-flip randomization inference. Apply Holm correction to the three confirmatory contrasts `B > A` (fresh context), `D > C` (allocation framing) and `D > A` (product gate). Treat `C > B` as a descriptive information-removal diagnostic. The unit of replication is the complete post-fork search, not an individual self-test.
+Set the 0.5% minimum meaningful effect before a four-block variance pilot. Use that pilot only to simulate the number of matched blocks required for 80% power; then freeze sample size and analyze paired block differences with exact sign-flip randomization inference. Apply Holm correction to three confirmatory comparisons: the fresh narrative allocator against the continuing incumbent session, the blinded allocator with an explicit budget against the otherwise identical blinded reviewer, and the complete blinded handoff against the continuing incumbent. Compare the blinded reviewer with the fresh narrative allocator only as a descriptive check on information removal. The unit of replication is the complete post-fork search, not an individual self-test.
+
+The first block must pass two separate gates. The apparatus gate checks isolation, equal budgets, scoring and provenance. The task gate rejects a pilot if every procedure finds the known optimum, no procedure reaches the 0.5% target, or all four procedures tie. A mechanically clean but uninformative pilot stops the run and triggers a new task design; it cannot proceed into causal calibration.
 
 Interpretation:
 
-- `B > A` supports fresh context; `D > C` supports symmetric allocation framing; powered `D > A` is required before a live strategy court. `C > B` remains a descriptive information-removal diagnostic.
+- The fresh allocator with the full narrative is compared with the continuing incumbent session to test whether a new context helps. The blinded allocator with an explicit eight-evaluation budget is compared with the otherwise identical blinded reviewer to test the budget instruction. The complete blinded handoff must beat the continuing incumbent in the powered experiment before a live strategy court. The blinded reviewer versus the fresh narrative handoff remains descriptive only.
 - Higher switch rate without score gain is thrashing, not success.
-- If B already matches D, context length/ownership is sufficient and the elaborate handoff is unnecessary.
-- If none beats A, do not build a strategy-court layer from these papers.
+- If the fresh allocator with the full narrative matches the blinded allocator with an explicit budget, a simple session reset is sufficient and the elaborate handoff is unnecessary.
+- If none of the fresh procedures beats the continuing incumbent session, do not build a strategy-court layer from these papers.
 
 ### 11.5 Experiment B: live procedure test
 

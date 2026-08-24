@@ -13,6 +13,7 @@ import {
   extractCodexResult,
   networkCanaryEvidence,
   promptSurfaceViolations,
+  reportRun,
   runBlock,
   runTuningBlock,
   runProcess,
@@ -305,6 +306,12 @@ describe("full block state machine", () => {
     const runDirectory = await temporaryDirectory();
     await fs.writeFile(path.join(runDirectory, "manifest.json"), JSON.stringify({ protocolVersion: "yukon-kg.handoff-mve.v1" }));
     await expect(resumeRun(runDirectory)).rejects.toThrow("retired protocol");
+    const report = await reportRun(runDirectory);
+    expect(report.rows[0]).toMatchObject({
+      area: "Retired source-mutation pilot",
+      verdict: "TASK_UNINFORMATIVE",
+    });
+    expect(report.proceedToLiveCourt).toBe(false);
   });
 
   test("runs 6 + 4x8 evaluations and resumes without extra model calls", async () => {

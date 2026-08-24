@@ -256,6 +256,12 @@ export function assessTuningLandscape(baselineScore, measurements, {
   const bestMeasurement = valid.reduce((best, measurement) => (
     !best || measurement.score.score < best.score.score ? measurement : best
   ), null);
+  const bestCandidateIds = bestMeasurement
+    ? valid
+      .filter((measurement) => measurement.score.score === bestMeasurement.score.score)
+      .map((measurement) => measurement.candidateId)
+      .sort()
+    : [];
   const corrections = [];
   if (measurements.length <= PRELUDE_EVALUATIONS + ARM_EVALUATIONS) {
     corrections.push("candidate set can be exhausted within one search");
@@ -274,6 +280,7 @@ export function assessTuningLandscape(baselineScore, measurements, {
     distinctScores,
     bestScore: bestMeasurement?.score.score ?? null,
     bestCandidateId: bestMeasurement?.candidateId ?? null,
+    bestCandidateIds,
     bestImprovementPercent,
     meaningfulConfigurations: meaningful,
     meaningfulFraction,

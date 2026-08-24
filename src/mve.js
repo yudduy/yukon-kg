@@ -46,6 +46,8 @@ const EXPECTED_CONTROL_OFF = 74_736_716.125;
 const EXPECTED_CONTROL_ON = 71_194_989.69;
 const EXPECTED_CONTROL_REDUCTION = 4.738938;
 const EXPECTED_TUNING_BASELINE = 56_408_075.598;
+const EXPECTED_TUNING_OPTIMUM = 55_853_825;
+const EXPECTED_TUNING_OPTIMUM_CANDIDATES = ["ladder-044", "ladder-046"];
 const CANARY_MAX_INPUT_TOKENS = 13_000;
 const CANARY_MAX_PROMPT_BYTES = 20_000;
 const SOURCE_ALLOWLIST = new Set(["Cargo.lock", "Cargo.toml", "NOTICE", "rust-toolchain", "src"]);
@@ -931,6 +933,7 @@ export async function runScorerPreflight({ runDirectory, scorer }) {
   let reduction = null;
   let taskBaseline = null;
   let taskMeasurements = [];
+  let taskRawMeasurements = [];
   let taskLandscape = null;
   let buildCache = null;
   try {
@@ -966,8 +969,17 @@ export async function runScorerPreflight({ runDirectory, scorer }) {
         reason: scoring.reason ?? null,
         score: scoring.score ?? null,
       });
+      taskRawMeasurements.push({
+        candidateId: candidate.candidateId,
+        configuration: { chunkMin: candidate.chunkMin, ladder: candidate.ladder },
+        scoring,
+      });
     }
     taskLandscape = assessTuningLandscape(taskBaseline.score.score, taskMeasurements);
+    await expectScore("tuning optimum", taskLandscape.bestScore, EXPECTED_TUNING_OPTIMUM);
+    if (canonicalStringify(taskLandscape.bestCandidateIds) !== canonicalStringify(EXPECTED_TUNING_OPTIMUM_CANDIDATES)) {
+      throw new Error(`tuning optimum expected ${EXPECTED_TUNING_OPTIMUM_CANDIDATES.join(", ")}, observed ${taskLandscape.bestCandidateIds.join(", ")}`);
+    }
     await writeJson(path.join(preflightDirectory, "task-landscape.json"), {
       baseline: { candidate: TUNING_BASELINE, scoring: taskBaseline },
       candidates: taskMeasurements,
@@ -986,7 +998,7 @@ export async function runScorerPreflight({ runDirectory, scorer }) {
     reduction = pairedImprovementPercent(off.score.score, on.score.score);
     await expectScore("positive control reduction", reduction, EXPECTED_CONTROL_REDUCTION, 0.000001);
   } catch (error) {
-    await writeJson(path.join(preflightDirectory, "scorer-raw.json"), { baseline: baselineResult, taskBaseline, taskMeasurements, off, on });
+    await writeJson(path.join(preflightDirectory, "scorer-raw.json"), { baseline: baselineResult, taskBaseline, taskRawMeasurements, off, on });
     const report = {
       gate: "host_scorer",
       status: "FAIL",
@@ -999,7 +1011,7 @@ export async function runScorerPreflight({ runDirectory, scorer }) {
     await writeJson(path.join(preflightDirectory, "host-scorer.json"), report);
     return { report, baseline };
   }
-  await writeJson(path.join(preflightDirectory, "scorer-raw.json"), { baseline: baselineResult, taskBaseline, taskMeasurements, off, on });
+  await writeJson(path.join(preflightDirectory, "scorer-raw.json"), { baseline: baselineResult, taskBaseline, taskRawMeasurements, off, on });
   const report = {
     gate: "host_scorer",
     status: "PASS",
@@ -2268,6 +2280,27 @@ function passFailMatrix(runDirectory, preflightReport, result) {
 }
 
 async function reportRun(runDirectory) {
+  const manifest = await readJsonIfPresent(path.join(runDirectory, "manifest.json"));
+  if (manifest?.protocolVersion && manifest.protocolVersion !== PROTOCOL_VERSION) {
+    const pilot = await readJsonIfPresent(path.join(runDirectory, "blocks", "calibration-0", "result.json"));
+    return {
+      runDirectory,
+      protocolVersion: manifest.protocolVersion,
+      rows: [
+        {
+          area: "Retired source-mutation pilot",
+          verdict: "TASK_UNINFORMATIVE",
+          correction: "Do not use this run as evidence for or against the handoff; use a new protocol-v2 tuning-search run.",
+        },
+        {
+          area: "Historical mechanical checks",
+          verdict: pilot?.apparatusStatus ?? "NOT_RUN",
+          correction: "A mechanical pass did not establish that the old task could distinguish allocation quality.",
+        },
+      ],
+      proceedToLiveCourt: false,
+    };
+  }
   const preflightReport = await readJsonIfPresent(path.join(runDirectory, "preflight", "report.json"));
   const result = await readJsonIfPresent(path.join(runDirectory, "result.json"));
   const pilot = result?.pilot ?? await readJsonIfPresent(path.join(runDirectory, "blocks", "calibration-0", "result.json"));

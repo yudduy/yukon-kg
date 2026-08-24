@@ -9,7 +9,7 @@ bun run mve -- resume <run-id>
 bun run mve -- report <run-id>
 ```
 
-`preflight` checks the clean Codex profile, live context budget, model and tool events, blocked agent network, pinned source commits, duplicate square scorer, and sealed positive control. It also records the host prompt/MCP configuration as a diagnostic; admission is based on the isolated worker invocation, which ignores user config and rules. `run` performs the four calibration blocks, freezes the powered sample size, and runs the matched confirmation. Long runs are idempotently resumable.
+`preflight` checks the isolated Codex profile, model identity, blocked network, pinned source, duplicate scorer, sealed positive control, and the complete difficulty landscape for the search task. `run` first performs one apparatus pilot. Only an informative pilot proceeds to three more calibration blocks, a frozen sample size, and matched confirmation. Long runs are idempotently resumable.
 
 All generated prompts, events, source artifacts, diffs, scores, timing, and reports live under `.runs/h1-h2/<run-id>/` and are ignored by Git.
 
@@ -20,4 +20,6 @@ Reports use four claim states:
 - `INCONCLUSIVE_AT_CAP`: the frozen experiment cannot decide.
 - `INVALID`: isolation, provenance, budget, or scorer integrity failed.
 
-The first calibration block is an apparatus pilot, not a causal result. A live Yukon strategy court is eligible only when the powered `D > A` product gate is `SUPPORTED`.
+The pilot also has a task check: `TASK_TOO_EASY` means every procedure found the known optimum, `TASK_TOO_HARD` means none achieved the preregistered 0.5% improvement, and `NO_CONDITION_SEPARATION` means the procedures tied. These outcomes require a new task and cannot be used as evidence for or against the handoff.
+
+A live Yukon strategy court is eligible only when the powered comparison shows that the complete blinded handoff with an explicit budget outperforms the continuing incumbent session.

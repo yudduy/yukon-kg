@@ -125,6 +125,8 @@ describe("condition packets", () => {
     expect(gate.status).toBe("PASS");
     expect(gate.distinctScores).toBeGreaterThanOrEqual(8);
     expect(gate.bestImprovementPercent).toBeGreaterThanOrEqual(MDE_PERCENT);
+    expect(gate.bestScore).toBe(98_300);
+    expect(gate.bestCandidateIds).toEqual([TUNING_CANDIDATES[7].candidateId]);
   });
 
   test("pilot gate rejects an uninformative search", () => {
