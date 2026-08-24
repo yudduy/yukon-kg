@@ -90,7 +90,7 @@ const TUNING_ALLOCATOR_SCHEMA = {
   additionalProperties: false,
   required: ["candidateId", "hypothesis", "falsifier", "rationale", "planUpdate"],
   properties: {
-    candidateId: { type: "string", pattern: "^ladder-[0-9]{3}$" },
+    candidateId: { type: "string", pattern: "^option-[0-9a-f]{12}$" },
     hypothesis: { type: "string", minLength: 1 },
     falsifier: { type: "string", minLength: 1 },
     rationale: { type: "string", minLength: 1 },
@@ -1052,7 +1052,7 @@ function tuningAllocatorPrompt(packet, lastResult = null) {
   return [
     "You are the allocator only. Do not edit source, run commands, use the network, or inspect unrelated files.",
     "Select exactly one candidateId from the available candidates in the decision packet.",
-    "The host will apply the candidate's two environment settings and score the fixed product-square self-test twice.",
+    "Each candidate is an anonymized member of the stated search region. The host will apply its sealed environment settings and score the fixed product-square self-test twice.",
     "Lower executed Toffoli multiplied by peak qubits is better. Do not select the incumbent or a candidate absent from the packet.",
     "State a falsifiable hypothesis, the reason for this choice, and how the plan should change after the measurement. Use plain third-person language and do not use any form of the word continue.",
     `Decision packet:\n${canonicalStringify(packet)}`,
@@ -1374,7 +1374,6 @@ function tuningEvidenceFromRecord(record) {
     baseArtifactId: record.baseArtifactId,
     candidateArtifactId: record.candidateArtifactId ?? null,
     candidateId: record.candidateId ?? null,
-    configuration: record.configuration ?? null,
     interventionFamily: record.interventionFamily,
     hypothesis: record.hypothesis,
     falsifier: record.falsifier,
@@ -1386,21 +1385,39 @@ function tuningEvidenceFromRecord(record) {
   };
 }
 
-function tuningPacketState({ baseline, evidence, remainingEvaluations, incumbentPlan }) {
+const PRELUDE_SEED_LADDERS = new Set([8, 32, 36, 54, 58, 62, 66, 80, 96, 98, 144, 192]);
+
+export function tuningCandidatesForBlock(blockId) {
+  const candidates = TUNING_CANDIDATES.map((candidate) => ({
+    ...candidate,
+    sourceCandidateId: candidate.candidateId,
+    candidateId: `option-${sha256(`${PROTOCOL_VERSION}:${blockId}:${candidate.candidateId}`).slice(0, 12)}`,
+    preludeSeed: PRELUDE_SEED_LADDERS.has(candidate.ladder),
+  })).sort((left, right) => left.candidateId.localeCompare(right.candidateId));
+  if (new Set(candidates.map((candidate) => candidate.candidateId)).size !== candidates.length) {
+    throw new Error(`opaque candidate collision in block ${blockId}`);
+  }
+  return candidates;
+}
+
+function tuningPacketState({ baseline, evidence, remainingEvaluations, incumbentPlan, candidates, phase }) {
   const used = new Set(evidence.map((record) => record.candidateId).filter(Boolean));
+  const available = candidates
+    .filter((candidate) => !used.has(candidate.candidateId) && (phase !== "prelude" || candidate.preludeSeed))
+    .map((candidate) => ({ candidateId: candidate.candidateId, region: candidate.region }));
   return {
     forkArtifactId: baseline.artifactId,
     frontier: [{ artifactId: baseline.artifactId, score: baseline.score.score }],
     evidence,
     alternatives: TUNING_ALTERNATIVES,
-    candidates: TUNING_CANDIDATES.filter((candidate) => !used.has(candidate.candidateId)),
+    candidates: available,
     remainingEvaluations,
     incumbentPlan,
-    task: "Choose one carry-ladder configuration for the fixed product-square self-test. The host will set SUB4_SQUARE_CHUNK_MIN=200 and the selected SUB4_SQUARE_LADDER, execute the deterministic self-test twice, and minimize executed Toffoli multiplied by peak qubits.",
+    task: "Allocate one measurement to an anonymized configuration in one of four carry-ladder search regions. The host applies the option's sealed settings, executes the deterministic product-square self-test twice, and minimizes executed Toffoli multiplied by peak qubits.",
     contract: {
       environment: {
-        SUB4_SQUARE_CHUNK_MIN: String(TUNING_BASELINE.chunkMin),
-        SUB4_SQUARE_LADDER: "selected candidate ladder",
+        SUB4_SQUARE_CHUNK_MIN: "host-sealed option setting",
+        SUB4_SQUARE_LADDER: "host-sealed option setting",
         SUB4_PRODUCT_SQUARE_SELFTEST: "1",
       },
       endpoint: "best valid executed Toffoli multiplied by peak qubits, reproduced exactly twice",
@@ -1706,6 +1723,7 @@ export async function runTuningEvaluation({
   codexRunner,
   scorer,
   schemas,
+  blockCandidates,
 }) {
   const slotDirectory = phase === "prelude"
     ? path.join(blockDirectory, "prelude", String(index))
@@ -1720,6 +1738,8 @@ export async function runTuningEvaluation({
     evidence,
     remainingEvaluations: total - index,
     incumbentPlan,
+    candidates: blockCandidates,
+    phase,
   });
   const packet = phase === "prelude"
     ? { ...compileConditionPacket("A", packetStateValue), condition: "shared prelude" }
@@ -1765,7 +1785,10 @@ export async function runTuningEvaluation({
     return { record, sessionId: decisionResult.sessionId };
   }
   const decision = decisionResult.decision;
-  const candidate = packet.candidates.find((item) => item.candidateId === decision.candidateId);
+  const publicCandidate = packet.candidates.find((item) => item.candidateId === decision.candidateId);
+  const candidate = publicCandidate
+    ? blockCandidates.find((item) => item.candidateId === decision.candidateId)
+    : null;
   if (!candidate) {
     const record = {
       protocolVersion: PROTOCOL_VERSION,
@@ -1850,6 +1873,7 @@ export async function runTuningBlock({
   const existing = await readJsonIfPresent(resultPath);
   if (existing) return existing;
   await ensureDirectory(blockDirectory);
+  const blockCandidates = tuningCandidatesForBlock(blockId);
   const preludeEvidence = [];
   let preludeSessionId = null;
   let incumbentPlan = "Measure the carry-ladder settings that most clearly distinguish the operation and qubit tradeoff.";
@@ -1868,6 +1892,7 @@ export async function runTuningBlock({
       codexRunner,
       scorer,
       schemas,
+      blockCandidates,
     });
     preludeSessionId = outcome.sessionId;
     incumbentPlan = outcome.record.planUpdate || incumbentPlan;
@@ -1893,6 +1918,7 @@ export async function runTuningBlock({
         codexRunner,
         scorer,
         schemas,
+        blockCandidates,
       });
       sessionId = outcome.sessionId;
       evidence.push(tuningEvidenceFromRecord(outcome.record));
@@ -1903,6 +1929,7 @@ export async function runTuningBlock({
       candidateId: TUNING_BASELINE.candidateId,
       score: baselineArtifact.score,
     });
+    const bestCandidate = blockCandidates.find((candidate) => candidate.candidateId === best.candidateId);
     return {
       condition,
       evaluations: postFork.length,
@@ -1910,6 +1937,10 @@ export async function runTuningBlock({
       protocolViolations: postFork.filter((record) => record.protocolViolation).length,
       bestArtifactId: best.candidateId === TUNING_BASELINE.candidateId ? baselineArtifact.artifactId : `config-${best.candidateId}`,
       bestCandidateId: best.candidateId,
+      bestConfiguration: bestCandidate ? {
+        SUB4_SQUARE_CHUNK_MIN: bestCandidate.chunkMin,
+        SUB4_SQUARE_LADDER: bestCandidate.ladder,
+      } : null,
       bestScore: best.score.score,
       bestScoreComponents: best.score,
       distinctCandidates: new Set(postFork.map((record) => record.candidateId).filter(Boolean)).size,

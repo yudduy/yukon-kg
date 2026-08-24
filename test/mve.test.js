@@ -19,6 +19,7 @@ import {
   runProcess,
   resumeRun,
   sealedHarnessSuffix,
+  tuningCandidatesForBlock,
 } from "../src/mve.js";
 
 const temporaries = [];
@@ -131,10 +132,9 @@ class FakeTuningCodexRunner {
     const packet = JSON.parse(packetText);
     if (this.calls === this.invalidCall) return fakeCodexResult({ nope: true }, `tuning-${this.calls}`);
     const condition = packet.condition;
-    const desired = condition === "blinded" && packet.evidence.length === 6
-      ? (packet.instruction.includes("four fresh") ? "ladder-012" : "ladder-008")
-      : packet.candidates.at(-1).candidateId;
-    const candidate = packet.candidates.find((item) => item.candidateId === desired) ?? packet.candidates[0];
+    const candidate = condition === "blinded" && packet.evidence.length >= 6
+      ? (packet.instruction.includes("four fresh") ? packet.candidates[0] : packet.candidates.at(-1))
+      : packet.candidates.at(-1);
     return fakeCodexResult({
       candidateId: candidate.candidateId,
       hypothesis: `The ${candidate.candidateId} setting changes the operation and qubit tradeoff.`,
@@ -153,7 +153,7 @@ class FakeTuningScorer {
   async twice(_workspace, _targetDirectory, environment = {}) {
     this.calls += 1;
     const ladder = Number(environment.SUB4_SQUARE_LADDER);
-    const score = ladder === 8 ? 900 : ladder === 12 ? 950 : ladder === 14 ? 970 : ladder === 10 ? 980 : 1_000 + ladder;
+    const score = 1_000 - ladder;
     return {
       validity: "valid",
       score: {
@@ -173,6 +173,17 @@ afterEach(async () => {
 });
 
 describe("runtime primitives", () => {
+  test("assigns block-specific opaque options and keeps the optimum out of the shared seed slate", () => {
+    const first = tuningCandidatesForBlock("block-1");
+    const second = tuningCandidatesForBlock("block-2");
+    expect(first).toHaveLength(92);
+    expect(first.every((candidate) => /^option-[0-9a-f]{12}$/u.test(candidate.candidateId))).toBe(true);
+    expect(first.map((candidate) => candidate.candidateId)).not.toEqual(second.map((candidate) => candidate.candidateId));
+    const seeds = first.filter((candidate) => candidate.preludeSeed);
+    expect(seeds).toHaveLength(12);
+    expect(seeds.some((candidate) => [44, 46].includes(candidate.ladder))).toBe(false);
+  });
+
   test("distinguishes enabled skills from generic wrappers and parses host MCP diagnostics", () => {
     expect(promptSurfaceViolations("<skills_instructions>\n<apps_instructions>\n<plugins_instructions>"))
       .toEqual([]);
