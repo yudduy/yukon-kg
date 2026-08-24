@@ -1,6 +1,6 @@
 # Yukon-KG Handoff MVE
 
-Requirements: Bun, Rust/Cargo, Git, the Codex CLI authenticated on this machine, and access to `gpt-5.3-codex-spark`.
+Requirements: Bun, Rust/Cargo, Git, the Codex CLI authenticated on this machine, and access to `gpt-5.6-luna`.
 
 ```bash
 bun run mve -- preflight

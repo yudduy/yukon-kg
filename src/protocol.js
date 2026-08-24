@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 
-export const PROTOCOL_VERSION = "yukon-kg.handoff-mve.v2";
-export const MODEL = "gpt-5.3-codex-spark";
+export const PROTOCOL_VERSION = "yukon-kg.handoff-mve.v3";
+export const MODEL = "gpt-5.6-luna";
 export const SEARCH_COMMIT = "51c6c31c722cc3a6c68867272e5959b4684c4142";
 export const POSITIVE_CONTROL_COMMIT = "d919bc64a3b6a236e17870a69993fd76a21a8092";
 export const REPOSITORY_URL = "https://github.com/Layr-Labs/ecdsafail-challenge";

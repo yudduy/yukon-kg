@@ -1223,6 +1223,8 @@ The first implementation asked allocators to propose arbitrary source changes an
 
 The corrected experiment isolates allocation quality from code-writing quality. The model chooses one real configuration on each evaluation; the host applies and scores it directly. Keep `SUB4_SQUARE_CHUNK_MIN=200` fixed and let the allocator choose an even `SUB4_SQUARE_LADDER` value from 8 through 192, excluding the incumbent value 64. The incumbent configuration scores `56,408,075.598`. A complete host sweep must be admitted before model work: at least 90% of configurations must be valid, there must be at least eight distinct scores, the best improvement must be between 0.5% and 5%, and between 5% and 40% of valid choices must clear 0.5%. The measured setup meets that design target: the best values, 44 and 46, score `55,853,825.000`, a 0.982% improvement, while only a minority of the 92 available choices are meaningfully better.
 
+Use `gpt-5.6-luna` for every allocator call: high reasoning for the shared six-evaluation prelude and medium reasoning after the fork. Do not mix model families within or across matched blocks.
+
 For each matched seed block:
 
 1. Let one persistent allocator choose six configurations and form an incumbent plan. The host scores every choice twice.

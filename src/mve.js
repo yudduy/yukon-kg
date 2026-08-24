@@ -2149,7 +2149,7 @@ async function fullRun(runDirectory) {
 async function resumeRun(runDirectory) {
   const manifest = await readJsonIfPresent(path.join(runDirectory, "manifest.json"));
   if (manifest?.protocolVersion && manifest.protocolVersion !== PROTOCOL_VERSION) {
-    throw new Error(`cannot resume retired protocol ${manifest.protocolVersion}; start a new v2 tuning-search run`);
+    throw new Error(`cannot resume retired protocol ${manifest.protocolVersion}; start a new ${PROTOCOL_VERSION} Luna tuning-search run`);
   }
   const completed = await readJsonIfPresent(path.join(runDirectory, "result.json"));
   if (completed) return completed;
@@ -2290,7 +2290,7 @@ async function reportRun(runDirectory) {
         {
           area: "Retired source-mutation pilot",
           verdict: "TASK_UNINFORMATIVE",
-          correction: "Do not use this run as evidence for or against the handoff; use a new protocol-v2 tuning-search run.",
+          correction: `Do not use this run as evidence for or against the handoff; use a new ${PROTOCOL_VERSION} Luna tuning-search run.`,
         },
         {
           area: "Historical mechanical checks",
