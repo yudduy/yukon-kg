@@ -1233,6 +1233,8 @@ Version 6 then completed a mechanically valid 38-evaluation Luna pilot. Every pr
 
 Version 7 also stopped as too easy: all four procedures followed the same exposed numeric gradient and reached the optimum in four post-fork measurements. Version 8 keeps the real configurations and duplicate scorer but removes that answer leak. Each matched block assigns every configuration a block-specific opaque option ID while preserving its four neutral search-region labels. The shared prelude can choose only from a balanced 12-option non-optimal seed slate, three per region. At the fork, every procedure receives the same remaining opaque options in the same order; the host privately resolves each option to its fixed settings and records that mapping in the immutable slot artifact. This tests allocation across regions under measured uncertainty rather than arithmetic interpolation from a visible ladder value. Versions 6 and 7 remain excluded design pilots.
 
+The first version-8 launch was rejected before scoring because the worker canary observed an actual `spawn_agent` call. The desktop host's `CODEX_THREAD_ID`, `CODEX_SESSION_ID`, and origin override had propagated the parent collaboration context into the child CLI despite the feature flag. Version 9 strips those host-context variables from every Codex/debug invocation and redundantly disables fanout, both multi-agent implementations, deferred execution, and agent identity. Version 8 contains no experimental evidence.
+
 For each matched seed block:
 
 1. Let one persistent allocator choose six configurations and form an incumbent plan. The host scores every choice twice.

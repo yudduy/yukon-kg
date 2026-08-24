@@ -153,7 +153,8 @@ class FakeTuningScorer {
   async twice(_workspace, _targetDirectory, environment = {}) {
     this.calls += 1;
     const ladder = Number(environment.SUB4_SQUARE_LADDER);
-    const score = 1_000 - ladder;
+    const seedLadders = new Set([8, 32, 36, 54, 58, 62, 66, 80, 96, 98, 144, 192]);
+    const score = seedLadders.has(ladder) ? 1_000 : 1_000 - ladder;
     return {
       validity: "valid",
       score: {
@@ -271,7 +272,18 @@ describe("runtime primitives", () => {
     expect(worker.join(" ")).toContain("--disable shell_tool");
     expect(worker.join(" ")).toContain("--disable unified_exec");
     expect(worker.join(" ")).toContain("mcp_servers={}");
+    expect(worker.join(" ")).toContain("--disable multi_agent_v2");
+    expect(worker.join(" ")).toContain("--disable enable_fanout");
     expect(canary.join(" ")).not.toContain("--disable shell_tool");
+  });
+
+  test("can remove inherited host context from child processes", async () => {
+    const result = await runProcess("zsh", ["-c", "printf %s ${MVE_HOST_CONTEXT-unset}"], {
+      env: { MVE_HOST_CONTEXT: "present" },
+      unsetEnv: ["MVE_HOST_CONTEXT"],
+    });
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toBe("unset");
   });
 
   test("enforces concurrency", async () => {

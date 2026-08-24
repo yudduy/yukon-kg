@@ -62,6 +62,7 @@ const FORBIDDEN_EVENT_TYPES = /(?:web_search|mcp|browser|computer|image_generati
 const FORBIDDEN_PROMPT_SURFACE = [
   { label: "enabled skill entries", pattern: /^\s*-\s+.+SKILL\.md.+$/mu },
 ];
+const CODEX_HOST_CONTEXT_ENV = ["CODEX_INTERNAL_ORIGINATOR_OVERRIDE", "CODEX_SESSION_ID", "CODEX_THREAD_ID"];
 const artifactWrites = new Map();
 const ALLOCATOR_SCHEMA = {
   type: "object",
@@ -214,14 +215,17 @@ export class Semaphore {
 export async function runProcess(command, args, {
   cwd = ROOT,
   env = {},
+  unsetEnv = [],
   input = null,
   timeoutMs = 15 * 60_000,
 } = {}) {
   const startedAt = Date.now();
   return new Promise((resolve, reject) => {
+    const childEnvironment = { ...process.env, ...env };
+    for (const key of unsetEnv) delete childEnvironment[key];
     const child = spawn(command, args, {
       cwd,
-      env: { ...process.env, ...env },
+      env: childEnvironment,
       stdio: ["pipe", "pipe", "pipe"],
     });
     const stdout = [];
@@ -603,11 +607,15 @@ function codexConfigArguments({ reasoning, skills, allowShell = false }) {
     "--disable", "image_generation",
     "--disable", "in_app_browser",
     "--disable", "memories",
+    "--disable", "deferred_executor",
+    "--disable", "enable_fanout",
     "--disable", "multi_agent",
+    "--disable", "multi_agent_v2",
     "--disable", "plugin_sharing",
     "--disable", "plugins",
     "--disable", "remote_plugin",
     "--disable", "tool_suggest",
+    "--disable", "use_agent_identity",
   ];
   if (!allowShell) argumentsList.push("--disable", "shell_tool", "--disable", "unified_exec");
   return argumentsList;
@@ -622,11 +630,15 @@ function codexDebugArguments(skills) {
     "--disable", "image_generation",
     "--disable", "in_app_browser",
     "--disable", "memories",
+    "--disable", "deferred_executor",
+    "--disable", "enable_fanout",
     "--disable", "multi_agent",
+    "--disable", "multi_agent_v2",
     "--disable", "plugin_sharing",
     "--disable", "plugins",
     "--disable", "remote_plugin",
     "--disable", "tool_suggest",
+    "--disable", "use_agent_identity",
   ];
 }
 
@@ -686,6 +698,7 @@ export class CodexRunner {
       cwd,
       input: prompt,
       timeoutMs: this.timeoutMs,
+      unsetEnv: CODEX_HOST_CONTEXT_ENV,
     })));
   }
 
@@ -783,9 +796,13 @@ async function inspectCodexSurface({ runDirectory, cwd, skills }) {
   const promptInputResult = await runProcess(
     "codex",
     ["debug", "prompt-input", ...codexDebugArguments(skills), "isolation canary"],
-    { cwd, timeoutMs: 30_000 },
+    { cwd, timeoutMs: 30_000, unsetEnv: CODEX_HOST_CONTEXT_ENV },
   );
-  const mcpListResult = await runProcess("codex", ["mcp", "list"], { cwd, timeoutMs: 30_000 });
+  const mcpListResult = await runProcess("codex", ["mcp", "list"], {
+    cwd,
+    timeoutMs: 30_000,
+    unsetEnv: CODEX_HOST_CONTEXT_ENV,
+  });
   await atomicWrite(path.join(runDirectory, "preflight", "prompt-input.json"), promptInputResult.stdout || promptInputResult.stderr);
   await atomicWrite(path.join(runDirectory, "preflight", "mcp-list.txt"), `${mcpListResult.stdout}${mcpListResult.stderr}`);
   const activeMcpServers = enabledMcpServers(mcpListResult.stdout);
