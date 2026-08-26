@@ -141,6 +141,13 @@ export function compileUserDecision(brief: WorkingKnowledgeBrief): UserDecision 
     reason: "whyUnverified" in karatsuba ? karatsuba.whyUnverified : karatsuba.predictedDistinction,
     sourceRefs: [...karatsuba.sourceRefs],
   }];
+  const fermat = brief.negativeKnowledge.find((item) => item.ideaId.includes("fermat-inversion"));
+  const avoidFermat = fermat === undefined ? [] : [{
+    id: `avoid:${fermat.ideaId}`,
+    action: `Do not retry ${fermat.title} without a representation or scorer change.`,
+    reason: fermat.reopenCondition,
+    sourceRefs: [...fermat.sourceRefs],
+  }];
   return {
     primaryQuestion: "What isolated move is worth trying next on the pinned ECDSA.fail scorer?",
     doNow: [...untried, ...isolate],
@@ -149,18 +156,7 @@ export function compileUserDecision(brief: WorkingKnowledgeBrief): UserDecision 
       action: `Do not treat ${hazard.title.toLowerCase()} as a circuit mechanism.`,
       reason: hazard.recommendedAction,
       sourceRefs: [...hazard.sourceRefs],
-    })).concat(
-      brief.negativeKnowledge
-        .filter((item) => item.ideaId.includes("fermat-inversion") || item.family === "measurement")
-        .slice(0, 3)
-        .map((item) => ({
-          id: `avoid:${item.ideaId}`,
-          action: `Do not retry ${item.title} without a representation or scorer change.`,
-          reason: item.reopenCondition,
-          sourceRefs: [...item.sourceRefs],
-        })),
-      avoidKaratsuba,
-    ),
+    })).concat(avoidFermat, avoidKaratsuba),
     knownLocalMoves,
   };
 }

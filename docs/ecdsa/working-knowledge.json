@@ -82,30 +82,12 @@
         ]
       },
       {
-        "id": "avoid:candidate:resource-estimation:d951023c40",
-        "action": "Do not retry Resource estimation without a representation or scorer change.",
-        "reason": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "id": "avoid:candidate:fermat-inversion:b1eff02f73",
+        "action": "Do not retry Fermat inversion without a representation or scorer change.",
+        "reason": "Reopen only if the inversion representation itself changes; a failed Fermat attempt does not bound dialog/Kaliski inversion.",
         "sourceRefs": [
-          "idea:candidate:resource-estimation:d951023c40",
-          "dossier:candidate:resource-estimation:d951023c40"
-        ]
-      },
-      {
-        "id": "avoid:idea:resource:phase-aware-accounting",
-        "action": "Do not retry Phase-aware accounting without a representation or scorer change.",
-        "reason": "Reopen if a new measurement becomes part of the official score or a verified bound.",
-        "sourceRefs": [
-          "idea:idea:resource:phase-aware-accounting",
-          "dossier:idea:resource:phase-aware-accounting"
-        ]
-      },
-      {
-        "id": "avoid:idea:resource:count-only-construction",
-        "action": "Do not retry Count-only construction without a representation or scorer change.",
-        "reason": "Reopen if a new measurement becomes part of the official score or a verified bound.",
-        "sourceRefs": [
-          "idea:idea:resource:count-only-construction",
-          "dossier:idea:resource:count-only-construction"
+          "idea:candidate:fermat-inversion:b1eff02f73",
+          "dossier:candidate:fermat-inversion:b1eff02f73"
         ]
       },
       {

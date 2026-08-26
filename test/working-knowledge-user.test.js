@@ -71,8 +71,10 @@ describe("HTML landing page", () => {
   });
 
   test("does not dump the submission archive as the home view", () => {
-    expect(html).not.toContain("949 submissions");
+    expect(html).not.toContain('data-section="submissions"');
+    expect(html).not.toMatch(/<tbody>[\s\S]*submission:/);
     expect(html).toContain("archive is sealed");
+    expect(html).toContain("JSON packet");
   });
 });
 
