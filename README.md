@@ -10,9 +10,26 @@ Given the same ECDSA.fail evidence, task, model, and retrieval budget, which inp
 2. `flat`: a searchable list of recorded attempts.
 3. `flat_plus_brief`: the same search results plus an Idea evidence brief after the agent selects an Idea.
 
-The earlier six-case pilot was not decisive: flat search and the brief each passed 2/6 cases. Its result is preserved in [`evidence/atlas-retrieval-v3/pilot.json`](evidence/atlas-retrieval-v3/pilot.json). The current v4 protocol first proves that every reviewed answer is reachable through the same search interface. Its latest preflight stopped before model calls because 9/30 frozen cases were not reachable. The parity, reachability, and decision reports are preserved under [`evidence/atlas-retrieval-v4-preflight/`](evidence/atlas-retrieval-v4-preflight/). No representation has earned promotion yet.
+The earlier six-case pilot was not decisive: flat search and the brief each passed 2/6 cases. Its result is preserved in [`evidence/atlas-retrieval-v3/pilot.json`](evidence/atlas-retrieval-v3/pilot.json). The current v4 protocol first proves that every reviewed answer is reachable through the same search interface. Its latest preflight stopped before model calls because 9/30 frozen cases were not reachable. The parity, reachability, and decision reports are preserved under [`evidence/atlas-retrieval-v4-preflight/`](evidence/atlas-retrieval-v4-preflight/). No retrieval representation has earned promotion yet.
 
-The working default is therefore the smallest useful workflow:
+As of August 2026, the public literature that actually moved verified search is **an executable candidate plus a hard evaluator**, with a compact de-narrativized decision packet as the agent-facing view. Undifferentiated graphs, winner-only memory, and high-volume archive injection are not the recipe. This repository therefore compiles a disposable ECDSA working-knowledge brief from the current Atlas snapshot without editing sealed releases:
+
+```text
+immutable Atlas records
+→ contract, bounds, frontier, admitted one-change mechanisms
+→ negative knowledge with reopen conditions
+→ evaluator hazards (nonce grinding, bundled diffs)
+→ next discriminators
+→ literature overlay labeled source_reported, not Atlas-verified
+```
+
+Compile it with:
+
+```bash
+bun run knowledge:ecdsa
+```
+
+The working retrieval default remains the smallest useful workflow until a later equal-budget court says otherwise:
 
 ```text
 search the flat attempt list
@@ -20,7 +37,7 @@ search the flat attempt list
 → inspect the original evidence
 ```
 
-The brief becomes the universal default only if it beats flat search under equal budgets. Otherwise the simpler flat search remains the default.
+The per-Idea brief becomes the universal default only if it beats flat search under equal budgets. The compiled working-knowledge brief is a presentation-plane cache, not a claim that Atlas accelerates discovery.
 
 ## Run the retrieval experiment
 
@@ -29,6 +46,7 @@ Requirements: Bun and an authenticated Codex CLI with access to `gpt-5.6-luna` a
 ```bash
 bun test
 bun run data:verify
+bun run knowledge:ecdsa
 bun run atlas:duplicate -- preflight
 bun run atlas:duplicate -- pilot <run-id>
 bun run atlas:duplicate -- run <run-id>

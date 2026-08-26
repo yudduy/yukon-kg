@@ -7,6 +7,7 @@
     "data:verify": "bun run src/verify-public-data.js",
     "mve": "bun run src/planning-mve.js",
     "mve:ecdsa": "bun run src/mve.js",
+    "knowledge:ecdsa": "bun run src/ecdsa-working-knowledge.js",
     "smoke": "bun run src/smoke.js",
     "test": "bun test"
   }
