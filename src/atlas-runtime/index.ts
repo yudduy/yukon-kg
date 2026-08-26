@@ -23,4 +23,23 @@ export type {
   WorkingKnowledgeInterventionFamily,
   WorkingKnowledgeLiteratureClaim,
 } from "./working-knowledge";
+export {
+  ECDSA_USER_CASES,
+  ECDSA_USER_PROTOCOL_VERSION,
+  ECDSA_USER_VIEW_SCHEMA,
+  ECDSA_USER_VIEW_SCHEMA_VERSION,
+  analyzeUserRepresentationExperiment,
+  buildEcdsaUserView,
+  compileUserDecision,
+  ideasFromRelease,
+  renderWorkingKnowledgePage,
+  scoreUserRepresentation,
+} from "./working-knowledge-user";
+export type {
+  EcdsaUserView,
+  UserCase,
+  UserCaseResult,
+  UserDecision,
+  UserRepresentation,
+} from "./working-knowledge-user";
 

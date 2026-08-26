@@ -1,0 +1,1733 @@
+{
+  "schema": "yukon-kg.ecdsa-user-view",
+  "schemaVersion": 1,
+  "protocolVersion": "yukon-kg.ecdsa-user-representation.v1",
+  "briefSha256": "49ff0afe7d5421ab3ee09e7b72364226db26082f76b8439ca86332297d676bd9",
+  "decision": {
+    "primaryQuestion": "What isolated move is worth trying next on the pinned ECDSA.fail scorer?",
+    "doNow": [
+      {
+        "id": "disc:barrett-vs-solinas",
+        "action": "Does Barrett reciprocal reduction beat the pinned Solinas fold on the verified scorer?",
+        "reason": "A genuine Barrett construction would not be a pseudo-Mersenne fold, even if nearby Solinas receipts exist.",
+        "sourceRefs": [
+          "idea:candidate:solinas-reduction:5a45b2514d"
+        ]
+      },
+      {
+        "id": "disc:fourier-comparator",
+        "action": "Does a Fourier-basis sign test beat the ripple-borrow quantum-classical comparator?",
+        "reason": "Phase-rotation comparison is not a carry-chain width or truncation variant.",
+        "sourceRefs": [
+          "idea:candidate:quantum-classical-comparator:d9ffd5fcec"
+        ]
+      },
+      {
+        "id": "disc:half-gcd",
+        "action": "Does recursive half-GCD matrix inversion beat the fixed-stream Kaliski / dialog replay?",
+        "reason": "Divide-and-conquer Bézout updates are a representation change relative to a recorded forward/reverse stream.",
+        "sourceRefs": [
+          "idea:candidate:extended-euclidean-algorithm:f11501d92a",
+          "idea:candidate:kaliski-inversion:e79f263674"
+        ]
+      },
+      {
+        "id": "disc:qrom-vs-location",
+        "action": "Does a bucket-brigade QROM constant load beat location-controlled arithmetic synthesis?",
+        "reason": "Table lookup plus uncompute is a different mechanism from position-guarded local arithmetic.",
+        "sourceRefs": [
+          "idea:candidate:location-controlled-arithmetic:0efa7e6ff7"
+        ]
+      },
+      {
+        "id": "disc:isolate:experiment:ecdsafail-borrowed-dirty-carry-c69b6c1-v2",
+        "action": "What is the isolated resource effect of Borrowed dirty ancillae under a matched one-change ablation?",
+        "reason": "Historical or bundled observation cannot identify the component.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-borrowed-dirty-carry-c69b6c1-v2"
+        ]
+      },
+      {
+        "id": "disc:isolate:experiment:ecdsafail-dialog-gcd-special-clean-conditional-replay-8e62-v1",
+        "action": "What is the isolated resource effect of Conditionally clean ancillae under a matched one-change ablation?",
+        "reason": "Historical or bundled observation cannot identify the component.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-dialog-gcd-special-clean-conditional-replay-8e62-v1"
+        ]
+      },
+      {
+        "id": "disc:isolate:experiment:ecdsafail-pingpong-fused-inverse-522d-v3",
+        "action": "What is the isolated resource effect of Fused inverse replay under a matched one-change ablation?",
+        "reason": "Historical or bundled observation cannot identify the component.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-fused-inverse-522d-v3"
+        ]
+      }
+    ],
+    "avoid": [
+      {
+        "id": "hazard:seed-grinding",
+        "action": "Do not treat nonce / seed grinding as a circuit mechanism.",
+        "reason": "Exclude nonce, reroll, and tail grinding from mechanism briefs. Factor them out of causal comparisons.",
+        "sourceRefs": [
+          "idea:candidate:seed-grinding:7647dab7dc"
+        ]
+      },
+      {
+        "id": "hazard:bundled-diffs",
+        "action": "Do not treat bundled multi-idea submissions as a circuit mechanism.",
+        "reason": "Use one-change ablations or factorials for mechanism claims. Keep mixed submissions as search history only.",
+        "sourceRefs": [
+          "role:decomposition.submissionRoutes"
+        ]
+      },
+      {
+        "id": "avoid:candidate:resource-estimation:d951023c40",
+        "action": "Do not retry Resource estimation without a representation or scorer change.",
+        "reason": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "sourceRefs": [
+          "idea:candidate:resource-estimation:d951023c40",
+          "dossier:candidate:resource-estimation:d951023c40"
+        ]
+      },
+      {
+        "id": "avoid:idea:resource:phase-aware-accounting",
+        "action": "Do not retry Phase-aware accounting without a representation or scorer change.",
+        "reason": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "sourceRefs": [
+          "idea:idea:resource:phase-aware-accounting",
+          "dossier:idea:resource:phase-aware-accounting"
+        ]
+      },
+      {
+        "id": "avoid:idea:resource:count-only-construction",
+        "action": "Do not retry Count-only construction without a representation or scorer change.",
+        "reason": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "sourceRefs": [
+          "idea:idea:resource:count-only-construction",
+          "dossier:idea:resource:count-only-construction"
+        ]
+      },
+      {
+        "id": "avoid:karatsuba-ping-pong",
+        "action": "Do not treat Karatsuba or ping-pong inversion as an isolated mechanism.",
+        "reason": "No jointly qualified controlled comparison is attached.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-round84-xtail-karatsuba-8e62-v1",
+          "idea:idea:karatsuba:product-register-squaring"
+        ]
+      }
+    ],
+    "knownLocalMoves": [
+      {
+        "id": "move:candidate:adaptive-phase-correction:a391ebef3b",
+        "action": "Reuse Adaptive phase correction on a new parent; do not rediscover it.",
+        "reason": "Admitted one-change official delta -66073800 under matched_control_scoped_to_workload_block.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-adaptive-phase-replay-bfd3fa6-v2",
+          "comparison:comparison:ecdsafail-adaptive-phase-replay-bfd3fa6-v2",
+          "idea:candidate:adaptive-phase-correction:a391ebef3b"
+        ]
+      },
+      {
+        "id": "move:candidate:quantum-classical-comparator:d9ffd5fcec",
+        "action": "Reuse Quantum–classical comparator on a new parent; do not rediscover it.",
+        "reason": "Admitted one-change official delta -17007168 under matched_control_scoped_to_workload_block.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-comparator-width-00e3a20-v2",
+          "comparison:comparison:ecdsafail-comparator-width-00e3a20-v2",
+          "idea:candidate:quantum-classical-comparator:d9ffd5fcec"
+        ]
+      },
+      {
+        "id": "move:candidate:solinas-reduction:5a45b2514d",
+        "action": "Reuse Solinas reduction on a new parent; do not rediscover it.",
+        "reason": "Admitted one-change official delta -7288088; Toffoli rose by 192 while the qubit–Toffoli product still improved.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-solinas-fold-carry-bc9728a-v2",
+          "comparison:comparison:ecdsafail-solinas-fold-carry-bc9728a-v2",
+          "idea:candidate:solinas-reduction:5a45b2514d"
+        ]
+      },
+      {
+        "id": "move:candidate:measurement-and-feed-forward:069984c0e1",
+        "action": "Reuse Measurement and feed-forward on a new parent; do not rediscover it.",
+        "reason": "Admitted one-change official delta -3015004 under matched_control_scoped_to_workload_block.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-measurement-feed-forward-0e32587-v2",
+          "comparison:comparison:ecdsafail-measurement-feed-forward-0e32587-v2",
+          "idea:candidate:measurement-and-feed-forward:069984c0e1"
+        ]
+      },
+      {
+        "id": "move:candidate:gidney-s-temporary-and:d783751042",
+        "action": "Reuse Temporary logical-AND on a new parent; do not rediscover it.",
+        "reason": "Admitted one-change official delta -2342340 under matched_control_scoped_to_workload_block.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-temporary-and-ce60f0e-v2",
+          "comparison:comparison:ecdsafail-temporary-and-ce60f0e-v2",
+          "idea:candidate:gidney-s-temporary-and:d783751042"
+        ]
+      },
+      {
+        "id": "move:idea:solinas:early-carry-termination",
+        "action": "Reuse Early carry termination on a new parent; do not rediscover it.",
+        "reason": "Admitted one-change official delta -1108320 under matched_control_scoped_to_workload_block.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-early-carry-termination-3ab1c72-v2",
+          "comparison:comparison:ecdsafail-early-carry-termination-3ab1c72-v2",
+          "idea:idea:solinas:early-carry-termination"
+        ]
+      },
+      {
+        "id": "move:candidate:constant-addition:d525aca5a2",
+        "action": "Reuse Constant addition on a new parent; do not rediscover it.",
+        "reason": "Admitted one-change official delta -281632 under matched_control_scoped_to_workload_block.",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-constant-direct-carry-8631b04-v2",
+          "comparison:comparison:ecdsafail-constant-direct-carry-8631b04-v2",
+          "idea:candidate:constant-addition:d525aca5a2"
+        ]
+      }
+    ]
+  },
+  "brief": {
+    "schema": "yukon.atlas-working-knowledge-brief",
+    "schemaVersion": 1,
+    "compiledFrom": {
+      "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+      "manifestSha256": "b9748c5a09e3af48b61b1feefb37e720c4acc40e09a15787a90b576b324b521d",
+      "benchmark": {
+        "id": "1ffb695a-309b-46b6-a728-2f97d8c7be74",
+        "name": "ECDSA Fail",
+        "description": "Optimize verified ECDSA circuit resource cost under the pinned ECDSA Fail scorer.",
+        "direction": "-",
+        "unit": "qubit-Toffoli product",
+        "baselineScore": null
+      }
+    },
+    "contract": {
+      "objective": "Optimize verified ECDSA circuit resource cost under the pinned ECDSA Fail scorer.",
+      "direction": "-",
+      "unit": "qubit-Toffoli product",
+      "mutableSurface": "src/point_add/** only; harness, Cargo.toml, and evaluator remain frozen.",
+      "shots": 9024,
+      "validity": [
+        "classical output matches Weierstrass addition on every retained shot",
+        "ancilla qubits return to |0>",
+        "global phase is clean",
+        "forward then reverse restores the input"
+      ],
+      "degenerateOptimum": "Identity-pair nonce grinding and operation-stream padding can move the Fiat-Shamir sample without a structural circuit change."
+    },
+    "boundAndGap": [
+      {
+        "constraintId": "constraint:affine:arithmetic-windows",
+        "label": "Arithmetic windows",
+        "metric": "Arithmetic-window resource product",
+        "unit": "qubit-Toffoli product",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for arithmetic windows, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for arithmetic windows, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:affine:coordinate-formulae",
+        "label": "Coordinate formulae",
+        "metric": "Coordinate-formula nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for coordinate formulae, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for coordinate formulae, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:affine:modular-addition",
+        "label": "Modular addition",
+        "metric": "Modular-addition nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for modular addition, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for modular addition, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:affine:modular-inversion",
+        "label": "Modular inversion",
+        "metric": "Modular-inversion nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for modular inversion, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for modular inversion, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:affine:modular-multiplication",
+        "label": "Modular multiplication",
+        "metric": "Modular-multiplication nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for modular multiplication, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for modular multiplication, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:affine:modular-reduction",
+        "label": "Modular reduction",
+        "metric": "Modular-reduction nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for modular reduction, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for modular reduction, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:ecdsa:control-synthesis",
+        "label": "Control synthesis",
+        "metric": "Executed nonlinear control gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "Control-gate cost is not measured separately yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "Control-gate cost is not measured separately yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:ecdsa:qubit-count",
+        "label": "Qubit count",
+        "metric": "Maximum referenced qubit ID plus one",
+        "unit": "qubits",
+        "baseline": 2715,
+        "frontier": 1150,
+        "limitKind": "pinned_floor",
+        "limitValue": 512,
+        "limitStatement": "The pinned interface requires two simultaneous 256-qubit target registers. The resulting 512-qubit floor is scoped to this interface, not a universal ECC lower bound.",
+        "progress": 0.7103949160236042,
+        "summary": {
+          "startingPoint": "2,715 qubits",
+          "bestFound": "1,150 qubits",
+          "limitLabel": "Known minimum",
+          "limitValue": "512 qubits",
+          "progress": "71% of the way from the starting point to the known minimum",
+          "basis": "Benchmark minimum",
+          "source": "Pinned benchmark interface, initial resource counts, and acceptance conditions.",
+          "unmeasured": null
+        },
+        "evidenceRefs": [
+          "evidence:constraint:benchmark-definition",
+          "evidence:constraint:frontier-score",
+          "evidence:constraint:official-evaluator"
+        ]
+      },
+      {
+        "constraintId": "constraint:ecdsa:spacetime-product",
+        "label": "Spacetime product",
+        "metric": "Qubit-Toffoli product",
+        "unit": "qubit-Toffoli product",
+        "baseline": 10704574395,
+        "frontier": 1182644586,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "No compatible nontrivial product floor is established; zero is not an informative attainable target.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "10,704,570,000 qubit-Toffoli product",
+          "bestFound": "1,182,645,000 qubit-Toffoli product",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": null
+        },
+        "evidenceRefs": [
+          "evidence:constraint:benchmark-definition",
+          "evidence:constraint:frontier-score",
+          "evidence:constraint:official-evaluator"
+        ]
+      },
+      {
+        "constraintId": "constraint:ecdsa:toffoli-count",
+        "label": "Toffoli count",
+        "metric": "Rounded average executed CCX and CCZ",
+        "unit": "gates per retained shot",
+        "baseline": 3942753,
+        "frontier": 925387,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "No nontrivial global lower bound is established for the complete verified point-addition circuit.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "3,942,753 gates per retained shot",
+          "bestFound": "925,387 gates per retained shot",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": null
+        },
+        "evidenceRefs": [
+          "evidence:constraint:benchmark-definition",
+          "evidence:constraint:frontier-score",
+          "evidence:constraint:official-evaluator"
+        ]
+      },
+      {
+        "constraintId": "constraint:proos:coefficient-storage",
+        "label": "Coefficient storage",
+        "metric": "Coefficient-storage width",
+        "unit": "qubits",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for coefficient storage, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for coefficient storage, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:proos:register-addressing",
+        "label": "Register addressing",
+        "metric": "Register-addressing nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for register addressing, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for register addressing, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:resource:construction-memory",
+        "label": "Construction memory",
+        "metric": "Peak circuit-construction memory",
+        "unit": "bytes",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for construction memory, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for construction memory, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:solinas:carry-propagation",
+        "label": "Carry propagation",
+        "metric": "Carry-propagation nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for carry propagation, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for carry propagation, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:solinas:shift-paths",
+        "label": "Shift paths",
+        "metric": "Shift-path nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for shift paths, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for shift paths, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:uncompute:classical-control",
+        "label": "Classical control",
+        "metric": "Feed-forward nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for classical control, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for classical control, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:uncompute:phase-recovery",
+        "label": "Phase recovery",
+        "metric": "Phase-recovery nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for phase recovery, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for phase recovery, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:uncompute:placement",
+        "label": "Uncompute placement",
+        "metric": "Uncompute resource product",
+        "unit": "qubit-Toffoli product",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for uncompute placement, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for uncompute placement, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      },
+      {
+        "constraintId": "constraint:uncompute:temporary-conjunctions",
+        "label": "Temporary conjunctions",
+        "metric": "Temporary-conjunction nonlinear gates",
+        "unit": "gates per retained shot",
+        "baseline": null,
+        "frontier": null,
+        "limitKind": "unknown",
+        "limitValue": null,
+        "limitStatement": "We have submissions for temporary conjunctions, but no separate measurement for it yet.",
+        "progress": null,
+        "summary": {
+          "startingPoint": "Not recorded",
+          "bestFound": "Not established",
+          "limitLabel": "Minimum",
+          "limitValue": "Not known",
+          "progress": null,
+          "basis": null,
+          "source": null,
+          "unmeasured": {
+            "title": "Not measured yet",
+            "detail": "We have submissions for temporary conjunctions, but no separate measurement for it yet."
+          }
+        },
+        "evidenceRefs": []
+      }
+    ],
+    "currentFrontier": [
+      {
+        "submissionId": "ed30a235-8ee6-4121-8ed8-3de4889af5e7",
+        "commitSha": "787eaa82f257aaee6c16bc08575ddfcfbbedd666",
+        "score": 1182644586,
+        "directionalGain": 3257622,
+        "interpretation": "mixed",
+        "ideaIds": [
+          "candidate:quantum-classical-comparator:d9ffd5fcec",
+          "candidate:seed-grinding:7647dab7dc",
+          "candidate:solinas-reduction:5a45b2514d"
+        ],
+        "changeTitles": [
+          "Replay comparison width",
+          "Replay fold window",
+          "Clean stream nonce"
+        ],
+        "sourceRefs": [
+          "submission:ed30a235-8ee6-4121-8ed8-3de4889af5e7",
+          "commit:787eaa82f257aaee6c16bc08575ddfcfbbedd666"
+        ]
+      },
+      {
+        "submissionId": "54ff37e6-cd69-43e4-ad67-9e7d0fc11ada",
+        "commitSha": "d6310171d81955af3ff0e196e79a9bd9df95ee0f",
+        "score": 1185902208,
+        "directionalGain": 3569454,
+        "interpretation": "mixed",
+        "ideaIds": [
+          "candidate:quantum-classical-comparator:d9ffd5fcec",
+          "candidate:seed-grinding:7647dab7dc"
+        ],
+        "changeTitles": [
+          "Replay comparison width",
+          "Clean stream nonce"
+        ],
+        "sourceRefs": [
+          "submission:54ff37e6-cd69-43e4-ad67-9e7d0fc11ada",
+          "commit:d6310171d81955af3ff0e196e79a9bd9df95ee0f"
+        ]
+      },
+      {
+        "submissionId": "9dcbdb80-de66-48a3-b337-30980f90701d",
+        "commitSha": "8d7051bdd1791c3a4db206844b420488bc1843ea",
+        "score": 1189471662,
+        "directionalGain": 9820818,
+        "interpretation": "mixed",
+        "ideaIds": [
+          "candidate:affine-weierstrass-point-additio:2b6f65115c",
+          "candidate:quantum-classical-comparator:d9ffd5fcec",
+          "candidate:seed-grinding:7647dab7dc",
+          "candidate:solinas-reduction:5a45b2514d"
+        ],
+        "changeTitles": [
+          "Division round depth",
+          "Replay comparison width",
+          "Replay fold window",
+          "Clean stream nonce"
+        ],
+        "sourceRefs": [
+          "submission:9dcbdb80-de66-48a3-b337-30980f90701d",
+          "commit:8d7051bdd1791c3a4db206844b420488bc1843ea"
+        ]
+      },
+      {
+        "submissionId": "f4be7e15-5532-4601-8400-00201fa5b1ce",
+        "commitSha": "0440b621cd1862adb821775267316da19db8414d",
+        "score": 1199292480,
+        "directionalGain": 358533,
+        "interpretation": "mixed",
+        "ideaIds": [
+          "candidate:proos-zalka-register-sharing:324524df3d",
+          "candidate:quantum-classical-comparator:d9ffd5fcec",
+          "candidate:seed-grinding:7647dab7dc",
+          "candidate:solinas-reduction:5a45b2514d",
+          "idea:windowed:exact-prefix-segmentation"
+        ],
+        "changeTitles": [
+          "Exact-prefix segmentation",
+          "Replay fold window",
+          "Replay comparison width",
+          "Ping-pong lifetime sharing",
+          "Clean stream nonce"
+        ],
+        "sourceRefs": [
+          "submission:f4be7e15-5532-4601-8400-00201fa5b1ce",
+          "commit:0440b621cd1862adb821775267316da19db8414d"
+        ]
+      },
+      {
+        "submissionId": "903ced66-ed59-43ac-83a8-c557c3bc12cc",
+        "commitSha": "a8ab75ac10c23eb7cd68997f481e3412204953d1",
+        "score": 1199651013,
+        "directionalGain": 53129,
+        "interpretation": "mixed",
+        "ideaIds": [
+          "candidate:proos-zalka-register-sharing:324524df3d",
+          "candidate:quantum-classical-comparator:d9ffd5fcec",
+          "candidate:seed-grinding:7647dab7dc",
+          "candidate:solinas-reduction:5a45b2514d",
+          "idea:windowed:exact-prefix-segmentation"
+        ],
+        "changeTitles": [
+          "Exact-prefix segmentation",
+          "Replay fold window",
+          "Replay comparison width",
+          "Ping-pong lifetime sharing",
+          "Clean stream nonce"
+        ],
+        "sourceRefs": [
+          "submission:903ced66-ed59-43ac-83a8-c557c3bc12cc",
+          "commit:a8ab75ac10c23eb7cd68997f481e3412204953d1"
+        ]
+      }
+    ],
+    "supportedMechanisms": [
+      {
+        "ideaId": "candidate:adaptive-phase-correction:a391ebef3b",
+        "title": "Adaptive phase correction",
+        "family": "algorithm",
+        "experimentId": "experiment:ecdsafail-adaptive-phase-replay-bfd3fa6-v2",
+        "comparisonId": "comparison:ecdsafail-adaptive-phase-replay-bfd3fa6-v2",
+        "evidenceLevel": "one_change_ablation",
+        "officialDelta": -66073800,
+        "controlScore": 1891349200,
+        "treatmentScore": 1825275400,
+        "toffoliDelta": -50825.67299999995,
+        "qubitDelta": 0,
+        "scope": "matched_control_scoped_to_workload_block",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-adaptive-phase-replay-bfd3fa6-v2",
+          "comparison:comparison:ecdsafail-adaptive-phase-replay-bfd3fa6-v2",
+          "idea:candidate:adaptive-phase-correction:a391ebef3b"
+        ]
+      },
+      {
+        "ideaId": "candidate:quantum-classical-comparator:d9ffd5fcec",
+        "title": "Quantum–classical comparator",
+        "family": "algorithm",
+        "experimentId": "experiment:ecdsafail-comparator-width-00e3a20-v2",
+        "comparisonId": "comparison:ecdsafail-comparator-width-00e3a20-v2",
+        "evidenceLevel": "one_change_ablation",
+        "officialDelta": -17007168,
+        "controlScore": 4148020428,
+        "treatmentScore": 4131013260,
+        "toffoliDelta": -10016,
+        "qubitDelta": 0,
+        "scope": "matched_control_scoped_to_workload_block",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-comparator-width-00e3a20-v2",
+          "comparison:comparison:ecdsafail-comparator-width-00e3a20-v2",
+          "idea:candidate:quantum-classical-comparator:d9ffd5fcec"
+        ]
+      },
+      {
+        "ideaId": "candidate:solinas-reduction:5a45b2514d",
+        "title": "Solinas reduction",
+        "family": "specialization",
+        "experimentId": "experiment:ecdsafail-solinas-fold-carry-bc9728a-v2",
+        "comparisonId": "comparison:ecdsafail-solinas-fold-carry-bc9728a-v2",
+        "evidenceLevel": "one_change_ablation",
+        "officialDelta": -7288088,
+        "controlScore": 10579872520,
+        "treatmentScore": 10572584432,
+        "toffoliDelta": 192,
+        "qubitDelta": -2,
+        "scope": "matched_control_scoped_to_workload_block",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-solinas-fold-carry-bc9728a-v2",
+          "comparison:comparison:ecdsafail-solinas-fold-carry-bc9728a-v2",
+          "idea:candidate:solinas-reduction:5a45b2514d"
+        ]
+      },
+      {
+        "ideaId": "candidate:measurement-and-feed-forward:069984c0e1",
+        "title": "Measurement and feed-forward",
+        "family": "algorithm",
+        "experimentId": "experiment:ecdsafail-measurement-feed-forward-0e32587-v2",
+        "comparisonId": "comparison:ecdsafail-measurement-feed-forward-0e32587-v2",
+        "evidenceLevel": "one_change_ablation",
+        "officialDelta": -3015004,
+        "controlScore": 6964659240,
+        "treatmentScore": 6961644236,
+        "toffoliDelta": 0,
+        "qubitDelta": -1,
+        "scope": "matched_control_scoped_to_workload_block",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-measurement-feed-forward-0e32587-v2",
+          "comparison:comparison:ecdsafail-measurement-feed-forward-0e32587-v2",
+          "idea:candidate:measurement-and-feed-forward:069984c0e1"
+        ]
+      },
+      {
+        "ideaId": "candidate:gidney-s-temporary-and:d783751042",
+        "title": "Temporary logical-AND",
+        "family": "algorithm",
+        "experimentId": "experiment:ecdsafail-temporary-and-ce60f0e-v2",
+        "comparisonId": "comparison:ecdsafail-temporary-and-ce60f0e-v2",
+        "evidenceLevel": "one_change_ablation",
+        "officialDelta": -2342340,
+        "controlScore": 7756453320,
+        "treatmentScore": 7754110980,
+        "toffoliDelta": -1014,
+        "qubitDelta": 0,
+        "scope": "matched_control_scoped_to_workload_block",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-temporary-and-ce60f0e-v2",
+          "comparison:comparison:ecdsafail-temporary-and-ce60f0e-v2",
+          "idea:candidate:gidney-s-temporary-and:d783751042"
+        ]
+      },
+      {
+        "ideaId": "idea:solinas:early-carry-termination",
+        "title": "Early carry termination",
+        "family": "specialization",
+        "experimentId": "experiment:ecdsafail-early-carry-termination-3ab1c72-v2",
+        "comparisonId": "comparison:ecdsafail-early-carry-termination-3ab1c72-v2",
+        "evidenceLevel": "one_change_ablation",
+        "officialDelta": -1108320,
+        "controlScore": 5549529106,
+        "treatmentScore": 5548420786,
+        "toffoliDelta": -480,
+        "qubitDelta": 0,
+        "scope": "matched_control_scoped_to_workload_block",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-early-carry-termination-3ab1c72-v2",
+          "comparison:comparison:ecdsafail-early-carry-termination-3ab1c72-v2",
+          "idea:idea:solinas:early-carry-termination"
+        ]
+      },
+      {
+        "ideaId": "candidate:constant-addition:d525aca5a2",
+        "title": "Constant addition",
+        "family": "specialization",
+        "experimentId": "experiment:ecdsafail-constant-direct-carry-8631b04-v2",
+        "comparisonId": "comparison:ecdsafail-constant-direct-carry-8631b04-v2",
+        "evidenceLevel": "one_change_ablation",
+        "officialDelta": -281632,
+        "controlScore": 10572584432,
+        "treatmentScore": 10572302800,
+        "toffoliDelta": -104,
+        "qubitDelta": 0,
+        "scope": "matched_control_scoped_to_workload_block",
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-constant-direct-carry-8631b04-v2",
+          "comparison:comparison:ecdsafail-constant-direct-carry-8631b04-v2",
+          "idea:candidate:constant-addition:d525aca5a2"
+        ]
+      }
+    ],
+    "unverifiedObservations": [
+      {
+        "ideaId": "candidate:borrowed-dirty-ancillae:286a6cff55",
+        "title": "Borrowed dirty ancillae",
+        "family": "algorithm",
+        "evidenceLevel": "historical_observation",
+        "whyUnverified": "No jointly qualified controlled comparison is attached.",
+        "coverage": {
+          "submissions": 71,
+          "promoted": 18,
+          "rejected": 27,
+          "failed": 24,
+          "bundledSubmissions": 67
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-borrowed-dirty-carry-c69b6c1-v2",
+          "idea:candidate:borrowed-dirty-ancillae:286a6cff55"
+        ]
+      },
+      {
+        "ideaId": "candidate:conditionally-clean-ancillae:148832b2d8",
+        "title": "Conditionally clean ancillae",
+        "family": "algorithm",
+        "evidenceLevel": "historical_observation",
+        "whyUnverified": "No jointly qualified controlled comparison is attached.",
+        "coverage": {
+          "submissions": 77,
+          "promoted": 36,
+          "rejected": 28,
+          "failed": 13,
+          "bundledSubmissions": 74
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-dialog-gcd-special-clean-conditional-replay-8e62-v1",
+          "idea:candidate:conditionally-clean-ancillae:148832b2d8"
+        ]
+      },
+      {
+        "ideaId": "idea:karatsuba:product-register-squaring",
+        "title": "Product-register squaring",
+        "family": "representation",
+        "evidenceLevel": "historical_observation",
+        "whyUnverified": "No jointly qualified controlled comparison is attached.",
+        "coverage": {
+          "submissions": 1,
+          "promoted": 1,
+          "rejected": 0,
+          "failed": 0,
+          "bundledSubmissions": 1
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-round84-xtail-karatsuba-8e62-v1",
+          "idea:idea:karatsuba:product-register-squaring"
+        ]
+      },
+      {
+        "ideaId": "idea:pingpong:fused-inverse-replay",
+        "title": "Fused inverse replay",
+        "family": "tuning",
+        "evidenceLevel": "historical_observation",
+        "whyUnverified": "No jointly qualified controlled comparison is attached.",
+        "coverage": {
+          "submissions": 1,
+          "promoted": 1,
+          "rejected": 0,
+          "failed": 0,
+          "bundledSubmissions": 1
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-fused-inverse-522d-v3",
+          "idea:idea:pingpong:fused-inverse-replay"
+        ]
+      },
+      {
+        "ideaId": "idea:windowed:exact-prefix-segmentation",
+        "title": "Exact-prefix segmentation",
+        "family": "schedule",
+        "evidenceLevel": "matched_control",
+        "whyUnverified": "No jointly qualified controlled comparison is attached.",
+        "coverage": {
+          "submissions": 11,
+          "promoted": 11,
+          "rejected": 0,
+          "failed": 0,
+          "bundledSubmissions": 11
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-historical-e928-bundle-factorial-v1",
+          "idea:idea:windowed:exact-prefix-segmentation"
+        ]
+      },
+      {
+        "ideaId": "idea:windowed:exact-prefix-segmentation",
+        "title": "Exact-prefix segmentation",
+        "family": "schedule",
+        "evidenceLevel": "historical_observation",
+        "whyUnverified": "No jointly qualified controlled comparison is attached.",
+        "coverage": {
+          "submissions": 11,
+          "promoted": 11,
+          "rejected": 0,
+          "failed": 0,
+          "bundledSubmissions": 11
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-replay-exact-prefix-layout-522d-v3",
+          "idea:idea:windowed:exact-prefix-segmentation"
+        ]
+      },
+      {
+        "ideaId": "idea:windowed:exact-prefix-segmentation",
+        "title": "Exact-prefix segmentation",
+        "family": "schedule",
+        "evidenceLevel": "historical_observation",
+        "whyUnverified": "No jointly qualified controlled comparison is attached.",
+        "coverage": {
+          "submissions": 11,
+          "promoted": 11,
+          "rejected": 0,
+          "failed": 0,
+          "bundledSubmissions": 11
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-walk-exact-boundary-split-522d-v3",
+          "idea:idea:windowed:exact-prefix-segmentation"
+        ]
+      },
+      {
+        "ideaId": "idea:windowed:exact-prefix-segmentation",
+        "title": "Exact-prefix segmentation",
+        "family": "schedule",
+        "evidenceLevel": "historical_observation",
+        "whyUnverified": "No jointly qualified controlled comparison is attached.",
+        "coverage": {
+          "submissions": 11,
+          "promoted": 11,
+          "rejected": 0,
+          "failed": 0,
+          "bundledSubmissions": 11
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-square-row-max-seg-8e62-v1",
+          "idea:idea:windowed:exact-prefix-segmentation"
+        ]
+      }
+    ],
+    "liveAlternatives": [
+      {
+        "ideaId": "candidate:conditionally-clean-ancillae:148832b2d8",
+        "title": "Conditionally clean ancillae",
+        "family": "algorithm",
+        "evidenceLevel": "one_change_ablation",
+        "whyUnverified": "control or treatment did not produce a valid numeric outcome",
+        "coverage": {
+          "submissions": 77,
+          "promoted": 36,
+          "rejected": 28,
+          "failed": 13,
+          "bundledSubmissions": 74
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-terminal-passenger-loan-522d-v3",
+          "idea:candidate:conditionally-clean-ancillae:148832b2d8"
+        ]
+      },
+      {
+        "ideaId": "idea:pingpong:fused-walk-replay-schedule",
+        "title": "Fused walk-replay schedule",
+        "family": "tuning",
+        "evidenceLevel": "one_change_ablation",
+        "whyUnverified": "control or treatment did not produce a valid numeric outcome",
+        "coverage": {
+          "submissions": 1,
+          "promoted": 1,
+          "rejected": 0,
+          "failed": 0,
+          "bundledSubmissions": 1
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-interleaved-replay-schedule-522d-v3",
+          "idea:idea:pingpong:fused-walk-replay-schedule"
+        ]
+      },
+      {
+        "ideaId": "idea:pingpong:sparse-endpoint-recovery",
+        "title": "Sparse endpoint recovery",
+        "family": "tuning",
+        "evidenceLevel": "one_change_ablation",
+        "whyUnverified": "control or treatment did not produce a valid numeric outcome",
+        "coverage": {
+          "submissions": 1,
+          "promoted": 1,
+          "rejected": 0,
+          "failed": 0,
+          "bundledSubmissions": 1
+        },
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-sparse-endpoint-recovery-522d-v3",
+          "idea:idea:pingpong:sparse-endpoint-recovery"
+        ]
+      }
+    ],
+    "negativeKnowledge": [
+      {
+        "ideaId": "candidate:resource-estimation:d951023c40",
+        "title": "Resource estimation",
+        "family": "measurement",
+        "submissions": 35,
+        "promoted": 0,
+        "rejected": 20,
+        "failed": 15,
+        "why": "These records change accounting or tooling, not the scored circuit.",
+        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "sourceRefs": [
+          "idea:candidate:resource-estimation:d951023c40",
+          "dossier:candidate:resource-estimation:d951023c40"
+        ]
+      },
+      {
+        "ideaId": "candidate:extended-euclidean-algorithm:f11501d92a",
+        "title": "Extended Euclidean algorithm",
+        "family": "algorithm",
+        "submissions": 10,
+        "promoted": 0,
+        "rejected": 6,
+        "failed": 4,
+        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
+        "reopenCondition": "Reopen if a recursive half-GCD or other non-stream EEA is implemented; recorded neighbors are fixed forward/reverse streams.",
+        "sourceRefs": [
+          "idea:candidate:extended-euclidean-algorithm:f11501d92a",
+          "dossier:candidate:extended-euclidean-algorithm:f11501d92a"
+        ]
+      },
+      {
+        "ideaId": "candidate:incrementer:66950ae201",
+        "title": "Incrementer",
+        "family": "specialization",
+        "submissions": 10,
+        "promoted": 0,
+        "rejected": 3,
+        "failed": 7,
+        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
+        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "sourceRefs": [
+          "idea:candidate:incrementer:66950ae201",
+          "dossier:candidate:incrementer:66950ae201"
+        ]
+      },
+      {
+        "ideaId": "candidate:unary-iteration:fc35cf45f0",
+        "title": "Unary iteration",
+        "family": "schedule",
+        "submissions": 7,
+        "promoted": 0,
+        "rejected": 5,
+        "failed": 2,
+        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
+        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "sourceRefs": [
+          "idea:candidate:unary-iteration:fc35cf45f0",
+          "dossier:candidate:unary-iteration:fc35cf45f0"
+        ]
+      },
+      {
+        "ideaId": "candidate:ancilla-restoration:fbec918cac",
+        "title": "Ancilla restoration",
+        "family": "algorithm",
+        "submissions": 5,
+        "promoted": 0,
+        "rejected": 4,
+        "failed": 1,
+        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
+        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "sourceRefs": [
+          "idea:candidate:ancilla-restoration:fbec918cac",
+          "dossier:candidate:ancilla-restoration:fbec918cac"
+        ]
+      },
+      {
+        "ideaId": "candidate:laddered-toggle-detection:f9621f9e49",
+        "title": "Laddered toggle detection",
+        "family": "algorithm",
+        "submissions": 3,
+        "promoted": 0,
+        "rejected": 2,
+        "failed": 1,
+        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
+        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "sourceRefs": [
+          "idea:candidate:laddered-toggle-detection:f9621f9e49",
+          "dossier:candidate:laddered-toggle-detection:f9621f9e49"
+        ]
+      },
+      {
+        "ideaId": "idea:mul:in-place-multiply-accumulate",
+        "title": "In-place multiply-accumulate",
+        "family": "tuning",
+        "submissions": 3,
+        "promoted": 0,
+        "rejected": 2,
+        "failed": 1,
+        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
+        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "sourceRefs": [
+          "idea:idea:mul:in-place-multiply-accumulate",
+          "dossier:idea:mul:in-place-multiply-accumulate"
+        ]
+      },
+      {
+        "ideaId": "idea:resource:phase-aware-accounting",
+        "title": "Phase-aware accounting",
+        "family": "measurement",
+        "submissions": 3,
+        "promoted": 0,
+        "rejected": 2,
+        "failed": 1,
+        "why": "These records change accounting or tooling, not the scored circuit.",
+        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "sourceRefs": [
+          "idea:idea:resource:phase-aware-accounting",
+          "dossier:idea:resource:phase-aware-accounting"
+        ]
+      },
+      {
+        "ideaId": "idea:temporary-and:shared-conjunction-fanout",
+        "title": "Shared conjunction fanout",
+        "family": "algorithm",
+        "submissions": 3,
+        "promoted": 0,
+        "rejected": 1,
+        "failed": 2,
+        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
+        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "sourceRefs": [
+          "idea:idea:temporary-and:shared-conjunction-fanout",
+          "dossier:idea:temporary-and:shared-conjunction-fanout"
+        ]
+      },
+      {
+        "ideaId": "idea:resource:count-only-construction",
+        "title": "Count-only construction",
+        "family": "measurement",
+        "submissions": 2,
+        "promoted": 0,
+        "rejected": 2,
+        "failed": 0,
+        "why": "These records change accounting or tooling, not the scored circuit.",
+        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "sourceRefs": [
+          "idea:idea:resource:count-only-construction",
+          "dossier:idea:resource:count-only-construction"
+        ]
+      },
+      {
+        "ideaId": "idea:resource:lifetime-tracing",
+        "title": "Lifetime tracing",
+        "family": "measurement",
+        "submissions": 2,
+        "promoted": 0,
+        "rejected": 0,
+        "failed": 2,
+        "why": "These records change accounting or tooling, not the scored circuit.",
+        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "sourceRefs": [
+          "idea:idea:resource:lifetime-tracing",
+          "dossier:idea:resource:lifetime-tracing"
+        ]
+      },
+      {
+        "ideaId": "idea:simulation:static-support-checks",
+        "title": "Static support checks",
+        "family": "measurement",
+        "submissions": 2,
+        "promoted": 0,
+        "rejected": 2,
+        "failed": 0,
+        "why": "These records change accounting or tooling, not the scored circuit.",
+        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "sourceRefs": [
+          "idea:idea:simulation:static-support-checks",
+          "dossier:idea:simulation:static-support-checks"
+        ]
+      },
+      {
+        "ideaId": "candidate:fermat-inversion:b1eff02f73",
+        "title": "Fermat inversion",
+        "family": "representation",
+        "submissions": 1,
+        "promoted": 0,
+        "rejected": 1,
+        "failed": 0,
+        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
+        "reopenCondition": "Reopen only if the inversion representation itself changes; a failed Fermat attempt does not bound dialog/Kaliski inversion.",
+        "sourceRefs": [
+          "idea:candidate:fermat-inversion:b1eff02f73",
+          "dossier:candidate:fermat-inversion:b1eff02f73"
+        ]
+      },
+      {
+        "ideaId": "idea:simulation:geometry-guards",
+        "title": "Geometry guards",
+        "family": "measurement",
+        "submissions": 1,
+        "promoted": 0,
+        "rejected": 1,
+        "failed": 0,
+        "why": "These records change accounting or tooling, not the scored circuit.",
+        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "sourceRefs": [
+          "idea:idea:simulation:geometry-guards",
+          "dossier:idea:simulation:geometry-guards"
+        ]
+      }
+    ],
+    "evaluatorHazards": [
+      {
+        "hazardId": "hazard:seed-grinding",
+        "title": "Nonce / seed grinding",
+        "count": 422,
+        "why": "345 of 422 seed-grinding-tagged submissions were promoted. The evaluator hashes the operation stream, so identity tails select a new workload rather than proving a circuit identity.",
+        "recommendedAction": "Exclude nonce, reroll, and tail grinding from mechanism briefs. Factor them out of causal comparisons.",
+        "sourceRefs": [
+          "idea:candidate:seed-grinding:7647dab7dc"
+        ]
+      },
+      {
+        "hazardId": "hazard:bundled-diffs",
+        "title": "Bundled multi-idea submissions",
+        "count": 579,
+        "why": "579 of 949 submissions are mixed-idea routes. Promotion counts on those ideas are not component effects.",
+        "recommendedAction": "Use one-change ablations or factorials for mechanism claims. Keep mixed submissions as search history only.",
+        "sourceRefs": [
+          "role:decomposition.submissionRoutes"
+        ]
+      }
+    ],
+    "nextDiscriminators": [
+      {
+        "discriminatorId": "disc:barrett-vs-solinas",
+        "question": "Does Barrett reciprocal reduction beat the pinned Solinas fold on the verified scorer?",
+        "predictedDistinction": "A genuine Barrett construction would not be a pseudo-Mersenne fold, even if nearby Solinas receipts exist.",
+        "status": "untried_in_atlas",
+        "relatedIdeaIds": [
+          "candidate:solinas-reduction:5a45b2514d"
+        ],
+        "sourceRefs": [
+          "idea:candidate:solinas-reduction:5a45b2514d"
+        ]
+      },
+      {
+        "discriminatorId": "disc:fourier-comparator",
+        "question": "Does a Fourier-basis sign test beat the ripple-borrow quantum-classical comparator?",
+        "predictedDistinction": "Phase-rotation comparison is not a carry-chain width or truncation variant.",
+        "status": "untried_in_atlas",
+        "relatedIdeaIds": [
+          "candidate:quantum-classical-comparator:d9ffd5fcec"
+        ],
+        "sourceRefs": [
+          "idea:candidate:quantum-classical-comparator:d9ffd5fcec"
+        ]
+      },
+      {
+        "discriminatorId": "disc:half-gcd",
+        "question": "Does recursive half-GCD matrix inversion beat the fixed-stream Kaliski / dialog replay?",
+        "predictedDistinction": "Divide-and-conquer Bézout updates are a representation change relative to a recorded forward/reverse stream.",
+        "status": "untried_in_atlas",
+        "relatedIdeaIds": [
+          "candidate:extended-euclidean-algorithm:f11501d92a",
+          "candidate:kaliski-inversion:e79f263674"
+        ],
+        "sourceRefs": [
+          "idea:candidate:extended-euclidean-algorithm:f11501d92a",
+          "idea:candidate:kaliski-inversion:e79f263674"
+        ]
+      },
+      {
+        "discriminatorId": "disc:isolate:experiment:ecdsafail-borrowed-dirty-carry-c69b6c1-v2",
+        "question": "What is the isolated resource effect of Borrowed dirty ancillae under a matched one-change ablation?",
+        "predictedDistinction": "Historical or bundled observation cannot identify the component.",
+        "status": "historical_only",
+        "relatedIdeaIds": [
+          "candidate:borrowed-dirty-ancillae:286a6cff55"
+        ],
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-borrowed-dirty-carry-c69b6c1-v2"
+        ]
+      },
+      {
+        "discriminatorId": "disc:isolate:experiment:ecdsafail-dialog-gcd-special-clean-conditional-replay-8e62-v1",
+        "question": "What is the isolated resource effect of Conditionally clean ancillae under a matched one-change ablation?",
+        "predictedDistinction": "Historical or bundled observation cannot identify the component.",
+        "status": "historical_only",
+        "relatedIdeaIds": [
+          "candidate:conditionally-clean-ancillae:148832b2d8"
+        ],
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-dialog-gcd-special-clean-conditional-replay-8e62-v1"
+        ]
+      },
+      {
+        "discriminatorId": "disc:isolate:experiment:ecdsafail-pingpong-fused-inverse-522d-v3",
+        "question": "What is the isolated resource effect of Fused inverse replay under a matched one-change ablation?",
+        "predictedDistinction": "Historical or bundled observation cannot identify the component.",
+        "status": "historical_only",
+        "relatedIdeaIds": [
+          "idea:pingpong:fused-inverse-replay"
+        ],
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-fused-inverse-522d-v3"
+        ]
+      },
+      {
+        "discriminatorId": "disc:isolate:experiment:ecdsafail-pingpong-replay-exact-prefix-layout-522d-v3",
+        "question": "What is the isolated resource effect of Exact-prefix segmentation under a matched one-change ablation?",
+        "predictedDistinction": "Historical or bundled observation cannot identify the component.",
+        "status": "historical_only",
+        "relatedIdeaIds": [
+          "idea:windowed:exact-prefix-segmentation"
+        ],
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-replay-exact-prefix-layout-522d-v3"
+        ]
+      },
+      {
+        "discriminatorId": "disc:isolate:experiment:ecdsafail-round84-xtail-karatsuba-8e62-v1",
+        "question": "What is the isolated resource effect of Product-register squaring under a matched one-change ablation?",
+        "predictedDistinction": "Historical or bundled observation cannot identify the component.",
+        "status": "historical_only",
+        "relatedIdeaIds": [
+          "idea:karatsuba:product-register-squaring"
+        ],
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-round84-xtail-karatsuba-8e62-v1"
+        ]
+      },
+      {
+        "discriminatorId": "disc:qrom-vs-location",
+        "question": "Does a bucket-brigade QROM constant load beat location-controlled arithmetic synthesis?",
+        "predictedDistinction": "Table lookup plus uncompute is a different mechanism from position-guarded local arithmetic.",
+        "status": "untried_in_atlas",
+        "relatedIdeaIds": [
+          "candidate:location-controlled-arithmetic:0efa7e6ff7"
+        ],
+        "sourceRefs": [
+          "idea:candidate:location-controlled-arithmetic:0efa7e6ff7"
+        ]
+      },
+      {
+        "discriminatorId": "disc:requalify:experiment:ecdsafail-pingpong-interleaved-replay-schedule-522d-v3",
+        "question": "Can Fused walk-replay schedule be re-run with a jointly valid matched control?",
+        "predictedDistinction": "The treatment arm produced a numeric score while the control did not, so no official effect is admitted.",
+        "status": "qualification_failed",
+        "relatedIdeaIds": [
+          "idea:pingpong:fused-walk-replay-schedule"
+        ],
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-interleaved-replay-schedule-522d-v3",
+          "comparison:comparison:ecdsafail-pingpong-interleaved-replay-schedule-522d-v3"
+        ]
+      },
+      {
+        "discriminatorId": "disc:requalify:experiment:ecdsafail-pingpong-sparse-endpoint-recovery-522d-v3",
+        "question": "Can Sparse endpoint recovery be re-run with a jointly valid matched control?",
+        "predictedDistinction": "The treatment arm produced a numeric score while the control did not, so no official effect is admitted.",
+        "status": "qualification_failed",
+        "relatedIdeaIds": [
+          "idea:pingpong:sparse-endpoint-recovery"
+        ],
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-sparse-endpoint-recovery-522d-v3",
+          "comparison:comparison:ecdsafail-pingpong-sparse-endpoint-recovery-522d-v3"
+        ]
+      },
+      {
+        "discriminatorId": "disc:requalify:experiment:ecdsafail-pingpong-terminal-passenger-loan-522d-v3",
+        "question": "Can Conditionally clean ancillae be re-run with a jointly valid matched control?",
+        "predictedDistinction": "The treatment arm produced a numeric score while the control did not, so no official effect is admitted.",
+        "status": "qualification_failed",
+        "relatedIdeaIds": [
+          "candidate:conditionally-clean-ancillae:148832b2d8"
+        ],
+        "sourceRefs": [
+          "experiment:experiment:ecdsafail-pingpong-terminal-passenger-loan-522d-v3",
+          "comparison:comparison:ecdsafail-pingpong-terminal-passenger-loan-522d-v3"
+        ]
+      }
+    ],
+    "literatureOverlay": [
+      {
+        "claimId": "lit:representation-plus-evaluator",
+        "claim": "The strongest publicly auditable discovery systems search an executable representation against a hard external evaluator, not an undifferentiated knowledge graph.",
+        "predicate": "source_reported",
+        "status": "confirmed",
+        "applicability": "knowledge-representation",
+        "sources": [
+          {
+            "citation": "Romera-Paredes et al., FunSearch, Nature 2024",
+            "url": "https://doi.org/10.1038/s41586-023-06924-6"
+          },
+          {
+            "citation": "Novikov et al., AlphaEvolve, arXiv:2506.13131",
+            "url": "https://arxiv.org/abs/2506.13131"
+          },
+          {
+            "citation": "Schkufza et al., STOKE, arXiv:1211.0557",
+            "url": "https://arxiv.org/abs/1211.0557"
+          }
+        ],
+        "implication": "Compile disposable decision briefs from immutable Atlas records. Do not add graph infrastructure until an equal-content representation factorial earns an effect.",
+        "boundary": "This describes where evidence is easiest to audit, not a controlled proof that executable domains produce the most important innovations."
+      },
+      {
+        "claimId": "lit:knowledge-presentation-not-strategy",
+        "claim": "Knowledge presentation and advice are not a sufficient mechanism for strategy revision. In PostTrainBench, only 2.08% of adjacent recognized experiment pairs changed objective family, data-source type, or stage structure.",
+        "predicate": "source_reported",
+        "status": "likely",
+        "applicability": "knowledge-representation",
+        "sources": [
+          {
+            "citation": "What Is Missing from AI Post-Training AI, arXiv:2608.19072",
+            "url": "https://arxiv.org/abs/2608.19072"
+          }
+        ],
+        "implication": "A compiled ECDSA brief can prevent rediscovery and stale claims. It should not be assumed to reallocate search.",
+        "boundary": "Observational corpus; 44 trajectories did probe alternatives. Not a causal result on Yukon agents."
+      },
+      {
+        "claimId": "lit:memory-can-reduce-diversity",
+        "claim": "Cross-session memory can accelerate rediscovery while high memory injection reduces strategy diversity; a cold condition can still find the best point.",
+        "predicate": "source_reported",
+        "status": "likely",
+        "applicability": "knowledge-representation",
+        "sources": [
+          {
+            "citation": "Experience Graphs/Trellis, arXiv:2606.29823",
+            "url": "https://arxiv.org/abs/2606.29823"
+          }
+        ],
+        "implication": "Hard-filter evaluator hazards and duplicated lineage. Do not broadcast the full submission archive into every prompt.",
+        "boundary": "Three sessions per configuration on one kernel task; reported token reduction is not total cost to a verified frontier."
+      },
+      {
+        "claimId": "lit:hybrid-search",
+        "claim": "On autoresearch, classical TPE and CMA-ES beat pure LLM search; the best reported system kept a classical optimizer on the trajectory and let an LLM inject occasional domain-informed proposals.",
+        "predicate": "source_reported",
+        "status": "likely",
+        "applicability": "knowledge-representation",
+        "sources": [
+          {
+            "citation": "Ferreira et al., arXiv:2603.24647",
+            "url": "https://arxiv.org/abs/2603.24647"
+          }
+        ],
+        "implication": "Prefer schedule/width/ladder search with a classical controller. Reserve LLM budget for representation proposals and diagnosis.",
+        "boundary": "Result is task-specific. It does not license deleting Atlas provenance."
+      },
+      {
+        "claimId": "lit:schrottenloher-dialog",
+        "claim": "The 2026 open circuit that matches Google's unpublished secp256k1 Pareto points is Schrottenloher's EEA-dialog / ping-pong inversion, with jump-GCD and Gidney venting as the main published knobs.",
+        "predicate": "source_reported",
+        "status": "confirmed",
+        "applicability": "published-pareto",
+        "sources": [
+          {
+            "citation": "Schrottenloher, Optimized Point Addition Circuits, arXiv:2606.02235",
+            "url": "https://arxiv.org/abs/2606.02235"
+          },
+          {
+            "citation": "trailofbits/trailmix circuit summaries",
+            "url": "https://github.com/trailofbits/trailmix"
+          }
+        ],
+        "implication": "Treat ping-pong / dialog inversion as a representation-class change. Local Kaliski-era tuning does not transfer automatically across this cut.",
+        "boundary": "Published counts use a different contract than the pinned ECDSA.fail 9,024-shot verified scorer. Do not subtract those Toffoli numbers from Atlas scores."
+      },
+      {
+        "claimId": "lit:google-pareto-unpublished",
+        "claim": "Babbush et al. reported low-qubit and low-gate secp256k1 point-add operating points but did not publish the circuits, relying on a zero-knowledge proof. The ECDSA.fail README quotes 1,175 qubits / 2.7M Toffoli and 1,425 qubits / 2.1M Toffoli.",
+        "predicate": "source_reported",
+        "status": "confirmed",
+        "applicability": "published-pareto",
+        "sources": [
+          {
+            "citation": "ECDSA.fail challenge README reference table",
+            "url": "https://github.com/ecdsafail/ecdsafail-challenge"
+          },
+          {
+            "citation": "Schrottenloher discussion of Babbush et al., arXiv:2606.02235",
+            "url": "https://arxiv.org/abs/2606.02235"
+          }
+        ],
+        "implication": "Use those numbers only as an external aspirational target, never as an Atlas floor or as evidence that a named mechanism is present in the sealed corpus.",
+        "boundary": "Kickmick / approximate-success circuits are not the ECDSA.fail exact classical+phase+ancilla contract."
+      },
+      {
+        "claimId": "lit:gidney-mbu",
+        "claim": "Gidney measurement-based uncomputation and temporary AND remain the standard Toffoli-saving uncompute pattern; Atlas has a jointly qualified one-change ablation of the temporary-AND family.",
+        "predicate": "source_reported",
+        "status": "confirmed",
+        "applicability": "ecdsa.fail-scorer",
+        "sources": [
+          {
+            "citation": "Gidney, Halving the cost of quantum addition, Quantum 2, 74 (2018)",
+            "url": "https://doi.org/10.22331/q-2018-06-18-74"
+          }
+        ],
+        "implication": "Keep measurement-uncomputation as a live algorithm family. Isolated Atlas effect is recorded separately as artifact_verified.",
+        "boundary": "The paper does not by itself identify the ECDSA.fail delta. Causal score movement requires the Atlas ablation."
+      },
+      {
+        "claimId": "lit:square-false-closure",
+        "claim": "A public note declared the product-square closed after pricing one algorithm, then a later recursion level (Karatsuba-2) invalidated that closure.",
+        "predicate": "source_reported",
+        "status": "confirmed",
+        "applicability": "ecdsa.fail-scorer",
+        "sources": [
+          {
+            "citation": "Yukon KG NOTE.md research cutoff 2026-08-23, section 11.2",
+            "url": "https://github.com/yudduy/yukon-kg/blob/main/NOTE.md"
+          }
+        ],
+        "implication": "Store closures as scoped assertions with reopen conditions. Never merge a retracted ceiling into current-best prose.",
+        "boundary": "The sealed Atlas snapshot records Karatsuba as historical observation, not a jointly qualified one-change ablation."
+      },
+      {
+        "claimId": "lit:nonce-lottery",
+        "claim": "The trusted evaluator derives inputs from SHAKE256 of the semantic operation stream, so identity padding and nonce grinding select a new Fiat-Shamir sample rather than proving an algorithmic mechanism.",
+        "predicate": "source_reported",
+        "status": "confirmed",
+        "applicability": "ecdsa.fail-scorer",
+        "sources": [
+          {
+            "citation": "ECDSA.fail challenge README, Fiat-Shamir workload",
+            "url": "https://github.com/ecdsafail/ecdsafail-challenge"
+          }
+        ],
+        "implication": "Classify seed grinding as an evaluator hazard. Do not promote it as a supported mechanism even when it dominates promotion counts.",
+        "boundary": "Competition realism may still use nonce search. Primary mechanism claims must freeze or factor it out."
+      }
+    ],
+    "corpusAccounting": {
+      "submissions": 949,
+      "promoted": 482,
+      "mixed": 579,
+      "focused": 69,
+      "unmapped": 257,
+      "seedGrindingSubmissions": 422,
+      "seedGrindingPromoted": 345,
+      "experiments": 18,
+      "oneChangeAblations": 10,
+      "admittedOneChangeImprovements": 7
+    },
+    "caveats": [
+      "Official one-change deltas are scoped to their parent artifacts. They are not additive with each other or with the current frontier score.",
+      "Frontier submissions in this snapshot still bundle nonce grinding with structural edits, so the champion score is not a pure mechanism effect.",
+      "Atlas reports baseline 10704574395 and frontier 1182644586 qubit-Toffoli product, with no compatible nontrivial product floor.",
+      "The 512-qubit floor is a pinned two-register interface bound, not a universal ECC lower bound. Current frontier width is 1150.",
+      "Published Google/Schrottenloher Pareto points use a different contract than the pinned ECDSA.fail scorer.",
+      "This brief is a disposable presentation-plane compilation. It does not mutate Atlas releases and has not earned an innovation-accelerator claim."
+    ]
+  }
+}

@@ -21,13 +21,18 @@ immutable Atlas records
 → evaluator hazards (nonce grinding, bundled diffs)
 → next discriminators
 → literature overlay labeled source_reported, not Atlas-verified
+→ user decision packet (do / don't / reuse)
 ```
 
-Compile it with:
+The ECDSA user default is that packet, not the 949-submission archive. Compile and publish it with:
 
 ```bash
 bun run knowledge:ecdsa
+bun run knowledge:ecdsa -- --write
+bun run knowledge:ecdsa -- --experiment
 ```
+
+`--write` refreshes `docs/ecdsa/index.html` and `docs/ecdsa/working-knowledge.json`. `--experiment` writes `evidence/ecdsa-user-representation/report.json`, comparing the working-knowledge packet against ranking ideas by promotion count on eight frozen user questions. The sealed archive remains at `docs/ecdsa/index.json` and under `docs/ecdsa/releases/`.
 
 The working retrieval default remains the smallest useful workflow until a later equal-budget court says otherwise:
 
@@ -46,7 +51,8 @@ Requirements: Bun and an authenticated Codex CLI with access to `gpt-5.6-luna` a
 ```bash
 bun test
 bun run data:verify
-bun run knowledge:ecdsa
+bun run knowledge:ecdsa -- --write
+bun run knowledge:ecdsa -- --experiment
 bun run atlas:duplicate -- preflight
 bun run atlas:duplicate -- pilot <run-id>
 bun run atlas:duplicate -- run <run-id>
