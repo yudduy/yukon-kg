@@ -1,0 +1,20 @@
+{
+  "schema": "yukon-kg.public-atlas-index.v1",
+  "benchmark": "ecdsa.fail",
+  "defaultReleaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+  "retrievalExperimentReleaseId": "b4bd9026018a9ab464fafd1ce4c2905c95af95462b29d55ede169c7cb953eac2",
+  "releases": [
+    {
+      "releaseId": "b4bd9026018a9ab464fafd1ce4c2905c95af95462b29d55ede169c7cb953eac2",
+      "manifestSha256": "db9c9c924543418ab47d871a666f0cdd17bcd4c116369bbcc411bacf97b50925",
+      "manifest": "releases/b4bd9026018a9ab464fafd1ce4c2905c95af95462b29d55ede169c7cb953eac2/manifest.json",
+      "purpose": "Pinned input for the three-arm retrieval experiment"
+    },
+    {
+      "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+      "manifestSha256": "b9748c5a09e3af48b61b1feefb37e720c4acc40e09a15787a90b576b324b521d",
+      "manifest": "releases/e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03/manifest.json",
+      "purpose": "Current Atlas snapshot with the historical e928 four-version comparison"
+    }
+  ]
+}

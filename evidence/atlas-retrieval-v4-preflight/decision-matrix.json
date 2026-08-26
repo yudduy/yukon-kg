@@ -1,0 +1,124 @@
+{
+  "schema": "yukon.atlas-evidence-workflow-decision",
+  "schemaVersion": 1,
+  "protocolVersion": "yukon-kg.atlas-duplicate.v4",
+  "runId": "2026-08-25T06-45-35-995Z-05ac15c6",
+  "release": {
+    "id": "b4bd9026018a9ab464fafd1ce4c2905c95af95462b29d55ede169c7cb953eac2",
+    "manifestSha256": "db9c9c924543418ab47d871a666f0cdd17bcd4c116369bbcc411bacf97b50925"
+  },
+  "frozenCaseFixtureSha256": "7bcdf80445293103645d94fb81b835ff3f6006614b911fdd231120aaba4c5e3d",
+  "decision": {
+    "status": "FAIL",
+    "adoptedWorkflow": null,
+    "action": "retain_current_non_atlas_agent_workflow",
+    "reason": "Stage 1 retrieval reachability failed for 9 of 30 frozen cases, including both fresh pilot negatives. The protocol therefore stopped before model calls and no Atlas workflow earned universal promotion.",
+    "embeddedAgentInstructionsChanged": false
+  },
+  "matrix": [
+    {
+      "dimension": "task_case_variation",
+      "status": "FAIL",
+      "evidence": {
+        "totalFrozenCases": 30,
+        "reachableCases": 21,
+        "unreachableCases": 9,
+        "pilot": {
+          "total": 6,
+          "unreachable": 2
+        },
+        "confirmatory": {
+          "total": 24,
+          "unreachable": 7
+        },
+        "unreachablePositiveCases": 2,
+        "unreachableNegativeCases": 7,
+        "unreachableCaseIds": [
+          "confirm-negative-01",
+          "confirm-negative-02",
+          "confirm-negative-03",
+          "confirm-negative-04",
+          "confirm-negative-06",
+          "confirm-positive-04",
+          "confirm-positive-08",
+          "pilot-negative-01",
+          "pilot-negative-02"
+        ]
+      }
+    },
+    {
+      "dimension": "three_repeat_model_call_variation",
+      "status": "NOT_RUN",
+      "evidence": {
+        "newModelSessions": 0,
+        "plannedPilotSessions": 108,
+        "reason": "The deterministic Stage 1 gate failed before the fresh pilot."
+      }
+    },
+    {
+      "dimension": "deterministic_scorer_and_replay",
+      "status": "PASS",
+      "evidence": {
+        "deterministicCompilation": true,
+        "byteStable": true,
+        "ideas": 75,
+        "rawMutationWitnesses": 2311,
+        "routedRows": 2209,
+        "submissionRoutes": 949,
+        "verifiedSubmissionDetails": 949,
+        "explicitlyUnroutedWitnesses": 102,
+        "sourceAtomParity": true,
+        "liveScorerReplay": "NOT_RUN"
+      }
+    },
+    {
+      "dimension": "retrieval_correctness",
+      "status": "FAIL",
+      "evidence": {
+        "oracleCallLimit": 11,
+        "oracleByteLimit": 22528,
+        "sessionReserveCallLimit": 12,
+        "sessionReserveByteLimit": 24576,
+        "allRequiredReceiptsReachable": false,
+        "report": "preflight/reachability.json"
+      }
+    },
+    {
+      "dimension": "live_research_progress",
+      "status": "NOT_RUN",
+      "evidence": {
+        "reason": "The retrieval court did not produce a universal winner because its prerequisite gate failed.",
+        "agentSessions": 0,
+        "officialEvaluations": 0,
+        "pairedEvaluations": 0,
+        "submissions": 0
+      }
+    }
+  ],
+  "stageOutcomes": {
+    "v3TranscriptDiagnosis": "COMPLETE_WITH_REVIEW_DISAGREEMENTS_SURFACED",
+    "contentParity": "PASS",
+    "retrievalReachability": "FAIL",
+    "freshPilot": "NOT_RUN",
+    "confirmatoryRetrievalCourt": "NOT_RUN",
+    "pairedLiveResearchCourt": "NOT_RUN"
+  },
+  "artifactRefs": {
+    "preflight": "preflight/report.json",
+    "parity": "preflight/evidence-parity.json",
+    "reachability": "preflight/reachability.json",
+    "caseFixture": "cases.json",
+    "manifest": "manifest.json"
+  },
+  "prohibitedActionsObserved": {
+    "backendRoute": false,
+    "databaseMigration": false,
+    "newAtlasReleaseRole": false,
+    "commit": false,
+    "push": false,
+    "deploy": false,
+    "atlasPointerUpdate": false,
+    "embeddedInstructionChange": false,
+    "ecdsaSubmission": false
+  }
+}

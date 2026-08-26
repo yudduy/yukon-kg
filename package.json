@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "atlas:duplicate": "bun run src/atlas-duplicate-mve.js",
+    "data:verify": "bun run src/verify-public-data.js",
     "mve": "bun run src/planning-mve.js",
     "mve:ecdsa": "bun run src/mve.js",
     "smoke": "bun run src/smoke.js",

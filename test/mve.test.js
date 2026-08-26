@@ -20,6 +20,7 @@ import {
   resumeRun,
   sealedHarnessSuffix,
   tuningCandidatesForBlock,
+  workerIsolationAttestationViolation,
 } from "../src/mve.js";
 
 const temporaries = [];
@@ -174,6 +175,13 @@ afterEach(async () => {
 });
 
 describe("runtime primitives", () => {
+  test("rejects a worker that reports a forbidden callable tool", () => {
+    expect(workerIsolationAttestationViolation("NO_FORBIDDEN_TOOLS")).toBeNull();
+    expect(workerIsolationAttestationViolation("FORBIDDEN_TOOL_VISIBLE")).toBe(
+      "worker profile reported a forbidden callable tool",
+    );
+  });
+
   test("assigns block-specific opaque options and keeps the optimum out of the shared seed slate", () => {
     const first = tuningCandidatesForBlock("block-1");
     const second = tuningCandidatesForBlock("block-2");

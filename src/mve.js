@@ -62,7 +62,12 @@ const FORBIDDEN_EVENT_TYPES = /(?:web_search|mcp|browser|computer|image_generati
 const FORBIDDEN_PROMPT_SURFACE = [
   { label: "enabled skill entries", pattern: /^\s*-\s+.+SKILL\.md.+$/mu },
 ];
-const CODEX_HOST_CONTEXT_ENV = ["CODEX_INTERNAL_ORIGINATOR_OVERRIDE", "CODEX_SESSION_ID", "CODEX_THREAD_ID"];
+const CODEX_HOST_CONTEXT_ENV = [
+  "CODEX_INTERNAL_ORIGINATOR_OVERRIDE",
+  "CODEX_PERMISSION_PROFILE",
+  "CODEX_SESSION_ID",
+  "CODEX_THREAD_ID",
+];
 const artifactWrites = new Map();
 const ALLOCATOR_SCHEMA = {
   type: "object",
@@ -908,6 +913,8 @@ export async function runIsolationCanary({ runDirectory, codexRunner, schemas })
     const workerMessage = JSON.parse(workerResult.lastMessage);
     workerAttestation = workerMessage.status;
     if (workerMessage.model !== MODEL) violations.push("worker profile did not attest the pinned model");
+    const attestationViolation = workerIsolationAttestationViolation(workerAttestation);
+    if (attestationViolation !== null) violations.push(attestationViolation);
   } catch {
     violations.push("worker tool-removal canary failed before a valid attestation");
   }
@@ -933,6 +940,10 @@ export async function runIsolationCanary({ runDirectory, codexRunner, schemas })
   };
   await writeJson(path.join(runDirectory, "preflight", "codex-isolation.json"), report);
   return report;
+}
+
+export function workerIsolationAttestationViolation(attestation) {
+  return attestation === "NO_FORBIDDEN_TOOLS" ? null : "worker profile reported a forbidden callable tool";
 }
 
 async function expectScore(label, actual, expected, tolerance = 0.001) {
