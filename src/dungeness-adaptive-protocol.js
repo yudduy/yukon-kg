@@ -59,7 +59,10 @@ function requireBudget(value) {
   const parsed = {};
   for (const key of Object.keys(DEFAULT_CAMPAIGN_BUDGET)) {
     const item = budget[key];
-    if (!Number.isFinite(item) || item <= 0) throw new Error(`budget.${key} must be positive`);
+    const valid = key === "descendantTokens"
+      ? Number.isFinite(item) && item >= 0
+      : Number.isFinite(item) && item > 0;
+    if (!valid) throw new Error(`budget.${key} must be ${key === "descendantTokens" ? "non-negative" : "positive"}`);
     parsed[key] = item;
   }
   return parsed;
