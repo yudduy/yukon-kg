@@ -17,6 +17,7 @@ export {
   canonicalLedgerStringify,
   createEvidenceLedger,
   createEvidenceSigningKeyPair,
+  evidenceSignerFromPrivateKey,
   ledgerSha256,
   parseEvidenceLedger,
   reduceEvidenceLedger,

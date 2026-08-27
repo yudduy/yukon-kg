@@ -5,7 +5,14 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { loadIndexedAtlasRelease } from "./atlas-local.js";
-import { buildEcdsaWorkingKnowledgeBrief, ideasFromRelease } from "./atlas-runtime/index.ts";
+import {
+  buildEcdsaWorkingKnowledgeBrief,
+  createEvidenceSigningKeyPair,
+  evidenceSignerFromPrivateKey,
+  ideasFromRelease,
+  ledgerSha256,
+  parseEvidenceLedger,
+} from "./atlas-runtime/index.ts";
 import { inspectDungenessCheckout, readDungenessPin } from "./dungeness-clone.js";
 import { compileKnowledgeVariants, OPENROUTER_DECODING } from "./dungeness-kb-protocol.js";
 import { pinnedOpenRouterModel } from "./openrouter.js";
@@ -37,6 +44,15 @@ const POWER_PATH = path.join(EVIDENCE_ROOT, "power.json");
 const REPORT_PATH = path.join(EVIDENCE_ROOT, "report.json");
 const PRIME_PROTOCOL_PATH = path.join(EVIDENCE_ROOT, "prime-factor-protocol.json");
 const PRIME_REPORT_PATH = path.join(EVIDENCE_ROOT, "prime-factor-report.json");
+const DEFAULT_SIGNING_KEY_PATH = "/cursor/stores/self/yukon-kg/dungeness-ledger-ed25519.pem";
+const RUNTIME_FILES = [
+  "src/atlas-runtime/evidence-ledger.ts",
+  "src/dungeness-adaptive-mve.js",
+  "src/dungeness-adaptive-protocol.js",
+  "src/dungeness-campaign-runner.js",
+  "src/dungeness-kb-protocol.js",
+  "src/openrouter.js",
+];
 
 function nowIso() {
   return new Date().toISOString();
@@ -62,8 +78,55 @@ async function writeJson(pathname, value) {
   await fs.rename(temporary, pathname);
 }
 
+async function runtimeSha256() {
+  const files = {};
+  for (const relative of RUNTIME_FILES) {
+    files[relative] = sha256(await fs.readFile(path.join(ROOT, relative)));
+  }
+  return sha256(files);
+}
+
 function providerName() {
   return process.env.OPENROUTER_PROVIDER?.trim() || "OpenAI";
+}
+
+function environmentNumber(name, fallback) {
+  const raw = process.env[name]?.trim();
+  return raw ? Number.parseFloat(raw) : fallback;
+}
+
+function signingKeyPath() {
+  const pathname = path.resolve(
+    process.env.DUNGENESS_LEDGER_PRIVATE_KEY_PATH?.trim() || DEFAULT_SIGNING_KEY_PATH,
+  );
+  if (pathname.startsWith(`${path.resolve(ROOT)}${path.sep}`)) {
+    throw new Error("the ledger private key must stay outside the repository");
+  }
+  return pathname;
+}
+
+async function ensureSigningKey() {
+  const pathname = signingKeyPath();
+  try {
+    const privateKeyPem = await fs.readFile(pathname, "utf8");
+    return { pathname, privateKeyPem, signer: evidenceSignerFromPrivateKey(privateKeyPem) };
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
+  const created = createEvidenceSigningKeyPair();
+  await fs.mkdir(path.dirname(pathname), { recursive: true, mode: 0o700 });
+  await fs.writeFile(pathname, created.privateKeyPem, { mode: 0o600, flag: "wx" });
+  return { pathname, privateKeyPem: created.privateKeyPem, signer: created.signer };
+}
+
+async function loadSigningKey(expectedSignerSha256) {
+  const pathname = signingKeyPath();
+  const privateKeyPem = await fs.readFile(pathname, "utf8");
+  const signer = evidenceSignerFromPrivateKey(privateKeyPem);
+  if (signer.publicKeySha256 !== expectedSignerSha256) {
+    throw new Error("local ledger signing key does not match the frozen protocol");
+  }
+  return { pathname, privateKeyPem, signer };
 }
 
 function adaptiveDecoding() {
@@ -139,6 +202,64 @@ async function checkpointRefsPresent(adapter) {
   return { ok: missing.length === 0, missing };
 }
 
+async function isolationRunnerStatus(adapter) {
+  if (adapter === null) return { ok: false, path: null, sha256: null };
+  const development = adapter.evaluator.developmentCommand[0];
+  const hidden = adapter.evaluator.hiddenCommand[0];
+  if (development !== hidden) {
+    return { ok: false, path: null, sha256: null, error: "development and hidden evaluators use different runners" };
+  }
+  let pathname = development;
+  if (!path.isAbsolute(pathname)) {
+    const resolved = await runProcess("which", [pathname], { timeoutMs: 30_000 });
+    if (resolved.exitCode !== 0) {
+      return { ok: false, path: null, sha256: null, error: `evaluator runner ${pathname} is not installed` };
+    }
+    pathname = resolved.stdout.trim();
+  }
+  try {
+    const digest = sha256(await fs.readFile(pathname));
+    return {
+      ok: digest === adapter.isolation.runnerSha256,
+      path: pathname,
+      sha256: digest,
+      error: digest === adapter.isolation.runnerSha256 ? null : "evaluator runner hash mismatch",
+    };
+  } catch (error) {
+    return { ok: false, path: pathname, sha256: null, error: error.message };
+  }
+}
+
+async function evaluatorAttestationStatus(adapter) {
+  if (adapter === null) return { ok: false, sha256: null };
+  const command = adapter.evaluator.attestationCommand;
+  const result = await runProcess(command[0], command.slice(1), {
+    cwd: DUNGENESS_REPO,
+    timeoutMs: adapter.evaluator.timeoutMs,
+    unsetEnv: ["OPENROUTER_API_KEY", "GITHUB_TOKEN", "GH_TOKEN", "YUDDUY_GITHUB_TOKEN"],
+  });
+  if (result.exitCode !== 0) {
+    return { ok: false, sha256: null, error: result.stderr || result.stdout };
+  }
+  try {
+    const value = JSON.parse(result.stdout);
+    const expected = {
+      schema: "yukon-kg.dungeness-evaluator-attestation.v1",
+      repoSha: adapter.repoSha,
+      isolationRunnerSha256: adapter.isolation.runnerSha256,
+      checkpoints: adapter.checkpoints,
+    };
+    const ok = sha256(value) === sha256(expected);
+    return {
+      ok,
+      sha256: sha256(value),
+      error: ok ? null : "evaluator attestation differs from the frozen adapter",
+    };
+  } catch (error) {
+    return { ok: false, sha256: null, error: `invalid evaluator attestation: ${error.message}` };
+  }
+}
+
 export async function runAdaptivePreflight() {
   const atlas = await verifyPublicData();
   const inspection = await inspectDungenessCheckout();
@@ -147,6 +268,10 @@ export async function runAdaptivePreflight() {
   const refs = inspection.present
     ? await checkpointRefsPresent(loadedAdapter.adapter)
     : { ok: false, missing: [] };
+  const isolationRunner = await isolationRunnerStatus(loadedAdapter.adapter);
+  const evaluatorAttestation = inspection.present
+    ? await evaluatorAttestationStatus(loadedAdapter.adapter)
+    : { ok: false, sha256: null };
   const apiKeyPresent = Boolean(process.env.OPENROUTER_API_KEY?.trim());
   const checks = {
     atlasPass: atlas.status === "PASS",
@@ -155,6 +280,8 @@ export async function runAdaptivePreflight() {
       && typeof pin?.sha === "string"
       && pin.sha === inspection.sha,
     adapterValid: loadedAdapter.adapter !== null,
+    isolationRunnerPinned: isolationRunner.ok,
+    evaluatorAttestation: evaluatorAttestation.ok,
     checkpointRefsPresent: refs.ok,
     openRouterKeyPresent: apiKeyPresent,
     providerPinned: providerName().length > 0,
@@ -172,6 +299,8 @@ export async function runAdaptivePreflight() {
       sha256: loadedAdapter.adapter === null ? null : sha256(loadedAdapter.adapter),
       error: loadedAdapter.error,
       missingCheckpointRefs: refs.missing,
+      isolationRunner,
+      evaluatorAttestation,
     },
     model: {
       id: pinnedOpenRouterModel(),
@@ -189,7 +318,12 @@ async function courtInputs() {
     ideasFromRelease(loaded.release),
     loaded.release.submissions.submissions,
   );
-  return { loaded, brief, briefText: variants.state_brief.text };
+  return {
+    loaded,
+    brief,
+    briefText: variants.state_brief.text,
+    briefSha256: variants.state_brief.sha256,
+  };
 }
 
 export async function freezeProtocol() {
@@ -201,22 +335,24 @@ export async function freezeProtocol() {
   const pin = preflight.dungeness.pin;
   const { adapter, error } = await loadAdapter(inspection, pin);
   if (adapter === null) throw new Error(error);
-  const { loaded } = await courtInputs();
+  const { loaded, briefSha256 } = await courtInputs();
+  const signing = await ensureSigningKey();
   const protocol = freezeAdaptiveProtocol({
     adapter,
     dungenessPin: pin,
     atlasReleaseId: loaded.release.pointer.id,
     atlasManifestSha256: loaded.release.pointer.manifestSha256,
+    stateBriefSha256: briefSha256,
+    runtimeSha256: await runtimeSha256(),
     model: pinnedOpenRouterModel(),
     provider: providerName(),
     decoding: adaptiveDecoding(),
+    signer: signing.signer,
     seed: process.env.DUNGENESS_PROTOCOL_SEED?.trim() || "dungeness-adaptive-v1",
     budget: campaignBudget(),
     createdAt: nowIso(),
   });
-  const calibrationSpendCapUsd = Number.parseFloat(
-    process.env.DUNGENESS_CALIBRATION_SPEND_CAP_USD ?? "100",
-  );
+  const calibrationSpendCapUsd = environmentNumber("DUNGENESS_CALIBRATION_SPEND_CAP_USD", 100);
   const frozen = {
     ...protocol,
     calibration: {
@@ -240,24 +376,66 @@ function campaignDirectoryName(campaignId) {
   return campaignId.replaceAll(":", "_");
 }
 
-function campaignResultPath(campaignId) {
-  return path.join(RUNS_ROOT, campaignDirectoryName(campaignId), "result.json");
+function campaignResultPath(protocolSha256, campaignId) {
+  return path.join(RUNS_ROOT, protocolSha256, campaignDirectoryName(campaignId), "result.json");
 }
 
-async function loadCampaignResults(assignments) {
+async function loadCampaignResults(assignments, protocol) {
   const results = [];
   for (const assignment of assignments) {
-    const result = await readJsonIfPresent(campaignResultPath(assignment.campaignId));
-    if (result !== null) results.push(result);
+    const resultPath = campaignResultPath(protocol.protocolSha256, assignment.campaignId);
+    const result = await readJsonIfPresent(resultPath);
+    if (result === null) continue;
+    if (
+      result.protocolSha256 !== protocol.protocolSha256
+      || result.campaignId !== assignment.campaignId
+      || result.pairId !== assignment.pairId
+      || result.checkpointId !== assignment.checkpointId
+      || result.arm !== assignment.arm
+      || result.procedureMode !== assignment.procedureMode
+      || result.seed !== assignment.seed
+    ) continue;
+    const ledgerText = await fs.readFile(path.join(path.dirname(resultPath), "ledger.jsonl"), "utf8");
+    const ledger = parseEvidenceLedger(ledgerText, {
+      expectedSignerSha256: protocol.signer.publicKeySha256,
+    });
+    if (
+      ledger.header.campaignId !== assignment.campaignId
+      || ledger.header.protocolSha256 !== protocol.protocolSha256
+      || ledgerSha256(ledgerText) !== result.ledgerSha256
+    ) {
+      throw new Error(`campaign ${assignment.campaignId} ledger binding mismatch`);
+    }
+    const checkpoint = protocol.dungeness.checkpoints.find((item) => item.id === assignment.checkpointId);
+    const hiddenReceipts = ledger.receipts.filter((receipt) => (
+      receipt.panelSha256 === checkpoint?.hiddenPanelSha256
+    ));
+    if (
+      hiddenReceipts.length !== result.hiddenAdjudication.length
+      || hiddenReceipts.length > 1
+      || (result.finalOutputValid && hiddenReceipts.length !== 1)
+    ) {
+      throw new Error(`campaign ${assignment.campaignId} hidden receipt mismatch`);
+    }
+    if (
+      hiddenReceipts.length === 1
+      && hiddenReceipts[0].receiptSha256 !== result.hiddenAdjudication[0]?.receiptSha256
+    ) throw new Error(`campaign ${assignment.campaignId} hidden receipt ID mismatch`);
+    const recomputedGain = Math.max(0, (result.baselineScore - result.bestValidScore) / result.baselineScore);
+    if (Math.abs(recomputedGain - result.normalizedGain) > 1e-12) {
+      throw new Error(`campaign ${assignment.campaignId} normalized gain mismatch`);
+    }
+    results.push(result);
   }
   return results;
 }
 
 async function runAssignments(protocol, adapter, assignments, {
   spendCapUsd,
+  signingPrivateKeyPem,
 } = {}) {
   const { briefText } = await courtInputs();
-  const existing = await loadCampaignResults(assignments);
+  const existing = await loadCampaignResults(assignments, protocol);
   const byCampaign = new Map(existing.map((result) => [result.campaignId, result]));
   for (const assignment of assignments) {
     if (byCampaign.has(assignment.campaignId)) continue;
@@ -269,16 +447,19 @@ async function runAssignments(protocol, adapter, assignments, {
     }
     const checkpoint = adapter.checkpoints.find((item) => item.id === assignment.checkpointId);
     if (checkpoint === undefined) throw new Error(`unknown checkpoint ${assignment.checkpointId}`);
-    const result = await runDungenessCampaign({
+    await runDungenessCampaign({
       assignment,
       protocol,
       adapter,
       checkpoint,
       briefText,
       dungenessRepo: DUNGENESS_REPO,
-      runRoot: RUNS_ROOT,
+      runRoot: path.join(RUNS_ROOT, protocol.protocolSha256),
+      signingPrivateKeyPem,
     });
-    byCampaign.set(assignment.campaignId, result);
+    const verified = await loadCampaignResults([assignment], protocol);
+    if (verified.length !== 1) throw new Error(`campaign ${assignment.campaignId} did not verify after execution`);
+    byCampaign.set(assignment.campaignId, verified[0]);
     if (Number.isFinite(spendCapUsd)) assertWithinSpendCap([...byCampaign.values()], spendCapUsd);
   }
   return assignments.map((assignment) => byCampaign.get(assignment.campaignId));
@@ -296,13 +477,33 @@ async function loadFrozenContext() {
   if (protocol.dungeness.sha !== inspection.sha || protocol.dungeness.sha !== pin?.sha) {
     throw new Error("frozen protocol no longer matches Dungeness checkout");
   }
-  return { protocol, adapter: loaded.adapter };
+  if (sha256(loaded.adapter) !== protocol.dungeness.adapterSha256) {
+    throw new Error("frozen protocol no longer matches the Dungeness adapter");
+  }
+  const isolationRunner = await isolationRunnerStatus(loaded.adapter);
+  if (!isolationRunner.ok) throw new Error(isolationRunner.error);
+  const evaluatorAttestation = await evaluatorAttestationStatus(loaded.adapter);
+  if (!evaluatorAttestation.ok) throw new Error(evaluatorAttestation.error);
+  if (await runtimeSha256() !== protocol.runtimeSha256) {
+    throw new Error("frozen protocol no longer matches the experiment runtime");
+  }
+  const court = await courtInputs();
+  if (
+    court.loaded.release.pointer.id !== protocol.atlas.releaseId
+    || court.loaded.release.pointer.manifestSha256 !== protocol.atlas.manifestSha256
+    || court.briefSha256 !== protocol.atlas.stateBriefSha256
+  ) {
+    throw new Error("frozen protocol no longer matches the Atlas state brief");
+  }
+  const signing = await loadSigningKey(protocol.signer.publicKeySha256);
+  return { protocol, adapter: loaded.adapter, signing };
 }
 
 export async function runCalibration() {
-  const { protocol, adapter } = await loadFrozenContext();
+  const { protocol, adapter, signing } = await loadFrozenContext();
   const results = await runAssignments(protocol, adapter, protocol.calibration.assignments, {
     spendCapUsd: protocol.calibration.spendCapUsd,
+    signingPrivateKeyPem: signing.privateKeyPem,
   });
   const summary = {
     schema: "yukon-kg.dungeness-adaptive-calibration.v1",
@@ -322,22 +523,74 @@ export async function freezePower() {
   const calibration = await readJson(path.join(EVIDENCE_ROOT, "calibration.json"));
   if (calibration.protocolSha256 !== protocol.protocolSha256) throw new Error("calibration protocol mismatch");
   const power = estimateConfirmatoryPairs(calibration.results);
-  const frozen = {
+  if (!power.attainableAtCap) throw new Error("the practical MDE is not attainable at the confirmatory cap");
+  const assignments = protocol.confirmatory.assignments.slice(
+    0,
+    power.scheduledPairs * KNOWLEDGE_ARMS.length,
+  );
+  const guaranteedMaxSpendUsd = assignments.length * protocol.budget.costUsd;
+  const spendCapUsd = environmentNumber(
+    "DUNGENESS_CONFIRMATORY_SPEND_CAP_USD",
+    guaranteedMaxSpendUsd,
+  );
+  if (spendCapUsd < guaranteedMaxSpendUsd) {
+    throw new Error(
+      `confirmatory spend cap ${spendCapUsd} is below the guaranteed campaign maximum ${guaranteedMaxSpendUsd}`,
+    );
+  }
+  const body = {
     schema: "yukon-kg.dungeness-adaptive-power.v1",
     protocolSha256: protocol.protocolSha256,
     createdAt: nowIso(),
     ...power,
-    spendCapUsd: power.projectedMaxSpendUsd,
-    assignments: protocol.confirmatory.assignments.slice(0, power.scheduledPairs * KNOWLEDGE_ARMS.length),
+    guaranteedMaxSpendUsd,
+    spendCapUsd,
+    assignments,
+  };
+  const powerSha256 = sha256(body);
+  const frozen = {
+    ...body,
+    powerSha256,
+    confirmatoryProtocolSha256: sha256({
+      phase: "confirmatory",
+      parentProtocolSha256: protocol.protocolSha256,
+      powerSha256,
+    }),
   };
   await writeJson(POWER_PATH, frozen);
   return frozen;
 }
 
+async function loadPower(protocol) {
+  const power = await readJson(POWER_PATH);
+  const { powerSha256, confirmatoryProtocolSha256, ...body } = power;
+  if (power.protocolSha256 !== protocol.protocolSha256) throw new Error("power protocol mismatch");
+  if (sha256(body) !== powerSha256) throw new Error("power file hash mismatch");
+  const expectedConfirmatory = sha256({
+    phase: "confirmatory",
+    parentProtocolSha256: protocol.protocolSha256,
+    powerSha256,
+  });
+  if (confirmatoryProtocolSha256 !== expectedConfirmatory) {
+    throw new Error("confirmatory protocol binding mismatch");
+  }
+  return power;
+}
+
+function confirmatoryProtocol(protocol, power) {
+  return {
+    ...protocol,
+    parentProtocolSha256: protocol.protocolSha256,
+    powerSha256: power.powerSha256,
+    protocolSha256: power.confirmatoryProtocolSha256,
+  };
+}
+
 export async function analyzeConfirmatory() {
   const { protocol } = await loadFrozenContext();
-  const power = await readJson(POWER_PATH);
-  const results = await loadCampaignResults(power.assignments);
+  const power = await loadPower(protocol);
+  const phaseProtocol = confirmatoryProtocol(protocol, power);
+  const results = await loadCampaignResults(power.assignments, phaseProtocol);
   const pairCount = results.length / KNOWLEDGE_ARMS.length;
   if (!Number.isInteger(pairCount) || !CONFIRMATORY_INTERIMS.includes(pairCount)) {
     throw new Error(`confirmatory results do not end at a scheduled interim: ${pairCount} pairs`);
@@ -347,8 +600,9 @@ export async function analyzeConfirmatory() {
   });
   const report = {
     ...analysis,
-    protocolSha256: protocol.protocolSha256,
-    powerSha256: sha256(power),
+    protocolSha256: phaseProtocol.protocolSha256,
+    parentProtocolSha256: protocol.protocolSha256,
+    powerSha256: power.powerSha256,
     createdAt: nowIso(),
     spentUsd: results.reduce((total, result) => total + result.costUsd, 0),
     results,
@@ -358,11 +612,15 @@ export async function analyzeConfirmatory() {
 }
 
 export async function runConfirmatory() {
-  const { protocol, adapter } = await loadFrozenContext();
-  const power = await readJson(POWER_PATH);
+  const { protocol, adapter, signing } = await loadFrozenContext();
+  const power = await loadPower(protocol);
+  const phaseProtocol = confirmatoryProtocol(protocol, power);
   for (const interim of CONFIRMATORY_INTERIMS.filter((count) => count <= power.scheduledPairs)) {
     const assignments = power.assignments.slice(0, interim * KNOWLEDGE_ARMS.length);
-    await runAssignments(protocol, adapter, assignments, { spendCapUsd: power.spendCapUsd });
+    await runAssignments(phaseProtocol, adapter, assignments, {
+      spendCapUsd: power.spendCapUsd,
+      signingPrivateKeyPem: signing.privateKeyPem,
+    });
     const report = await analyzeConfirmatory();
     if (report.decision !== "CONTINUE") return report;
   }
@@ -385,16 +643,26 @@ export async function freezePrimeFactorProtocol() {
     return notWarranted;
   }
   const { protocol, adapter } = await loadFrozenContext();
+  const existing = await readJsonIfPresent(PRIME_PROTOCOL_PATH);
+  if (existing !== null) {
+    const { protocolSha256, ...body } = existing;
+    if (
+      sha256(body) !== protocolSha256
+      || existing.parentProtocolSha256 !== protocol.protocolSha256
+      || existing.parentReportSha256 !== sha256(report)
+    ) throw new Error("existing Prime-factor protocol does not match its frozen parents");
+    return existing;
+  }
   const frozen = {
     schema: "yukon-kg.dungeness-prime-factor-protocol.v1",
     createdAt: nowIso(),
     parentProtocolSha256: protocol.protocolSha256,
     parentReportSha256: sha256(report),
-    pairCount: 20,
+    pairCount: 40,
     procedureModes: [...PROCEDURE_MODES],
     assignments: buildPairedAssignments({
       checkpoints: adapter.checkpoints,
-      pairCount: 20,
+      pairCount: 40,
       phase: "prime_factor",
       seed: `${protocol.seed}:prime-factor`,
       procedureModes: PROCEDURE_MODES,
@@ -408,9 +676,21 @@ export async function freezePrimeFactorProtocol() {
 export async function runPrimeFactor() {
   const frozen = await freezePrimeFactorProtocol();
   if (frozen.status === "NOT_WARRANTED") return frozen;
-  const { protocol, adapter } = await loadFrozenContext();
-  const spendCapUsd = Number.parseFloat(process.env.DUNGENESS_PRIME_SPEND_CAP_USD ?? "100");
-  const results = await runAssignments(protocol, adapter, frozen.assignments, { spendCapUsd });
+  const { protocol, adapter, signing } = await loadFrozenContext();
+  const phaseProtocol = {
+    ...protocol,
+    parentProtocolSha256: protocol.protocolSha256,
+    protocolSha256: frozen.protocolSha256,
+  };
+  const guaranteedMaxSpendUsd = frozen.assignments.length * protocol.budget.costUsd;
+  const spendCapUsd = environmentNumber("DUNGENESS_PRIME_SPEND_CAP_USD", guaranteedMaxSpendUsd);
+  if (spendCapUsd < guaranteedMaxSpendUsd) {
+    throw new Error(`Prime-factor spend cap is below the guaranteed campaign maximum ${guaranteedMaxSpendUsd}`);
+  }
+  const results = await runAssignments(phaseProtocol, adapter, frozen.assignments, {
+    spendCapUsd,
+    signingPrivateKeyPem: signing.privateKeyPem,
+  });
   const analysis = analyzePrimeFactorCampaigns(results);
   const report = {
     ...analysis,

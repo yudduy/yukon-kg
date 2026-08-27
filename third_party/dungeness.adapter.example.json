@@ -5,22 +5,26 @@
     "src/point_add/**"
   ],
   "setupCommand": null,
+  "isolation": {
+    "kind": "external_microvm",
+    "network": "none",
+    "hostWorkspaceMounted": false,
+    "runnerSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
   "evaluator": {
+    "attestationCommand": [
+      "dungeness-sandbox-evaluator",
+      "--attest"
+    ],
     "developmentCommand": [
-      "bun",
-      "run",
-      "evaluate",
-      "--",
+      "dungeness-sandbox-evaluator",
       "--panel",
       "development",
       "--checkpoint",
       "{checkpointId}"
     ],
     "hiddenCommand": [
-      "bun",
-      "run",
-      "evaluate",
-      "--",
+      "dungeness-sandbox-evaluator",
       "--panel",
       "hidden",
       "--checkpoint",

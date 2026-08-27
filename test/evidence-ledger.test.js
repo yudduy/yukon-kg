@@ -28,7 +28,7 @@ function fixture() {
     baseCommitSha: hashes.base,
     protocolSha256: hashes.protocol,
     evaluatorSha256: hashes.evaluator,
-    panelSha256: hashes.panel,
+    panelSha256s: [hashes.panel],
     signer: signing.signer,
   });
   return { ledger, privateKeyPem: signing.privateKeyPem };
@@ -162,5 +162,24 @@ describe("provenance-gated evaluator ledger", () => {
     expect(() => appendSignedEvidenceReceipt(empty, receipt("evaluation", {
       score: null,
     }), privateKeyPem)).toThrow(/valid evaluations require a score/i);
+    expect(() => appendSignedEvidenceReceipt(empty, receipt("attestation"), privateKeyPem)).toThrow(/phase/i);
+    expect(() => appendSignedEvidenceReceipt(empty, receipt("evaluation", {
+      score: "90",
+    }), privateKeyPem)).toThrow(/score must be finite/i);
+  });
+
+  test("anchors the signer and prevents proposal IDs from joining different artifacts", () => {
+    const { ledger: empty, privateKeyPem } = fixture();
+    const first = appendSignedEvidenceReceipt(empty, receipt("evaluation"), privateKeyPem);
+    const otherSigner = createEvidenceSigningKeyPair().signer;
+    expect(() => verifyEvidenceLedger(first, {
+      expectedSignerSha256: otherSigner.publicKeySha256,
+    })).toThrow(/anchored/i);
+    expect(() => appendSignedEvidenceReceipt(first, receipt("evaluation", {
+      artifactSha256: "1".repeat(64),
+    }), privateKeyPem)).toThrow(/another artifact/i);
+    expect(() => appendSignedEvidenceReceipt(empty, receipt("evaluation", {
+      proposalId: "spaces are not trusted",
+    }), privateKeyPem)).toThrow(/proposalId/i);
   });
 });

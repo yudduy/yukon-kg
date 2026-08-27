@@ -3,6 +3,7 @@ import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { runProcess } from "../src/mve.js";
+import { createEvidenceSigningKeyPair } from "../src/atlas-runtime/evidence-ledger.ts";
 import {
   CALIBRATION_PAIR_COUNT,
   CONFIRMATORY_INTERIMS,
@@ -20,6 +21,7 @@ import {
 } from "../src/dungeness-campaign-runner.js";
 
 const temporaryRoots = [];
+const protocolSigning = createEvidenceSigningKeyPair();
 
 afterEach(async () => {
   await Promise.all(temporaryRoots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
@@ -41,12 +43,21 @@ function adapterValue(repoSha = "a".repeat(40)) {
     repoSha,
     mutableGlobs: ["src/point_add/**"],
     setupCommand: null,
+    isolation: {
+      kind: "external_microvm",
+      network: "none",
+      hostWorkspaceMounted: false,
+      runnerSha256: "9".repeat(64),
+    },
     evaluator: {
+      attestationCommand: ["bun", "evaluator.js", "attest"],
       developmentCommand: ["bun", "evaluator.js", "development"],
       hiddenCommand: ["bun", "evaluator.js", "hidden"],
       timeoutMs: 10_000,
     },
-    checkpoints: Array.from({ length: 8 }, (_, index) => checkpoint(`checkpoint-${index + 1}`, repoSha)),
+    checkpoints: Array.from({ length: 8 }, (_, index) => (
+      checkpoint(`checkpoint-${index + 1}`, (index + 1).toString(16).repeat(40))
+    )),
   };
 }
 
@@ -97,6 +108,10 @@ describe("adaptive campaign protocol", () => {
     expect(() => parseDungenessAdapter(adapterValue(), {
       expectedRepoSha: "b".repeat(40),
     })).toThrow(/checkout/i);
+    expect(() => parseDungenessAdapter({
+      ...adapterValue(),
+      checkpoints: Array.from({ length: 8 }, (_, index) => checkpoint(`duplicate-${index}`, "a".repeat(40))),
+    })).toThrow(/distinct Git commits/i);
   });
 
   test("freezes model, provider, budgets, pins, and assignments into one hash", () => {
@@ -106,9 +121,12 @@ describe("adaptive campaign protocol", () => {
       dungenessPin: { repo: "https://github.com/Layr-Labs/dungeness.git", sha: adapter.repoSha },
       atlasReleaseId: "1".repeat(64),
       atlasManifestSha256: "2".repeat(64),
+      stateBriefSha256: "3".repeat(64),
+      runtimeSha256: "4".repeat(64),
       model: "openai/gpt-5.4",
       provider: "OpenAI",
       decoding: { temperature: 0, maxTokens: 2048 },
+      signer: protocolSigning.signer,
       seed: "protocol-seed",
       createdAt: "2026-08-27T00:00:00.000Z",
     };
@@ -144,10 +162,14 @@ describe("adaptive campaign protocol", () => {
     expect(report.decision).toBe("ADOPT_ADAPTIVE_STATE");
     expect(report.positiveCheckpoints).toBe(8);
     expect(report.provenanceViolations).toBe(0);
+    const interim = analyzeAdaptiveCampaigns(confirmatory.slice(0, 40));
+    expect(interim.pairCount).toBe(20);
+    expect(interim.isFinal).toBe(false);
+    expect(interim.decision).toBe("CONTINUE");
   });
 
   test("isolates adaptive procedure and knowledge effects in a 2x2", () => {
-    const campaigns = Array.from({ length: 20 }, (_, index) => {
+    const campaigns = Array.from({ length: 40 }, (_, index) => {
       const blockId = `prime:checkpoint-${index % 8}:p${index}`;
       const checkpointId = `checkpoint-${index % 8}`;
       return [
@@ -174,6 +196,27 @@ describe("adaptive campaign protocol", () => {
     expect(report.procedure.mean).toBeCloseTo(0.1);
     expect(report.interaction.mean).toBeCloseTo(0);
     expect(report.decision).toBe("ADOPT_ADAPTIVE_PROCEDURES");
+  });
+
+  test("does not adopt procedures that hurt the deployed adaptive-state cell", () => {
+    const campaigns = Array.from({ length: 40 }, (_, index) => {
+      const blockId = `prime-harm:checkpoint-${index % 8}:p${index}`;
+      const checkpointId = `checkpoint-${index % 8}`;
+      const cell = (mode, arm, gain) => campaign(`${blockId}:${mode}`, checkpointId, arm, gain, {
+        blockId,
+        procedureMode: mode,
+      });
+      return [
+        cell("fixed", "state_static", 0),
+        cell("fixed", "state_adaptive", 0.1),
+        cell("adaptive_procedures", "state_static", 0.2),
+        cell("adaptive_procedures", "state_adaptive", 0.08),
+      ];
+    }).flat();
+    const report = analyzePrimeFactorCampaigns(campaigns);
+    expect(report.procedure.mean).toBeGreaterThan(0);
+    expect(report.adaptiveStateProcedure.mean).toBeLessThan(0);
+    expect(report.decision).toBe("RETAIN_FIXED_PROCEDURES");
   });
 });
 
@@ -230,9 +273,12 @@ describe("Dungeness evaluator and campaign runner", () => {
       dungenessPin: { repo: "fixture", sha: revision },
       atlasReleaseId: "1".repeat(64),
       atlasManifestSha256: "2".repeat(64),
+      stateBriefSha256: "3".repeat(64),
+      runtimeSha256: "4".repeat(64),
       model: "openai/gpt-5.4",
       provider: "fixture",
       decoding: { temperature: 0, maxTokens: 512 },
+      signer: protocolSigning.signer,
       seed: "fixture-seed",
       createdAt: "2026-08-27T00:00:00.000Z",
       budget: {
@@ -288,12 +334,15 @@ describe("Dungeness evaluator and campaign runner", () => {
       dungenessRepo: repo,
       runRoot: runs,
       completionFn: async () => completions.shift(),
+      signingPrivateKeyPem: protocolSigning.privateKeyPem,
     });
     expect(result.bestValidScore).toBe(90);
     expect(result.normalizedGain).toBeCloseTo(0.1);
-    expect(result.evaluatorCalls).toBe(1);
+    expect(result.evaluatorCalls).toBe(2);
     expect(result.provenanceViolations).toEqual([]);
     expect(result.hiddenAdjudication).toHaveLength(1);
+    expect(result.hiddenAdjudication[0].receiptSha256).toHaveLength(64);
+    expect(result.finalOutputValid).toBe(true);
     expect(result.providerRoutes).toEqual(["fixture"]);
   });
 });

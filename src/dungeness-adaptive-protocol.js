@@ -8,6 +8,9 @@ export const PROCEDURE_MODES = Object.freeze(["fixed", "adaptive_procedures"]);
 export const CALIBRATION_PAIR_COUNT = 16;
 export const CONFIRMATORY_INTERIMS = Object.freeze([20, 40, 60, 80]);
 export const CONFIRMATORY_MAX_PAIRS = CONFIRMATORY_INTERIMS.at(-1);
+export const CONFIRMATORY_FINAL_PAIR_COUNTS = Object.freeze([40, 80]);
+export const CONFIRMATORY_ALPHA = 0.025;
+export const CONFIRMATORY_POWER = 0.90;
 export const PRACTICAL_MDE = 0.05;
 export const TARGET_ADVANTAGE = 0.10;
 export const INVALID_NONINFERIORITY_MARGIN = 0.05;
@@ -81,6 +84,14 @@ export function parseDungenessAdapter(value, { expectedRepoSha = null } = {}) {
   if (input.mutableGlobs.some((glob) => typeof glob !== "string" || !glob.startsWith("src/point_add/"))) {
     throw new Error("Dungeness mutable globs must stay under src/point_add/");
   }
+  const isolation = requireObject(input.isolation, "isolation");
+  if (
+    isolation.kind !== "external_microvm"
+    || isolation.network !== "none"
+    || isolation.hostWorkspaceMounted !== false
+  ) {
+    throw new Error("Dungeness evaluation requires a networkless external microVM without the host workspace mounted");
+  }
   const evaluator = requireObject(input.evaluator, "evaluator");
   const checkpoints = input.checkpoints;
   if (!Array.isArray(checkpoints) || checkpoints.length !== 8) {
@@ -106,12 +117,22 @@ export function parseDungenessAdapter(value, { expectedRepoSha = null } = {}) {
       hiddenPanelSha256: requireSha(item.hiddenPanelSha256, `checkpoints[${index}].hiddenPanelSha256`),
     };
   });
+  if (new Set(parsedCheckpoints.map((checkpoint) => checkpoint.gitRef)).size !== parsedCheckpoints.length) {
+    throw new Error("the eight checkpoints must pin distinct Git commits");
+  }
   return {
     schema: DUNGENESS_ADAPTER_SCHEMA,
     repoSha,
     mutableGlobs: [...input.mutableGlobs],
     setupCommand: input.setupCommand == null ? null : requireCommand(input.setupCommand, "setupCommand"),
+    isolation: {
+      kind: "external_microvm",
+      network: "none",
+      hostWorkspaceMounted: false,
+      runnerSha256: requireSha(isolation.runnerSha256, "isolation.runnerSha256"),
+    },
     evaluator: {
+      attestationCommand: requireCommand(evaluator.attestationCommand, "evaluator.attestationCommand"),
       developmentCommand: requireCommand(evaluator.developmentCommand, "evaluator.developmentCommand"),
       hiddenCommand: requireCommand(evaluator.hiddenCommand, "evaluator.hiddenCommand"),
       timeoutMs: Number.isFinite(evaluator.timeoutMs) && evaluator.timeoutMs > 0
@@ -123,9 +144,9 @@ export function parseDungenessAdapter(value, { expectedRepoSha = null } = {}) {
   };
 }
 
-function cellSeed(seed, phase, checkpointId, repeatIndex, arm, procedureMode) {
+function cellSeed(seed, phase, checkpointId, repeatIndex) {
   return Number.parseInt(
-    sha256(`${seed}\0${phase}\0${checkpointId}\0${repeatIndex}\0${arm}\0${procedureMode}`).slice(0, 8),
+    sha256(`${seed}\0${phase}\0${checkpointId}\0${repeatIndex}`).slice(0, 8),
     16,
   );
 }
@@ -143,11 +164,12 @@ export function buildPairedAssignments({
   const assignments = [];
   for (let pairIndex = 0; pairIndex < pairCount; pairIndex += 1) {
     const checkpoint = checkpoints[pairIndex % checkpoints.length];
+    const blockCells = [];
     for (const procedureMode of procedureModes) {
       if (!PROCEDURE_MODES.includes(procedureMode)) throw new Error(`unknown procedure mode ${procedureMode}`);
       const blockId = `${phase}:${checkpoint.id}:p${String(pairIndex + 1).padStart(3, "0")}`;
       const pairId = `${blockId}:${procedureMode}`;
-      const cells = KNOWLEDGE_ARMS.map((arm) => ({
+      blockCells.push(...KNOWLEDGE_ARMS.map((arm) => ({
         campaignId: `${pairId}:${arm}`,
         blockId,
         pairId,
@@ -158,11 +180,15 @@ export function buildPairedAssignments({
         arm,
         procedureMode,
         seed: cellSeed(seed, phase, checkpoint.id, pairIndex, arm, procedureMode),
-      }));
-      const reverse = Number.parseInt(sha256(`${seed}\0${pairId}\0order`)[0], 16) % 2 === 1;
-      for (const [waveOrder, cell] of (reverse ? cells.reverse() : cells).entries()) {
-        assignments.push({ ...cell, waveOrder });
-      }
+      })));
+    }
+    const ordered = blockCells.sort((left, right) => (
+      sha256(`${seed}\0${left.campaignId}\0order`).localeCompare(
+        sha256(`${seed}\0${right.campaignId}\0order`),
+      )
+    ));
+    for (const [waveOrder, cell] of ordered.entries()) {
+      assignments.push({ ...cell, waveOrder });
     }
   }
   return assignments;
@@ -173,9 +199,12 @@ export function freezeAdaptiveProtocol({
   dungenessPin,
   atlasReleaseId,
   atlasManifestSha256,
+  stateBriefSha256,
+  runtimeSha256,
   model,
   provider,
   decoding,
+  signer,
   seed,
   budget = DEFAULT_CAMPAIGN_BUDGET,
   createdAt,
@@ -185,8 +214,13 @@ export function freezeAdaptiveProtocol({
   requireString(provider, "provider");
   requireString(seed, "seed");
   requireString(createdAt, "createdAt");
+  if (signer?.algorithm !== "ed25519") throw new Error("an Ed25519 ledger signer is required");
+  requireSha(signer.publicKeySha256, "signer.publicKeySha256");
+  requireString(signer.publicKeyPem, "signer.publicKeyPem");
   requireSha(atlasReleaseId, "atlasReleaseId");
   requireSha(atlasManifestSha256, "atlasManifestSha256");
+  requireSha(stateBriefSha256, "stateBriefSha256");
+  requireSha(runtimeSha256, "runtimeSha256");
   const frozen = {
     schema: DUNGENESS_ADAPTIVE_SCHEMA,
     protocolVersion: DUNGENESS_ADAPTIVE_PROTOCOL_VERSION,
@@ -195,16 +229,21 @@ export function freezeAdaptiveProtocol({
       repo: dungenessPin.repo,
       sha: dungenessPin.sha,
       adapterSha256: sha256(adapter),
+      isolation: adapter.isolation,
+      checkpoints: adapter.checkpoints,
     },
     atlas: {
       releaseId: atlasReleaseId,
       manifestSha256: atlasManifestSha256,
+      stateBriefSha256,
     },
+    runtimeSha256,
     model: {
       id: model,
       provider,
       decoding: requireObject(decoding, "decoding"),
     },
+    signer,
     seed,
     budget: requireBudget(budget),
     arms: [...KNOWLEDGE_ARMS],
@@ -277,14 +316,17 @@ export function estimateConfirmatoryPairs(calibrationCampaigns, {
   maximum = CONFIRMATORY_MAX_PAIRS,
 } = {}) {
   const pairs = pairedRows(calibrationCampaigns);
-  if (pairs.length < 12) throw new Error("power calibration requires at least 12 matched pairs");
+  if (pairs.length !== CALIBRATION_PAIR_COUNT) {
+    throw new Error(`power calibration requires exactly ${CALIBRATION_PAIR_COUNT} matched pairs`);
+  }
   const differences = pairs.map((pair) => pair.difference);
   const observedSd = sampleStandardDeviation(differences);
   const conservativeSd = Math.max(0.05, observedSd * 1.5);
   if (targetAdvantage <= practicalMde) throw new Error("target advantage must exceed the practical MDE");
-  const raw = Math.ceil(((1.959963984540054 + 1.2815515655446004) * conservativeSd
+  const finalCritical = 2.023;
+  const raw = Math.ceil(((finalCritical + 1.2815515655446004) * conservativeSd
     / (targetAdvantage - practicalMde)) ** 2);
-  const scheduled = CONFIRMATORY_INTERIMS.find((count) => count >= Math.max(minimum, raw)) ?? maximum;
+  const scheduled = CONFIRMATORY_FINAL_PAIR_COUNTS.find((count) => count >= Math.max(minimum, raw)) ?? maximum;
   const pairCosts = pairs.map((pair) => pair.static.costUsd + pair.adaptive.costUsd);
   const projectedMaxSpendUsd = 1.1 * mean(pairCosts) * scheduled;
   return {
@@ -294,6 +336,9 @@ export function estimateConfirmatoryPairs(calibrationCampaigns, {
     conservativeSd,
     practicalMde,
     targetAdvantage,
+    alpha: CONFIRMATORY_ALPHA,
+    targetPower: CONFIRMATORY_POWER,
+    inference: "final-only paired Student interval; interim reports are descriptive",
     rawRequiredPairs: raw,
     scheduledPairs: Math.min(maximum, scheduled),
     attainableAtCap: raw <= maximum,
@@ -302,9 +347,16 @@ export function estimateConfirmatoryPairs(calibrationCampaigns, {
   };
 }
 
-function groupSequentialCriticalZ(pairCount, maximumPairs) {
-  const informationFraction = pairCount / maximumPairs;
-  return 1.959963984540054 / Math.sqrt(informationFraction);
+function studentTCritical975(degreesOfFreedom) {
+  if (!Number.isInteger(degreesOfFreedom) || degreesOfFreedom < 1) {
+    throw new Error("Student interval requires positive degrees of freedom");
+  }
+  const z = 1.959963984540054;
+  const inverse = 1 / degreesOfFreedom;
+  return z
+    + (z ** 3 + z) * inverse / 4
+    + (5 * z ** 5 + 16 * z ** 3 + 3 * z) * inverse ** 2 / 96
+    + (3 * z ** 7 + 19 * z ** 5 + 17 * z ** 3 - 15 * z) * inverse ** 3 / 384;
 }
 
 function interval(values, criticalZ) {
@@ -329,11 +381,16 @@ export function analyzeAdaptiveCampaigns(campaigns, {
   if (!CONFIRMATORY_INTERIMS.includes(pairs.length)) {
     throw new Error(`analysis requires an interim at ${CONFIRMATORY_INTERIMS.join(", ")} pairs`);
   }
-  const criticalZ = groupSequentialCriticalZ(pairs.length, maximumPairs);
-  const effect = interval(pairs.map((pair) => pair.difference), criticalZ);
+  if (!CONFIRMATORY_FINAL_PAIR_COUNTS.includes(maximumPairs)) {
+    throw new Error(`maximumPairs must be one of ${CONFIRMATORY_FINAL_PAIR_COUNTS.join(", ")}`);
+  }
+  if (pairs.length > maximumPairs) throw new Error("pair count exceeds the frozen maximum");
+  const isFinal = pairs.length === maximumPairs;
+  const criticalValue = studentTCritical975(pairs.length - 1);
+  const effect = interval(pairs.map((pair) => pair.difference), criticalValue);
   const invalidEffect = interval(pairs.map((pair) => (
     pair.adaptive.invalidRate - pair.static.invalidRate
-  )), criticalZ);
+  )), criticalValue);
   const checkpointMeans = Object.fromEntries(
     [...new Set(pairs.map((pair) => pair.checkpointId))].sort().map((checkpointId) => {
       const values = pairs.filter((pair) => pair.checkpointId === checkpointId).map((pair) => pair.difference);
@@ -349,12 +406,15 @@ export function analyzeAdaptiveCampaigns(campaigns, {
     (total, campaign) => total + (campaign.provenanceViolations?.length ?? 0),
     0,
   );
+  if (Object.keys(checkpointMeans).length !== 8) {
+    throw new Error("confirmatory analysis requires all eight frozen checkpoints");
+  }
   const safetyPass = invalidEffect.upper <= invalidMargin && provenanceViolations === 0;
   const breadthPass = positiveCheckpoints >= 6
     && Object.values(leaveOneCheckpointOut).every((value) => value > 0);
   let decision = "CONTINUE";
-  if (effect.lower > practicalMde && safetyPass && breadthPass) decision = "ADOPT_ADAPTIVE_STATE";
-  else if (pairs.length === maximumPairs) {
+  if (isFinal && effect.lower > practicalMde && safetyPass && breadthPass) decision = "ADOPT_ADAPTIVE_STATE";
+  else if (isFinal) {
     decision = effect.upper < practicalMde || !safetyPass
       ? "RETAIN_STATIC_STATE"
       : "INCONCLUSIVE_RETAIN_STATIC";
@@ -362,10 +422,12 @@ export function analyzeAdaptiveCampaigns(campaigns, {
   return {
     schema: DUNGENESS_ADAPTIVE_SCHEMA,
     protocolVersion: DUNGENESS_ADAPTIVE_PROTOCOL_VERSION,
-    analysis: "paired O'Brien-Fleming-style normal approximation; one confirmatory contrast",
+    analysis: "final-only paired Student interval; interim reports are descriptive and cannot adopt",
     pairCount: pairs.length,
     maximumPairs,
-    criticalZ,
+    isFinal,
+    alpha: CONFIRMATORY_ALPHA,
+    criticalValue,
     practicalMde,
     effect,
     invalidNoninferiority: {
@@ -417,13 +479,36 @@ export function analyzePrimeFactorCampaigns(campaigns, {
     ) - (
       y("state_adaptive", "fixed") - y("state_static", "fixed")
     );
-    return { blockId, knowledgeEffect, procedureEffect, interaction, cells: Object.fromEntries(cells) };
+    const adaptiveStateProcedureEffect = (
+      y("state_adaptive", "adaptive_procedures") - y("state_adaptive", "fixed")
+    );
+    const adaptiveStateInvalidEffect = (
+      cells.get("state_adaptive:adaptive_procedures").invalidRate
+      - cells.get("state_adaptive:fixed").invalidRate
+    );
+    return {
+      blockId,
+      knowledgeEffect,
+      procedureEffect,
+      adaptiveStateProcedureEffect,
+      adaptiveStateInvalidEffect,
+      interaction,
+      cells: Object.fromEntries(cells),
+    };
   });
-  if (blocks.length < 20) throw new Error("prime-factor analysis requires at least 20 complete blocks");
-  const criticalZ = 1.959963984540054;
-  const knowledge = interval(blocks.map((block) => block.knowledgeEffect), criticalZ);
-  const procedure = interval(blocks.map((block) => block.procedureEffect), criticalZ);
-  const interaction = interval(blocks.map((block) => block.interaction), criticalZ);
+  if (blocks.length !== 40) throw new Error("prime-factor analysis requires exactly 40 complete blocks");
+  const criticalValue = studentTCritical975(blocks.length - 1);
+  const knowledge = interval(blocks.map((block) => block.knowledgeEffect), criticalValue);
+  const procedure = interval(blocks.map((block) => block.procedureEffect), criticalValue);
+  const adaptiveStateProcedure = interval(
+    blocks.map((block) => block.adaptiveStateProcedureEffect),
+    criticalValue,
+  );
+  const adaptiveStateInvalid = interval(
+    blocks.map((block) => block.adaptiveStateInvalidEffect),
+    criticalValue,
+  );
+  const interaction = interval(blocks.map((block) => block.interaction), criticalValue);
   const provenanceViolations = campaigns.reduce(
     (total, campaign) => total + (campaign.provenanceViolations?.length ?? 0),
     0,
@@ -431,20 +516,24 @@ export function analyzePrimeFactorCampaigns(campaigns, {
   return {
     schema: DUNGENESS_ADAPTIVE_SCHEMA,
     protocolVersion: DUNGENESS_ADAPTIVE_PROTOCOL_VERSION,
-    analysis: "paired 2x2 factorial normal approximation",
+    analysis: "paired 2x2 factorial; adaptive-state procedural effect is primary",
     blocks: blocks.length,
     practicalMde,
     knowledge,
     procedure,
+    adaptiveStateProcedure,
+    adaptiveStateInvalid,
     interaction,
     provenanceViolations,
     decision: provenanceViolations > 0
       ? "REJECT_ADAPTIVE_PROCEDURES"
-      : procedure.lower > practicalMde
-        ? "ADOPT_ADAPTIVE_PROCEDURES"
-        : procedure.upper < practicalMde
-          ? "RETAIN_FIXED_PROCEDURES"
-          : "INCONCLUSIVE_RETAIN_FIXED_PROCEDURES",
+      : adaptiveStateInvalid.upper > INVALID_NONINFERIORITY_MARGIN
+        ? "REJECT_ADAPTIVE_PROCEDURES"
+        : adaptiveStateProcedure.lower > practicalMde
+          ? "ADOPT_ADAPTIVE_PROCEDURES"
+          : adaptiveStateProcedure.upper < practicalMde
+            ? "RETAIN_FIXED_PROCEDURES"
+            : "INCONCLUSIVE_RETAIN_FIXED_PROCEDURES",
   };
 }
 

@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { existsSync, lstatSync, realpathSync } from "node:fs";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { chatCompletion, pinnedOpenRouterModel } from "./openrouter.js";
@@ -6,7 +7,7 @@ import { runProcess } from "./mve.js";
 import {
   appendSignedEvidenceReceipt,
   createEvidenceLedger,
-  createEvidenceSigningKeyPair,
+  evidenceSignerFromPrivateKey,
   ledgerSha256,
   reduceEvidenceLedger,
   serializeEvidenceLedger,
@@ -51,7 +52,7 @@ export const CAMPAIGN_TOOLS = Object.freeze([
     type: "function",
     function: {
       name: "search",
-      description: "Search UTF-8 repository files with a regular expression.",
+      description: "Search UTF-8 repository files for literal case-insensitive text.",
       parameters: {
         type: "object",
         additionalProperties: false,
@@ -89,7 +90,7 @@ export const CAMPAIGN_TOOLS = Object.freeze([
         additionalProperties: false,
         required: ["proposalId"],
         properties: {
-          proposalId: { type: "string", minLength: 1 },
+          proposalId: { type: "string", pattern: "^[a-z0-9][a-z0-9-]{0,63}$" },
         },
       },
     },
@@ -170,10 +171,19 @@ function safeRelative(value = "") {
 }
 
 function absolutePath(root, relative) {
-  const resolved = path.resolve(root, safeRelative(relative));
-  const rootPrefix = `${path.resolve(root)}${path.sep}`;
-  if (resolved !== path.resolve(root) && !resolved.startsWith(rootPrefix)) {
+  const normalized = safeRelative(relative);
+  const rootReal = realpathSync(root);
+  const resolved = path.resolve(rootReal, normalized);
+  const rootPrefix = `${rootReal}${path.sep}`;
+  if (resolved !== rootReal && !resolved.startsWith(rootPrefix)) {
     throw new Error("path escapes the campaign worktree");
+  }
+  let cursor = rootReal;
+  for (const segment of normalized.split("/").filter(Boolean)) {
+    cursor = path.join(cursor, segment);
+    if (existsSync(cursor) && lstatSync(cursor).isSymbolicLink()) {
+      throw new Error(`symbolic links are forbidden in campaign paths: ${normalized}`);
+    }
   }
   return resolved;
 }
@@ -194,15 +204,16 @@ async function listFiles(root, relative = "") {
   const start = absolutePath(root, relative);
   const output = [];
   async function walk(directory, prefix) {
+    if (output.length >= 2000) return;
     const entries = await fs.readdir(directory, { withFileTypes: true });
     for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+      if (output.length >= 2000) break;
       if ([".git", "target", "node_modules"].includes(entry.name)) continue;
       const childPrefix = prefix ? `${prefix}/${entry.name}` : entry.name;
       const child = path.join(directory, entry.name);
       if (entry.isSymbolicLink()) continue;
       if (entry.isDirectory()) await walk(child, childPrefix);
       else if (entry.isFile()) output.push(childPrefix);
-      if (output.length >= 2000) return;
     }
   }
   await walk(start, safeRelative(relative));
@@ -220,6 +231,25 @@ async function mutableSourceDigest(root, adapter) {
     hash.update("\0");
   }
   return hash.digest("hex");
+}
+
+async function assertNoMutableSymlinks(root, adapter) {
+  async function walk(directory) {
+    const entries = await fs.readdir(directory, { withFileTypes: true });
+    for (const entry of entries) {
+      const child = path.join(directory, entry.name);
+      const metadata = await fs.lstat(child);
+      if (metadata.isSymbolicLink()) throw new Error(`mutable source contains symbolic link ${child}`);
+      if (metadata.isDirectory()) await walk(child);
+    }
+  }
+  for (const prefix of mutablePrefixes(adapter)) {
+    try {
+      await walk(absolutePath(root, prefix));
+    } catch (error) {
+      if (error?.code !== "ENOENT") throw error;
+    }
+  }
 }
 
 async function snapshotMutableSource(root, destination, adapter) {
@@ -295,15 +325,29 @@ export function parseDungenessEvaluation(processResult) {
   return { score, qualification, valid };
 }
 
-async function trackedChangesOutsideMutable(worktree, adapter) {
-  const status = await runProcess("git", ["status", "--porcelain", "--untracked-files=all"], { cwd: worktree });
+async function worktreeStatusPaths(worktree) {
+  const status = await runProcess("git", ["status", "--porcelain=v1", "-z", "--untracked-files=all"], { cwd: worktree });
   if (status.exitCode !== 0) throw new Error(`git status failed: ${status.stderr}`);
-  return status.stdout.split("\n").filter(Boolean).map((line) => line.slice(3)).filter((relative) => (
+  return status.stdout.split("\0").filter(Boolean).map((entry) => (
+    entry.length >= 3 && entry[2] === " " ? entry.slice(3) : entry
+  ));
+}
+
+async function trackedChangesOutsideMutable(worktree, adapter, allowedSetupChanges = new Set()) {
+  const paths = await worktreeStatusPaths(worktree);
+  return paths.filter((relative) => !allowedSetupChanges.has(relative)).filter((relative) => (
     !mutablePrefixes(adapter).some((prefix) => relative.startsWith(prefix))
   ));
 }
 
-async function runEvaluator({ worktree, adapter, checkpoint, panel, runProcessFn = runProcess }) {
+async function runEvaluator({
+  worktree,
+  adapter,
+  checkpoint,
+  panel,
+  timeoutMs = adapter.evaluator.timeoutMs,
+  runProcessFn = runProcess,
+}) {
   const commandTemplate = panel === "hidden"
     ? adapter.evaluator.hiddenCommand
     : adapter.evaluator.developmentCommand;
@@ -314,7 +358,7 @@ async function runEvaluator({ worktree, adapter, checkpoint, panel, runProcessFn
   });
   const result = await runProcessFn(command[0], command.slice(1), {
     cwd: worktree,
-    timeoutMs: adapter.evaluator.timeoutMs,
+    timeoutMs: Math.min(adapter.evaluator.timeoutMs, timeoutMs),
     unsetEnv: ["OPENROUTER_API_KEY", "GITHUB_TOKEN", "GH_TOKEN", "YUDDUY_GITHUB_TOKEN"],
   });
   return { process: result, evaluation: parseDungenessEvaluation(result), command };
@@ -344,14 +388,13 @@ function campaignTools(arm, procedureMode) {
   });
 }
 
-function campaignSystemPrompt({ briefText, assignment, budget }) {
+function campaignSystemPrompt({ briefText, budget }) {
   return [
     "Optimize the pinned ECDSA circuit using only the provided repository tools.",
     "The evaluator, harness, Cargo manifest, and files outside src/point_add/ are immutable.",
     "Do not use nonce grinding, identity padding, or operation-stream changes that only alter the sampled workload.",
     "Use one focused code change at a time and call evaluate for objective feedback.",
     "Evaluator receipts, not your prose, determine trusted state.",
-    `Campaign arm: ${assignment.arm}. Procedure mode: ${assignment.procedureMode}.`,
     `Hard limits: ${budget.turns} turns, ${budget.rootTokens} root tokens, ${budget.evaluatorCalls} evaluator calls, $${budget.costUsd}.`,
     `Initial neutral state brief:\n${briefText}`,
   ].join("\n\n");
@@ -367,22 +410,32 @@ function parseToolArguments(toolCall) {
   }
 }
 
+function remainingWallMs(state) {
+  return Math.max(0, state.budget.wallClockMs - (Date.now() - state.startedAt));
+}
+
 async function executeTool(name, args, state) {
   if (name === "list_files") {
     return { files: await listFiles(state.worktree, args.path ?? "") };
   }
   if (name === "read_file") {
-    const contents = await fs.readFile(absolutePath(state.worktree, args.path), "utf8");
-    if (Buffer.byteLength(contents, "utf8") > MAX_READ_BYTES) {
+    const pathname = absolutePath(state.worktree, args.path);
+    const metadata = await fs.stat(pathname);
+    if (!metadata.isFile()) throw new Error("read_file requires a regular file");
+    if (metadata.size > MAX_READ_BYTES) {
       throw new Error(`file exceeds ${MAX_READ_BYTES} readable bytes`);
     }
+    const contents = await fs.readFile(pathname, "utf8");
     const lines = contents.split("\n");
     const offset = args.offset ?? 0;
     const limit = args.limit ?? 300;
     return { path: safeRelative(args.path), offset, lines: lines.slice(offset, offset + limit) };
   }
   if (name === "search") {
-    const expression = new RegExp(args.pattern, "iu");
+    if (typeof args.pattern !== "string" || args.pattern.length === 0 || args.pattern.length > 256) {
+      throw new Error("search pattern must contain 1 to 256 characters");
+    }
+    const needle = args.pattern.toLowerCase();
     const files = await listFiles(state.worktree, args.path ?? "");
     const matches = [];
     for (const relative of files) {
@@ -393,7 +446,9 @@ async function executeTool(name, args, state) {
         continue;
       }
       for (const [index, line] of contents.split("\n").entries()) {
-        if (expression.test(line)) matches.push({ path: relative, line: index + 1, text: line.slice(0, 500) });
+        if (line.toLowerCase().includes(needle)) {
+          matches.push({ path: relative, line: index + 1, text: line.slice(0, 500) });
+        }
         if (matches.length >= 200) return { matches, truncated: true };
       }
     }
@@ -449,20 +504,39 @@ async function executeTool(name, args, state) {
     return { finished: true };
   }
   if (name === "evaluate") {
-    if (state.evaluatorCalls >= state.budget.evaluatorCalls) throw new Error("evaluator call budget exhausted");
-    const outside = await trackedChangesOutsideMutable(state.worktree, state.adapter);
+    if (state.developmentCalls >= Math.floor(state.budget.evaluatorCalls / 2)) {
+      throw new Error("development evaluator call budget exhausted; hidden adjudication is reserved");
+    }
+    if (remainingWallMs(state) <= 0) throw new Error("campaign wall-clock budget exhausted");
+    const outside = await trackedChangesOutsideMutable(
+      state.worktree,
+      state.adapter,
+      state.allowedSetupChanges,
+    );
     if (outside.length > 0) {
       state.provenanceViolations.push(`files outside mutable surface changed: ${outside.join(", ")}`);
       throw new Error(state.provenanceViolations.at(-1));
     }
     const artifactSha256 = await mutableSourceDigest(state.worktree, state.adapter);
+    const candidateDirectory = path.join(
+      state.candidatesRoot,
+      String(state.developmentCalls + 1).padStart(3, "0"),
+    );
+    await snapshotMutableSource(state.worktree, candidateDirectory, state.adapter);
     const evaluated = await runEvaluator({
       worktree: state.worktree,
       adapter: state.adapter,
       checkpoint: state.checkpoint,
       panel: "development",
+      timeoutMs: remainingWallMs(state),
       runProcessFn: state.runProcessFn,
     });
+    const postEvaluationSha256 = await mutableSourceDigest(state.worktree, state.adapter);
+    if (postEvaluationSha256 !== artifactSha256) {
+      state.provenanceViolations.push("development evaluator mutated the candidate source");
+      throw new Error(state.provenanceViolations.at(-1));
+    }
+    state.developmentCalls += 1;
     state.evaluatorCalls += 1;
     const proposalId = args.proposalId;
     state.ledger = appendSignedEvidenceReceipt(state.ledger, {
@@ -497,8 +571,6 @@ async function executeTool(name, args, state) {
       },
     }, state.privateKeyPem);
     await appendLedgerFile(state.ledgerPath, state.ledger);
-    const candidateDirectory = path.join(state.candidatesRoot, String(state.evaluatorCalls).padStart(3, "0"));
-    await snapshotMutableSource(state.worktree, candidateDirectory, state.adapter);
     state.candidates.push({
       proposalId,
       artifactSha256,
@@ -518,6 +590,7 @@ async function executeTool(name, args, state) {
 
 async function addWorktree(repo, destination, gitRef, runProcessFn = runProcess) {
   await fs.mkdir(path.dirname(destination), { recursive: true });
+  await runProcessFn("git", ["worktree", "prune"], { cwd: repo, timeoutMs: 30_000 });
   const result = await runProcessFn("git", ["worktree", "add", "--detach", destination, gitRef], {
     cwd: repo,
     timeoutMs: 120_000,
@@ -530,7 +603,10 @@ async function removeWorktree(repo, destination, runProcessFn = runProcess) {
     cwd: repo,
     timeoutMs: 120_000,
   });
-  if (result.exitCode !== 0) await fs.rm(destination, { recursive: true, force: true });
+  if (result.exitCode !== 0) {
+    await fs.rm(destination, { recursive: true, force: true });
+    await runProcessFn("git", ["worktree", "prune"], { cwd: repo, timeoutMs: 30_000 });
+  }
 }
 
 async function hiddenAdjudication({
@@ -538,34 +614,103 @@ async function hiddenAdjudication({
   dungenessRepo,
   adjudicationRoot,
 }) {
-  const rows = [];
-  for (const [index, candidate] of state.candidates.entries()) {
-    if (!candidate.development.valid) continue;
-    const worktree = path.join(adjudicationRoot, `candidate-${String(index + 1).padStart(3, "0")}`);
-    await addWorktree(dungenessRepo, worktree, state.checkpoint.gitRef, state.runProcessFn);
+  const candidate = state.candidates
+    .filter((item) => item.development.valid)
+    .sort((left, right) => left.development.score - right.development.score)[0];
+  if (candidate === undefined) return [];
+  if (state.evaluatorCalls >= state.budget.evaluatorCalls) {
+    state.provenanceViolations.push("no evaluator-call budget remained for hidden adjudication");
+    return [];
+  }
+  if (remainingWallMs(state) <= 0) {
+    state.provenanceViolations.push("no wall-clock budget remained for hidden adjudication");
+    return [];
+  }
+  const worktree = path.join(adjudicationRoot, "selected-candidate");
+  await addWorktree(dungenessRepo, worktree, state.checkpoint.gitRef, state.runProcessFn);
+  try {
+    await restoreMutableSnapshot(candidate.snapshot, worktree, state.adapter);
+    const restoredSha256 = await mutableSourceDigest(worktree, state.adapter);
+    if (restoredSha256 !== candidate.artifactSha256) {
+      throw new Error("hidden adjudication snapshot does not match the development artifact");
+    }
+    const evaluated = await runEvaluator({
+      worktree,
+      adapter: state.adapter,
+      checkpoint: state.checkpoint,
+      panel: "hidden",
+      timeoutMs: remainingWallMs(state),
+      runProcessFn: state.runProcessFn,
+    });
+    const postEvaluationSha256 = await mutableSourceDigest(worktree, state.adapter);
+    if (postEvaluationSha256 !== candidate.artifactSha256) {
+      state.provenanceViolations.push("hidden evaluator mutated the candidate source");
+      throw new Error(state.provenanceViolations.at(-1));
+    }
+    state.evaluatorCalls += 1;
+    state.ledger = appendSignedEvidenceReceipt(state.ledger, {
+      createdAt: new Date().toISOString(),
+      phase: "evaluation",
+      proposalId: candidate.proposalId,
+      matcher: {
+        matcherId: "matcher:exact-artifact",
+        matcherVersion: "1",
+        ideaId: null,
+        membership: "matched",
+      },
+      baseCommitSha: state.checkpoint.gitRef,
+      artifactSha256: candidate.artifactSha256,
+      protocolSha256: state.protocol.protocolSha256,
+      evaluatorSha256: state.protocol.dungeness.adapterSha256,
+      panelSha256: state.checkpoint.hiddenPanelSha256,
+      command: commandReceipt(evaluated),
+      qualification: evaluated.evaluation.qualification,
+      baselineScore: state.checkpoint.baselineScore,
+      score: evaluated.evaluation.score,
+      executor: {
+        executorId: "host:dungeness-hidden",
+        independenceKey: `${state.assignment.campaignId}:hidden`,
+        authority: "pinned_evaluator",
+      },
+      budget: {
+        rootTokens: state.rootTokens,
+        descendantTokens: 0,
+        costUsd: state.costUsd,
+        evaluatorCalls: state.evaluatorCalls,
+      },
+    }, state.privateKeyPem);
+    await appendLedgerFile(state.ledgerPath, state.ledger);
+    return [{
+      proposalId: candidate.proposalId,
+      artifactSha256: candidate.artifactSha256,
+      score: evaluated.evaluation.score,
+      qualification: evaluated.evaluation.qualification,
+      valid: evaluated.evaluation.valid,
+      receiptSha256: state.ledger.receipts.at(-1).receiptSha256,
+    }];
+  } finally {
+    await removeWorktree(dungenessRepo, worktree, state.runProcessFn);
+  }
+}
+
+async function completeWithRetry(completionFn, options, remainingMs) {
+  let lastError = null;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
     try {
-      await restoreMutableSnapshot(candidate.snapshot, worktree, state.adapter);
-      const evaluated = await runEvaluator({
-        worktree,
-        adapter: state.adapter,
-        checkpoint: state.checkpoint,
-        panel: "hidden",
-        runProcessFn: state.runProcessFn,
+      return await completionFn({
+        ...options,
+        timeoutMs: Math.max(1, remainingMs),
       });
-      rows.push({
-        proposalId: candidate.proposalId,
-        artifactSha256: candidate.artifactSha256,
-        score: evaluated.evaluation.score,
-        qualification: evaluated.evaluation.qualification,
-        valid: evaluated.evaluation.valid,
-        stdoutSha256: sha256(evaluated.process.stdout),
-        stderrSha256: sha256(evaluated.process.stderr),
-      });
-    } finally {
-      await removeWorktree(dungenessRepo, worktree, state.runProcessFn);
+    } catch (error) {
+      lastError = error;
+      const retryable = error?.status === 429 || (Number.isInteger(error?.status) && error.status >= 500);
+      const delayMs = 1000 * 2 ** attempt;
+      if (!retryable || attempt === 3 || delayMs >= remainingMs) throw error;
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      remainingMs -= delayMs;
     }
   }
-  return rows;
+  throw lastError;
 }
 
 export async function runDungenessCampaign({
@@ -578,10 +723,17 @@ export async function runDungenessCampaign({
   runRoot,
   completionFn = chatCompletion,
   runProcessFn = runProcess,
+  signingPrivateKeyPem,
 }) {
   const campaignRoot = path.join(runRoot, assignment.campaignId.replaceAll(":", "_"));
   const worktree = path.join(campaignRoot, "worktree");
-  const signing = createEvidenceSigningKeyPair();
+  if (typeof signingPrivateKeyPem !== "string" || signingPrivateKeyPem.length === 0) {
+    throw new Error("the frozen protocol's ledger signing key is required");
+  }
+  const signer = evidenceSignerFromPrivateKey(signingPrivateKeyPem);
+  if (signer.publicKeySha256 !== protocol.signer.publicKeySha256) {
+    throw new Error("ledger private key does not match the frozen protocol signer");
+  }
   const ledger = createEvidenceLedger({
     campaignId: assignment.campaignId,
     createdAt: new Date().toISOString(),
@@ -589,8 +741,8 @@ export async function runDungenessCampaign({
     baseCommitSha: checkpoint.gitRef,
     protocolSha256: protocol.protocolSha256,
     evaluatorSha256: protocol.dungeness.adapterSha256,
-    panelSha256: checkpoint.developmentPanelSha256,
-    signer: signing.signer,
+    panelSha256s: [checkpoint.developmentPanelSha256, checkpoint.hiddenPanelSha256],
+    signer: protocol.signer,
   });
   await addWorktree(dungenessRepo, worktree, checkpoint.gitRef, runProcessFn);
   const state = {
@@ -601,38 +753,55 @@ export async function runDungenessCampaign({
     budget: protocol.budget,
     worktree,
     ledger,
-    privateKeyPem: signing.privateKeyPem,
+    privateKeyPem: signingPrivateKeyPem,
     ledgerPath: path.join(campaignRoot, "ledger.jsonl"),
     candidatesRoot: path.join(campaignRoot, "candidates"),
     candidates: [],
     procedures: new Map(),
     rootTokens: 0,
     costUsd: 0,
+    developmentCalls: 0,
     evaluatorCalls: 0,
     provenanceViolations: [],
+    allowedSetupChanges: new Set(),
     finished: false,
     summary: "",
     runProcessFn,
+    startedAt: Date.now(),
   };
-  await appendLedgerFile(state.ledgerPath, state.ledger);
   const messages = [{
     role: "system",
-    content: campaignSystemPrompt({ briefText, assignment, budget: protocol.budget }),
+    content: campaignSystemPrompt({ briefText, budget: protocol.budget }),
   }];
   const fingerprints = new Set();
   const providers = new Set();
   try {
+    await appendLedgerFile(state.ledgerPath, state.ledger);
+    await assertNoMutableSymlinks(worktree, adapter);
     if (adapter.setupCommand !== null) {
       const setup = await runProcessFn(adapter.setupCommand[0], adapter.setupCommand.slice(1), {
         cwd: worktree,
-        timeoutMs: adapter.evaluator.timeoutMs,
+        timeoutMs: Math.min(adapter.evaluator.timeoutMs, remainingWallMs(state)),
         unsetEnv: ["OPENROUTER_API_KEY", "GITHUB_TOKEN", "GH_TOKEN", "YUDDUY_GITHUB_TOKEN"],
       });
       if (setup.exitCode !== 0) throw new Error(`Dungeness setup failed: ${setup.stderr || setup.stdout}`);
+      const setupChanges = await worktreeStatusPaths(worktree);
+      const mutableSetupChanges = setupChanges.filter((relative) => (
+        mutablePrefixes(adapter).some((prefix) => relative.startsWith(prefix))
+      ));
+      if (mutableSetupChanges.length > 0) {
+        throw new Error(`Dungeness setup mutated candidate source: ${mutableSetupChanges.join(", ")}`);
+      }
+      state.allowedSetupChanges = new Set(setupChanges);
     }
     for (let turn = 0; turn < protocol.budget.turns && !state.finished; turn += 1) {
-      if (state.rootTokens >= protocol.budget.rootTokens || state.costUsd >= protocol.budget.costUsd) break;
-      const completion = await completionFn({
+      const remainingMs = remainingWallMs(state);
+      if (
+        remainingMs <= 0
+        || state.rootTokens >= protocol.budget.rootTokens
+        || state.costUsd >= protocol.budget.costUsd
+      ) break;
+      const completion = await completeWithRetry(completionFn, {
         model: protocol.model.id || pinnedOpenRouterModel(),
         provider: {
           order: [protocol.model.provider],
@@ -645,9 +814,25 @@ export async function runDungenessCampaign({
         tools: campaignTools(assignment.arm, assignment.procedureMode),
         toolChoice: "auto",
         messages,
-      });
-      state.rootTokens += completion.usage?.total_tokens ?? 0;
-      state.costUsd += completion.usage?.cost ?? 0;
+      }, remainingMs);
+      if (
+        !Number.isFinite(completion.usage?.total_tokens)
+        || completion.usage.total_tokens < 0
+        || !Number.isFinite(completion.usage?.cost)
+        || completion.usage.cost < 0
+      ) {
+        throw new Error("model provider omitted required token or cost accounting");
+      }
+      state.rootTokens += completion.usage.total_tokens;
+      state.costUsd += completion.usage.cost;
+      if (
+        state.rootTokens > protocol.budget.rootTokens
+        || state.costUsd > protocol.budget.costUsd
+        || remainingWallMs(state) <= 0
+      ) {
+        state.provenanceViolations.push("campaign exceeded a frozen model or wall-clock budget");
+        break;
+      }
       if (completion.provider) providers.add(completion.provider);
       if (completion.systemFingerprint) fingerprints.add(completion.systemFingerprint);
       messages.push({
@@ -684,6 +869,10 @@ export async function runDungenessCampaign({
     const bestValidScore = validScores.length > 0
       ? Math.min(checkpoint.baselineScore, ...validScores)
       : checkpoint.baselineScore;
+    const finalOutputValid = hidden.length === 1 && hidden[0].valid === true;
+    const proposalInvalidRate = state.candidates.length === 0
+      ? 1
+      : state.candidates.filter((candidate) => !candidate.development.valid).length / state.candidates.length;
     const result = {
       schema: "yukon-kg.dungeness-campaign.v1",
       protocolVersion: protocol.protocolVersion,
@@ -698,14 +887,15 @@ export async function runDungenessCampaign({
       baselineScore: checkpoint.baselineScore,
       bestValidScore,
       normalizedGain: normalizedGain(checkpoint.baselineScore, bestValidScore),
-      invalidRate: state.candidates.length === 0
-        ? 0
-        : state.candidates.filter((candidate) => !candidate.development.valid).length / state.candidates.length,
+      invalidRate: finalOutputValid ? 0 : 1,
+      proposalInvalidRate,
+      finalOutputValid,
       candidateCount: state.candidates.length,
       evaluatorCalls: state.evaluatorCalls,
       rootTokens: state.rootTokens,
       costUsd: state.costUsd,
       provenanceViolations: state.provenanceViolations,
+      signerSha256: state.ledger.header.signer.publicKeySha256,
       ledgerSha256: ledgerSha256(serializeEvidenceLedger(state.ledger)),
       providerRoutes: [...providers].sort(),
       systemFingerprints: [...fingerprints].sort(),

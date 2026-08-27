@@ -1,9 +1,12 @@
 import {
   createHash,
+  createPrivateKey,
+  createPublicKey,
   generateKeyPairSync,
   sign as signBytes,
   verify as verifyBytes,
 } from "node:crypto";
+import { canonicalStringify } from "../protocol.js";
 
 export const EVIDENCE_LEDGER_SCHEMA = "yukon.evaluator-evidence-ledger";
 export const EVIDENCE_LEDGER_SCHEMA_VERSION = 1 as const;
@@ -35,7 +38,7 @@ export interface EvidenceLedgerHeader {
   baseCommitSha: string;
   protocolSha256: string;
   evaluatorSha256: string;
-  panelSha256: string;
+  panelSha256s: string[];
   signer: EvidenceLedgerSigner;
   headerSha256: string;
 }
@@ -132,21 +135,10 @@ export interface UntrustedEvidenceAnnotation {
 
 const SHA256_PATTERN = /^[a-f0-9]{64}$/u;
 const COMMIT_PATTERN = /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u;
-
-function canonicalize(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(canonicalize);
-  if (value !== null && typeof value === "object") {
-    return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>)
-        .sort(([left], [right]) => left.localeCompare(right))
-        .map(([key, child]) => [key, canonicalize(child)]),
-    );
-  }
-  return value;
-}
+const PROPOSAL_ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/u;
 
 export function canonicalLedgerStringify(value: unknown): string {
-  return JSON.stringify(canonicalize(value));
+  return canonicalStringify(value);
 }
 
 export function ledgerSha256(value: unknown): string {
@@ -191,9 +183,18 @@ function unsignedReceipt(
 
 function validateInput(input: EvidenceReceiptInput, header: EvidenceLedgerHeader): void {
   requireNonempty(input.proposalId, "proposalId");
+  if (!PROPOSAL_ID_PATTERN.test(input.proposalId)) {
+    throw new Error("proposalId must use lowercase letters, numbers, and hyphens");
+  }
   requireNonempty(input.createdAt, "createdAt");
+  if (!["proposal", "build", "evaluation"].includes(input.phase)) {
+    throw new Error(`unsupported evidence phase ${input.phase}`);
+  }
   requireNonempty(input.matcher.matcherId, "matcher.matcherId");
   requireNonempty(input.matcher.matcherVersion, "matcher.matcherVersion");
+  if (!["matched", "not_matched", "unknown"].includes(input.matcher.membership)) {
+    throw new Error(`unsupported matcher membership ${input.matcher.membership}`);
+  }
   requireNonempty(input.executor.executorId, "executor.executorId");
   requireNonempty(input.executor.independenceKey, "executor.independenceKey");
   requireCommit(input.baseCommitSha, "baseCommitSha");
@@ -205,9 +206,15 @@ function validateInput(input: EvidenceReceiptInput, header: EvidenceLedgerHeader
     input.baseCommitSha !== header.baseCommitSha
     || input.protocolSha256 !== header.protocolSha256
     || input.evaluatorSha256 !== header.evaluatorSha256
-    || input.panelSha256 !== header.panelSha256
+    || !header.panelSha256s.includes(input.panelSha256)
   ) {
     throw new Error("receipt pins differ from the ledger header");
+  }
+  if (input.baselineScore !== null && !Number.isFinite(input.baselineScore)) {
+    throw new Error("baselineScore must be finite or null");
+  }
+  if (input.score !== null && !Number.isFinite(input.score)) {
+    throw new Error("score must be finite or null");
   }
   requireNonnegative(input.budget.rootTokens, "budget.rootTokens");
   requireNonnegative(input.budget.descendantTokens, "budget.descendantTokens");
@@ -240,6 +247,9 @@ function validateInput(input: EvidenceReceiptInput, header: EvidenceLedgerHeader
     }
     if (input.baselineScore === null) throw new Error("evaluation receipts require a baseline score");
     const valid = Object.values(input.qualification).every((status) => status === "passed");
+    if (Object.values(input.qualification).some((status) => !["passed", "failed", "not_run"].includes(status))) {
+      throw new Error("evaluation qualification contains an unsupported status");
+    }
     if (valid && input.score === null) throw new Error("valid evaluations require a score");
   }
 }
@@ -260,6 +270,16 @@ export function createEvidenceSigningKeyPair(): {
   };
 }
 
+export function evidenceSignerFromPrivateKey(privateKeyPem: string): EvidenceLedgerSigner {
+  const privateKey = createPrivateKey(privateKeyPem);
+  const publicKeyPem = createPublicKey(privateKey).export({ type: "spki", format: "pem" }).toString();
+  return {
+    algorithm: "ed25519",
+    publicKeyPem,
+    publicKeySha256: ledgerSha256(publicKeyPem),
+  };
+}
+
 export function createEvidenceLedger(input: {
   campaignId: string;
   createdAt: string;
@@ -267,7 +287,7 @@ export function createEvidenceLedger(input: {
   baseCommitSha: string;
   protocolSha256: string;
   evaluatorSha256: string;
-  panelSha256: string;
+  panelSha256s: string[];
   signer: EvidenceLedgerSigner;
 }): EvidenceLedger {
   requireNonempty(input.campaignId, "campaignId");
@@ -275,7 +295,15 @@ export function createEvidenceLedger(input: {
   requireCommit(input.baseCommitSha, "baseCommitSha");
   requireSha256(input.protocolSha256, "protocolSha256");
   requireSha256(input.evaluatorSha256, "evaluatorSha256");
-  requireSha256(input.panelSha256, "panelSha256");
+  if (!Array.isArray(input.panelSha256s) || input.panelSha256s.length === 0) {
+    throw new Error("panelSha256s must be non-empty");
+  }
+  for (const [index, panelSha256] of input.panelSha256s.entries()) {
+    requireSha256(panelSha256, `panelSha256s[${index}]`);
+  }
+  if (new Set(input.panelSha256s).size !== input.panelSha256s.length) {
+    throw new Error("panelSha256s must be unique");
+  }
   requireSha256(input.signer.publicKeySha256, "signer.publicKeySha256");
   if (ledgerSha256(input.signer.publicKeyPem) !== input.signer.publicKeySha256) {
     throw new Error("signer public key fingerprint mismatch");
@@ -289,7 +317,7 @@ export function createEvidenceLedger(input: {
     baseCommitSha: input.baseCommitSha,
     protocolSha256: input.protocolSha256,
     evaluatorSha256: input.evaluatorSha256,
-    panelSha256: input.panelSha256,
+    panelSha256s: [...input.panelSha256s].sort(),
     signer: input.signer,
   } as const;
   return {
@@ -305,6 +333,20 @@ export function appendSignedEvidenceReceipt(
 ): EvidenceLedger {
   verifyEvidenceLedger(ledger);
   validateInput(input, ledger.header);
+  const related = ledger.receipts.filter((receipt) => receipt.proposalId === input.proposalId);
+  const artifactHashes = new Set(
+    related.flatMap((receipt) => receipt.artifactSha256 === null ? [] : [receipt.artifactSha256]),
+  );
+  if (input.artifactSha256 !== null && artifactHashes.size > 0 && !artifactHashes.has(input.artifactSha256)) {
+    throw new Error(`proposalId ${input.proposalId} is already bound to another artifact`);
+  }
+  if (related.some((receipt) => (
+    receipt.matcher.matcherId !== input.matcher.matcherId
+    || receipt.matcher.matcherVersion !== input.matcher.matcherVersion
+    || receipt.matcher.ideaId !== input.matcher.ideaId
+  ))) {
+    throw new Error(`proposalId ${input.proposalId} is already bound to another matcher`);
+  }
   const previous = ledger.receipts.at(-1);
   const unsigned = {
     ...input,
@@ -354,7 +396,10 @@ export function verifySignedEvidenceReceipt(
   }
 }
 
-export function verifyEvidenceLedger(ledger: EvidenceLedger): void {
+export function verifyEvidenceLedger(
+  ledger: EvidenceLedger,
+  { expectedSignerSha256 = null }: { expectedSignerSha256?: string | null } = {},
+): void {
   if (
     ledger.header.schema !== EVIDENCE_LEDGER_SCHEMA
     || ledger.header.schemaVersion !== EVIDENCE_LEDGER_SCHEMA_VERSION
@@ -365,6 +410,13 @@ export function verifyEvidenceLedger(ledger: EvidenceLedger): void {
   if (ledgerSha256(ledger.header.signer.publicKeyPem) !== ledger.header.signer.publicKeySha256) {
     throw new Error("evidence ledger signer fingerprint mismatch");
   }
+  if (expectedSignerSha256 !== null && ledger.header.signer.publicKeySha256 !== expectedSignerSha256) {
+    throw new Error("evidence ledger signer is not anchored to the frozen protocol");
+  }
+  if (!Array.isArray(ledger.header.panelSha256s) || ledger.header.panelSha256s.length === 0) {
+    throw new Error("evidence ledger has no pinned panels");
+  }
+  for (const panelSha256 of ledger.header.panelSha256s) requireSha256(panelSha256, "header.panelSha256s");
   let parent = ledger.header.headerSha256;
   for (const [index, receipt] of ledger.receipts.entries()) {
     if (receipt.sequence !== index) throw new Error(`receipt ${index} sequence mismatch`);
@@ -425,12 +477,13 @@ export function reduceEvidenceLedger(
         && receipt.command?.exitCode === 0
         && receipt.artifactSha256 !== null
       ))) state = "built_not_evaluated";
-      const scores = valid.map((receipt) => receipt.score as number);
-      const bestScore = scores.length === 0
+      const bestReceipt = valid.length === 0
         ? null
-        : ledger.header.direction === "-"
-          ? Math.min(...scores)
-          : Math.max(...scores);
+        : [...valid].sort((left, right) => (
+          ledger.header.direction === "-"
+            ? (left.score as number) - (right.score as number)
+            : (right.score as number) - (left.score as number)
+        ))[0];
       return {
         proposalId,
         ideaId: latest.matcher.ideaId,
@@ -438,9 +491,9 @@ export function reduceEvidenceLedger(
         matcherVersion: latest.matcher.matcherVersion,
         membership: latest.matcher.membership,
         state,
-        artifactSha256: latest.artifactSha256,
-        baselineScore: latest.baselineScore,
-        bestScore,
+        artifactSha256: bestReceipt?.artifactSha256 ?? latest.artifactSha256,
+        baselineScore: bestReceipt?.baselineScore ?? latest.baselineScore,
+        bestScore: bestReceipt?.score ?? null,
         receiptSha256s: receipts.map((receipt) => receipt.receiptSha256),
         independentReproductions: independentKeys.size,
       };
@@ -455,7 +508,10 @@ export function serializeEvidenceLedger(ledger: EvidenceLedger): string {
   ].map((entry) => canonicalLedgerStringify(entry)).join("\n")}\n`;
 }
 
-export function parseEvidenceLedger(text: string): EvidenceLedger {
+export function parseEvidenceLedger(
+  text: string,
+  options: { expectedSignerSha256?: string | null } = {},
+): EvidenceLedger {
   const rows = text.split("\n").filter((line) => line.trim().length > 0).map((line) => JSON.parse(line));
   if (rows.length === 0 || rows[0]?.kind !== "header") throw new Error("ledger is missing its header");
   const ledger = {
@@ -465,6 +521,6 @@ export function parseEvidenceLedger(text: string): EvidenceLedger {
       return row.value;
     }),
   } as EvidenceLedger;
-  verifyEvidenceLedger(ledger);
+  verifyEvidenceLedger(ledger, options);
   return ledger;
 }

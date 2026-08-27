@@ -66,6 +66,7 @@ export async function chatCompletion({
   provider,
   tools,
   toolChoice,
+  timeoutMs,
 } = {}) {
   if (!Array.isArray(messages) || messages.length === 0) {
     throw new OpenRouterError("messages must be a non-empty array");
@@ -84,6 +85,7 @@ export async function chatCompletion({
   const response = await fetch(`${baseUrl}/chat/completions`, {
     method: "POST",
     headers,
+    ...(timeoutMs === undefined ? {} : { signal: AbortSignal.timeout(timeoutMs) }),
     body: JSON.stringify({
       model,
       messages,
