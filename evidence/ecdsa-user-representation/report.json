@@ -1,0 +1,207 @@
+{
+  "schema": "yukon-kg.ecdsa-user-representation-experiment.v1",
+  "protocolVersion": "yukon-kg.ecdsa-user-representation.v3",
+  "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+  "totals": {
+    "archive_promotions": {
+      "cases": 8,
+      "passed": 0
+    },
+    "working_knowledge": {
+      "cases": 8,
+      "passed": 8
+    }
+  },
+  "adoptedRepresentation": "working_knowledge",
+  "reason": "The working-knowledge brief answered every frozen knowledge question; ranking ideas by promotions misled on mechanism identity.",
+  "results": {
+    "archive_promotions": [
+      {
+        "caseId": "seed-grinding-mechanism",
+        "question": "Is nonce or seed grinding a supported circuit mechanism?",
+        "gold": {
+          "label": "no",
+          "hazardId": "hazard:seed-grinding",
+          "ideaId": null
+        },
+        "answer": "yes",
+        "pass": false,
+        "rationale": "Nonce grinding has 182 promotions, so the archive invites treating it as what worked."
+      },
+      {
+        "caseId": "largest-isolated-effect",
+        "question": "Which isolated one-change intervention improved the official score the most?",
+        "gold": {
+          "label": "Adaptive phase correction",
+          "ideaId": "candidate:adaptive-phase-correction:a391ebef3b"
+        },
+        "answer": "Nonce grinding",
+        "pass": false,
+        "rationale": "The most promoted idea is Nonce grinding."
+      },
+      {
+        "caseId": "karatsuba-isolated",
+        "question": "Has Karatsuba squaring been isolated with a jointly qualified one-change ablation?",
+        "gold": {
+          "label": "no"
+        },
+        "answer": "yes",
+        "pass": false,
+        "rationale": "Karatsuba has 11 promoted submissions in the idea catalog."
+      },
+      {
+        "caseId": "fermat-controlled-negative",
+        "question": "Does Fermat inversion's zero-promotion archive record prove a controlled negative result?",
+        "gold": {
+          "label": "no",
+          "ideaId": "candidate:fermat-inversion:b1eff02f73"
+        },
+        "answer": "yes",
+        "pass": false,
+        "rationale": "The archive-only view treats 0 promotions as an outcome label without a matched control."
+      },
+      {
+        "caseId": "toffoli-can-rise",
+        "question": "Can a change increase Toffoli count and still improve the official score?",
+        "gold": {
+          "label": "yes",
+          "ideaId": "candidate:solinas-reduction:5a45b2514d"
+        },
+        "answer": "unknown",
+        "pass": false,
+        "rationale": "Promotion counts do not separate Toffoli change from the official product score."
+      },
+      {
+        "caseId": "qubit-floor",
+        "question": "What is the pinned qubit floor for this interface?",
+        "gold": {
+          "label": "512",
+          "constraintId": "constraint:ecdsa:qubit-count"
+        },
+        "answer": "unknown",
+        "pass": false,
+        "rationale": "The idea catalog does not carry the pinned interface floor."
+      },
+      {
+        "caseId": "frontier-mixed",
+        "question": "Is the current champion score a pure mechanism effect?",
+        "gold": {
+          "label": "no",
+          "interpretation": "mixed"
+        },
+        "answer": "unknown",
+        "pass": false,
+        "rationale": "Best-score rows are visible in submissions, but mixed-idea routing is not the default user view."
+      },
+      {
+        "caseId": "representation-proposal",
+        "question": "Name one unverified representation-class proposal.",
+        "gold": {
+          "label": "Barrett reciprocal reduction",
+          "discriminatorId": "disc:barrett-vs-solinas",
+          "acceptableDiscriminatorIds": [
+            "disc:barrett-vs-solinas",
+            "disc:half-gcd"
+          ]
+        },
+        "answer": "Nonce grinding, Iteration schedule, Fold schedule, Seed-tail search, Comparator width, Reroll selection, Toffoli gate network, Carry-chain layout",
+        "pass": false,
+        "rationale": "Promotion rank cannot represent unverified proposals such as Barrett reduction."
+      }
+    ],
+    "working_knowledge": [
+      {
+        "caseId": "seed-grinding-mechanism",
+        "question": "Is nonce or seed grinding a supported circuit mechanism?",
+        "gold": {
+          "label": "no",
+          "hazardId": "hazard:seed-grinding",
+          "ideaId": null
+        },
+        "answer": "no",
+        "pass": true,
+        "rationale": "Seed grinding is listed as an evaluator hazard and is absent from admitted mechanisms."
+      },
+      {
+        "caseId": "largest-isolated-effect",
+        "question": "Which isolated one-change intervention improved the official score the most?",
+        "gold": {
+          "label": "Adaptive phase correction",
+          "ideaId": "candidate:adaptive-phase-correction:a391ebef3b"
+        },
+        "answer": "Adaptive phase correction",
+        "pass": true,
+        "rationale": "Adaptive phase correction has the most negative admitted official delta."
+      },
+      {
+        "caseId": "karatsuba-isolated",
+        "question": "Has Karatsuba squaring been isolated with a jointly qualified one-change ablation?",
+        "gold": {
+          "label": "no"
+        },
+        "answer": "no",
+        "pass": true,
+        "rationale": "Karatsuba remains historical observation only."
+      },
+      {
+        "caseId": "fermat-controlled-negative",
+        "question": "Does Fermat inversion's zero-promotion archive record prove a controlled negative result?",
+        "gold": {
+          "label": "no",
+          "ideaId": "candidate:fermat-inversion:b1eff02f73"
+        },
+        "answer": "no",
+        "pass": true,
+        "rationale": "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result."
+      },
+      {
+        "caseId": "toffoli-can-rise",
+        "question": "Can a change increase Toffoli count and still improve the official score?",
+        "gold": {
+          "label": "yes",
+          "ideaId": "candidate:solinas-reduction:5a45b2514d"
+        },
+        "answer": "yes",
+        "pass": true,
+        "rationale": "Solinas reduction raises Toffoli by 192 while improving the product score."
+      },
+      {
+        "caseId": "qubit-floor",
+        "question": "What is the pinned qubit floor for this interface?",
+        "gold": {
+          "label": "512",
+          "constraintId": "constraint:ecdsa:qubit-count"
+        },
+        "answer": "512",
+        "pass": true,
+        "rationale": "The pinned interface requires two simultaneous 256-qubit target registers. The resulting 512-qubit floor is scoped to this interface, not a universal ECC lower bound."
+      },
+      {
+        "caseId": "frontier-mixed",
+        "question": "Is the current champion score a pure mechanism effect?",
+        "gold": {
+          "label": "no",
+          "interpretation": "mixed"
+        },
+        "answer": "no",
+        "pass": true,
+        "rationale": "Champion interpretation is mixed."
+      },
+      {
+        "caseId": "representation-proposal",
+        "question": "Name one unverified representation-class proposal.",
+        "gold": {
+          "label": "Barrett reciprocal reduction",
+          "discriminatorId": "disc:barrett-vs-solinas",
+          "acceptableDiscriminatorIds": [
+            "disc:barrett-vs-solinas",
+            "disc:half-gcd"
+          ]
+        },
+        "answer": "Barrett reciprocal reduction",
+        "pass": true,
+        "rationale": "Does Barrett reciprocal reduction beat the pinned Solinas fold on the verified scorer?"
+      }
+    ]
+  }
+}

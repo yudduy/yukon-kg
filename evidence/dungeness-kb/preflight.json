@@ -1,0 +1,209 @@
+{
+  "schema": "yukon-kg.dungeness-kb-court",
+  "protocolVersion": "yukon-kg.dungeness-kb.v1",
+  "status": "PASS",
+  "model": "openai/gpt-5.4",
+  "pinnedModel": "openai/gpt-5.4",
+  "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+  "briefSha256": "49ff0afe7d5421ab3ee09e7b72364226db26082f76b8439ca86332297d676bd9",
+  "atlas": {
+    "status": "PASS",
+    "benchmark": "ecdsa.fail",
+    "releases": [
+      {
+        "releaseId": "b4bd9026018a9ab464fafd1ce4c2905c95af95462b29d55ede169c7cb953eac2",
+        "manifestSha256": "db9c9c924543418ab47d871a666f0cdd17bcd4c116369bbcc411bacf97b50925",
+        "files": 253,
+        "bytes": 5825252
+      },
+      {
+        "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+        "manifestSha256": "b9748c5a09e3af48b61b1feefb37e720c4acc40e09a15787a90b576b324b521d",
+        "files": 272,
+        "bytes": 6162506
+      }
+    ]
+  },
+  "variants": {
+    "cold": {
+      "sha256": "943f63cbf7ea01030c2937feba7c1eb8180bfea6de083c058a98433df782e091",
+      "bytes": 606,
+      "truncated": false,
+      "hasDoNow": false
+    },
+    "raw": {
+      "sha256": "7344ba5c3a54ece4ff832d01260247e076da311b03a06d6d60ce0ea1f8e9bc11",
+      "bytes": 24576,
+      "truncated": true,
+      "hasDoNow": false
+    },
+    "flat": {
+      "sha256": "718b4000ba643845f931cf1ef1b2ebc5d46da83455b2d55d231139f69ea8bc66",
+      "bytes": 15059,
+      "truncated": false,
+      "hasDoNow": false
+    },
+    "state_brief": {
+      "sha256": "d8767b91a4b10c3554ca525b0e560c3af86c9f18a467b557de45b19e8620a669",
+      "bytes": 13753,
+      "truncated": false,
+      "hasDoNow": false
+    },
+    "winner_only": {
+      "sha256": "7373e8a27c64543558f9dbfce0d377c94f0d60e11babe3ec8871850481842f2c",
+      "bytes": 8578,
+      "truncated": false,
+      "hasDoNow": false
+    }
+  },
+  "reachability": [
+    {
+      "caseId": "seed-grinding-mechanism",
+      "perArm": {
+        "cold": true,
+        "raw": true,
+        "flat": true,
+        "state_brief": true,
+        "winner_only": true
+      },
+      "claimed": [
+        "state_brief"
+      ],
+      "ok": true,
+      "missing": []
+    },
+    {
+      "caseId": "largest-isolated-effect",
+      "perArm": {
+        "cold": false,
+        "raw": false,
+        "flat": true,
+        "state_brief": true,
+        "winner_only": true
+      },
+      "claimed": [
+        "state_brief",
+        "flat"
+      ],
+      "ok": true,
+      "missing": []
+    },
+    {
+      "caseId": "karatsuba-isolated",
+      "perArm": {
+        "cold": true,
+        "raw": true,
+        "flat": true,
+        "state_brief": true,
+        "winner_only": true
+      },
+      "claimed": [
+        "state_brief"
+      ],
+      "ok": true,
+      "missing": []
+    },
+    {
+      "caseId": "fermat-retry",
+      "perArm": {
+        "cold": true,
+        "raw": true,
+        "flat": true,
+        "state_brief": true,
+        "winner_only": true
+      },
+      "claimed": [
+        "state_brief"
+      ],
+      "ok": true,
+      "missing": []
+    },
+    {
+      "caseId": "toffoli-can-rise",
+      "perArm": {
+        "cold": false,
+        "raw": true,
+        "flat": true,
+        "state_brief": true,
+        "winner_only": true
+      },
+      "claimed": [
+        "state_brief"
+      ],
+      "ok": true,
+      "missing": []
+    },
+    {
+      "caseId": "qubit-floor",
+      "perArm": {
+        "cold": false,
+        "raw": true,
+        "flat": false,
+        "state_brief": true,
+        "winner_only": false
+      },
+      "claimed": [
+        "state_brief"
+      ],
+      "ok": true,
+      "missing": []
+    },
+    {
+      "caseId": "frontier-mixed",
+      "perArm": {
+        "cold": true,
+        "raw": true,
+        "flat": true,
+        "state_brief": true,
+        "winner_only": true
+      },
+      "claimed": [
+        "state_brief"
+      ],
+      "ok": true,
+      "missing": []
+    },
+    {
+      "caseId": "next-untried",
+      "perArm": {
+        "cold": false,
+        "raw": false,
+        "flat": false,
+        "state_brief": true,
+        "winner_only": false
+      },
+      "claimed": [
+        "state_brief"
+      ],
+      "ok": true,
+      "missing": []
+    }
+  ],
+  "dungeness": {
+    "present": false,
+    "kind": "missing",
+    "directory": "/workspace/third_party/dungeness",
+    "signals": [],
+    "pin": {
+      "schema": "yukon-kg.dungeness-vendor-pin.v1",
+      "repo": "https://github.com/Layr-Labs/dungeness.git",
+      "sha": null,
+      "branch": null,
+      "kind": "missing",
+      "clonedAt": null,
+      "note": "Populate by running bun run src/dungeness-clone.js with a yudduy GITHUB_TOKEN."
+    }
+  },
+  "openrouter": {
+    "ok": true,
+    "model": "openai/gpt-5.4",
+    "id": "gen-1787797636-uoqD0PTK5NfVXysvOQN8"
+  },
+  "checks": {
+    "atlasPass": true,
+    "stateBriefReachable": true,
+    "noDoNow": true,
+    "openrouter": true,
+    "dungenessPresent": false
+  }
+}

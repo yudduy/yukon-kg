@@ -1,0 +1,81 @@
+{
+  "schema": "yukon-kg.dungeness-adaptive-preflight.v1",
+  "createdAt": "2026-08-27T06:57:57.293Z",
+  "status": "BLOCKED",
+  "checks": {
+    "atlasPass": true,
+    "dungenessPresent": false,
+    "dungenessPinned": false,
+    "adapterValid": false,
+    "isolationRunnerPinned": false,
+    "evaluatorAttestation": false,
+    "checkpointRefsPresent": false,
+    "openRouterKeyPresent": true,
+    "providerPinned": true,
+    "modelPinned": true
+  },
+  "atlas": {
+    "status": "PASS",
+    "benchmark": "ecdsa.fail",
+    "releases": [
+      {
+        "releaseId": "b4bd9026018a9ab464fafd1ce4c2905c95af95462b29d55ede169c7cb953eac2",
+        "manifestSha256": "db9c9c924543418ab47d871a666f0cdd17bcd4c116369bbcc411bacf97b50925",
+        "files": 253,
+        "bytes": 5825252
+      },
+      {
+        "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+        "manifestSha256": "b9748c5a09e3af48b61b1feefb37e720c4acc40e09a15787a90b576b324b521d",
+        "files": 272,
+        "bytes": 6162506
+      }
+    ]
+  },
+  "dungeness": {
+    "inspection": {
+      "present": false,
+      "kind": "missing",
+      "directory": "/workspace/third_party/dungeness",
+      "signals": []
+    },
+    "pin": {
+      "schema": "yukon-kg.dungeness-vendor-pin.v1",
+      "repo": "https://github.com/Layr-Labs/dungeness.git",
+      "sha": null,
+      "branch": null,
+      "kind": "missing",
+      "clonedAt": null,
+      "note": "Populate by running bun run src/dungeness-clone.js with a yudduy GITHUB_TOKEN."
+    }
+  },
+  "adapter": {
+    "path": null,
+    "sha256": null,
+    "error": "no Dungeness adapter file is available",
+    "missingCheckpointRefs": [],
+    "taskStateMismatches": [],
+    "isolationRunner": {
+      "ok": false,
+      "path": null,
+      "sha256": null
+    },
+    "evaluatorAttestation": {
+      "ok": false,
+      "sha256": null
+    }
+  },
+  "model": {
+    "id": "openai/gpt-5.4",
+    "provider": "OpenAI",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "pricing": {
+      "inputUsdPerMillion": 2.5,
+      "outputUsdPerMillion": 15
+    },
+    "decoding": {
+      "temperature": 0,
+      "maxTokens": 4096
+    }
+  }
+}
