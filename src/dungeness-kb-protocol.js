@@ -235,10 +235,9 @@ export function scorePilot(results) {
       winner_only: winnerRow?.pass === true,
     };
   });
-  const adopted = gate.every((item) => item.state_brief && !item.winner_only)
-    && byArm.state_brief.passed === byArm.state_brief.cases
-    ? "state_brief"
-    : null;
+  const missed = state.filter((row) => row.pass !== true).map((row) => row.caseId);
+  const gateCleared = gate.every((item) => item.state_brief && !item.winner_only);
+  const adopted = gateCleared && missed.length === 0 ? "state_brief" : null;
   return {
     protocolVersion: DUNGENESS_KB_PROTOCOL_VERSION,
     totals: Object.fromEntries(ARMS.map((arm) => [arm, {
@@ -246,10 +245,13 @@ export function scorePilot(results) {
       passed: byArm[arm].passed,
     }])),
     gate,
+    missed,
     adopted,
     reason: adopted === "state_brief"
       ? "state_brief answered every frozen knowledge question and beat winner_only on mechanism identity."
-      : "state_brief did not clear the preregistered gate against winner_only.",
+      : gateCleared
+        ? `state_brief beat winner_only on mechanism identity but missed ${missed.join(", ")}.`
+        : "state_brief did not clear the preregistered gate against winner_only.",
   };
 }
 

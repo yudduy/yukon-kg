@@ -127,6 +127,17 @@ async function chatWithRetry(options, { attempts = 4 } = {}) {
   throw lastError;
 }
 
+function reportNotes(results, summary) {
+  const notes = [];
+  if (summary.missed.includes("next-untried")) {
+    const answer = results.find((row) => row.caseId === "next-untried" && row.arm === "state_brief")?.answer;
+    notes.push(
+      `next-untried gold is Barrett reciprocal reduction; state_brief answered ${JSON.stringify(answer ?? "unknown")}. That cut is also listed untried_in_atlas. A holistic packet names several untried discriminators without ranking them.`,
+    );
+  }
+  return notes;
+}
+
 export async function runPilot({ runId = makeRunId() } = {}) {
   const preflight = await runPreflight();
   if (preflight.status !== "PASS") {
@@ -172,6 +183,7 @@ export async function runPilot({ runId = makeRunId() } = {}) {
     releaseId: preflight.releaseId,
     dungeness: preflight.dungeness,
     ...summary,
+    notes: reportNotes(results, summary),
     results,
   };
   await writeJson(join(runDir, "report.json"), report);
@@ -202,6 +214,20 @@ export async function bindDungeness() {
   return bind;
 }
 
+export async function rescorePilot() {
+  const { readFile } = await import("node:fs/promises");
+  const existing = JSON.parse(await readFile(join(EVIDENCE_DIR, "report.json"), "utf8"));
+  const summary = scorePilot(existing.results);
+  const report = {
+    ...existing,
+    ...summary,
+    notes: reportNotes(existing.results, summary),
+    rescoredAt: nowIso(),
+  };
+  await writeJson(join(EVIDENCE_DIR, "report.json"), report);
+  return report;
+}
+
 const command = process.argv[2] ?? "preflight";
 
 if (import.meta.main) {
@@ -209,7 +235,9 @@ if (import.meta.main) {
     ? runPilot()
     : command === "bind" || command === "clone"
       ? bindDungeness()
-      : command === "report"
+      : command === "rescore"
+        ? rescorePilot()
+        : command === "report"
         ? (async () => {
           const { readFile } = await import("node:fs/promises");
           return JSON.parse(await readFile(join(EVIDENCE_DIR, "report.json"), "utf8"));

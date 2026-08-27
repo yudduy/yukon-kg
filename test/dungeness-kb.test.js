@@ -77,5 +77,19 @@ describe("dungeness knowledge scoring", () => {
     expect(report.adopted).toBe("state_brief");
     expect(report.totals.state_brief.passed).toBe(8);
     expect(report.totals.winner_only.passed).toBe(0);
+    expect(report.missed).toEqual([]);
+  });
+
+  test("records missed cases without claiming the winner_only gate failed", () => {
+    const results = PILOT_CASES.flatMap((userCase) => ARMS.map((arm) => ({
+      caseId: userCase.id,
+      arm,
+      pass: arm === "state_brief" && userCase.id !== "next-untried",
+    })));
+    const report = scorePilot(results);
+    expect(report.adopted).toBeNull();
+    expect(report.missed).toEqual(["next-untried"]);
+    expect(report.gate.every((item) => item.state_brief && !item.winner_only)).toBe(true);
+    expect(report.reason).toContain("next-untried");
   });
 });
