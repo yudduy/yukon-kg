@@ -30,7 +30,6 @@ export {
   ECDSA_USER_VIEW_SCHEMA_VERSION,
   analyzeUserRepresentationExperiment,
   buildEcdsaUserView,
-  compileUserDecision,
   ideasFromRelease,
   renderWorkingKnowledgePage,
   scoreUserRepresentation,
@@ -39,7 +38,6 @@ export type {
   EcdsaUserView,
   UserCase,
   UserCaseResult,
-  UserDecision,
   UserRepresentation,
 } from "./working-knowledge-user";
 

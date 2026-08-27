@@ -1,33 +1,18 @@
 import type { AtlasIdea, AtlasRelease } from "./types";
 import type { WorkingKnowledgeBrief } from "./working-knowledge";
 
-export const ECDSA_USER_PROTOCOL_VERSION = "yukon-kg.ecdsa-user-representation.v1";
+export const ECDSA_USER_PROTOCOL_VERSION = "yukon-kg.ecdsa-user-representation.v2";
 export const ECDSA_USER_VIEW_SCHEMA = "yukon-kg.ecdsa-user-view";
-export const ECDSA_USER_VIEW_SCHEMA_VERSION = 1 as const;
+export const ECDSA_USER_VIEW_SCHEMA_VERSION = 2 as const;
 export const USER_REPRESENTATIONS = Object.freeze(["archive_promotions", "working_knowledge"] as const);
 
 export type UserRepresentation = (typeof USER_REPRESENTATIONS)[number];
-
-export interface UserDecisionItem {
-  id: string;
-  action: string;
-  reason: string;
-  sourceRefs: string[];
-}
-
-export interface UserDecision {
-  primaryQuestion: string;
-  doNow: UserDecisionItem[];
-  avoid: UserDecisionItem[];
-  knownLocalMoves: UserDecisionItem[];
-}
 
 export interface EcdsaUserView {
   schema: typeof ECDSA_USER_VIEW_SCHEMA;
   schemaVersion: typeof ECDSA_USER_VIEW_SCHEMA_VERSION;
   protocolVersion: typeof ECDSA_USER_PROTOCOL_VERSION;
   briefSha256: string;
-  decision: UserDecision;
   brief: WorkingKnowledgeBrief;
 }
 
@@ -102,65 +87,6 @@ function compareText(left: string, right: string): number {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
-export function compileUserDecision(brief: WorkingKnowledgeBrief): UserDecision {
-  const knownLocalMoves = brief.supportedMechanisms.map((mechanism) => {
-    const toffoliRise = mechanism.toffoliDelta !== null && mechanism.toffoliDelta > 0 && mechanism.officialDelta < 0;
-    return {
-      id: `move:${mechanism.ideaId}`,
-      action: `Reuse ${mechanism.title} on a new parent; do not rediscover it.`,
-      reason: toffoliRise
-        ? `Admitted one-change official delta ${mechanism.officialDelta}; Toffoli rose by ${mechanism.toffoliDelta} while the qubit–Toffoli product still improved.`
-        : `Admitted one-change official delta ${mechanism.officialDelta} under ${mechanism.scope}.`,
-      sourceRefs: [...mechanism.sourceRefs],
-    };
-  });
-  const untried = brief.nextDiscriminators
-    .filter((item) => item.status === "untried_in_atlas")
-    .sort((left, right) => compareText(left.discriminatorId, right.discriminatorId))
-    .map((item) => ({
-      id: item.discriminatorId,
-      action: item.question,
-      reason: item.predictedDistinction,
-      sourceRefs: [...item.sourceRefs],
-    }));
-  const isolate = brief.nextDiscriminators
-    .filter((item) => item.status === "historical_only" || item.status === "qualification_failed")
-    .sort((left, right) => compareText(left.discriminatorId, right.discriminatorId))
-    .slice(0, 3)
-    .map((item) => ({
-      id: item.discriminatorId,
-      action: item.question,
-      reason: item.predictedDistinction,
-      sourceRefs: [...item.sourceRefs],
-    }));
-  const karatsuba = brief.unverifiedObservations.find((item) => item.ideaId.toLowerCase().includes("karatsuba"))
-    ?? brief.nextDiscriminators.find((item) => item.relatedIdeaIds.some((ideaId) => ideaId.toLowerCase().includes("karatsuba")));
-  const avoidKaratsuba = karatsuba === undefined ? [] : [{
-    id: "avoid:karatsuba-ping-pong",
-    action: "Do not treat Karatsuba or ping-pong inversion as an isolated mechanism.",
-    reason: "whyUnverified" in karatsuba ? karatsuba.whyUnverified : karatsuba.predictedDistinction,
-    sourceRefs: [...karatsuba.sourceRefs],
-  }];
-  const fermat = brief.negativeKnowledge.find((item) => item.ideaId.includes("fermat-inversion"));
-  const avoidFermat = fermat === undefined ? [] : [{
-    id: `avoid:${fermat.ideaId}`,
-    action: `Do not retry ${fermat.title} without a representation or scorer change.`,
-    reason: fermat.reopenCondition,
-    sourceRefs: [...fermat.sourceRefs],
-  }];
-  return {
-    primaryQuestion: "What isolated move is worth trying next on the pinned ECDSA.fail scorer?",
-    doNow: [...untried, ...isolate],
-    avoid: brief.evaluatorHazards.map((hazard) => ({
-      id: hazard.hazardId,
-      action: `Do not treat ${hazard.title.toLowerCase()} as a circuit mechanism.`,
-      reason: hazard.recommendedAction,
-      sourceRefs: [...hazard.sourceRefs],
-    })).concat(avoidFermat, avoidKaratsuba),
-    knownLocalMoves,
-  };
-}
-
 function topPromotedIdeas(ideas: readonly AtlasIdea[], limit = 8): AtlasIdea[] {
   return [...ideas]
     .sort((left, right) => right.aggregate.promoted - left.aggregate.promoted || compareText(left.id, right.id))
@@ -215,7 +141,6 @@ function answerArchivePromotions(ideas: readonly AtlasIdea[], userCase: UserCase
 }
 
 function answerWorkingKnowledge(brief: WorkingKnowledgeBrief, userCase: UserCase): UserCaseResult {
-  const decision = compileUserDecision(brief);
   let answer = "unknown";
   let pass = false;
   let rationale = "";
@@ -260,11 +185,10 @@ function answerWorkingKnowledge(brief: WorkingKnowledgeBrief, userCase: UserCase
     pass = answer === userCase.gold.label;
     rationale = `Champion interpretation is ${interpretation ?? "missing"}.`;
   } else if (userCase.id === "next-untried") {
-    const untried = brief.nextDiscriminators.find((item) => item.discriminatorId === userCase.gold.discriminatorId)
-      ?? decision.doNow.find((item) => item.id.startsWith("disc:barrett"));
+    const untried = brief.nextDiscriminators.find((item) => item.discriminatorId === userCase.gold.discriminatorId);
     answer = untried === undefined ? "unknown" : (userCase.gold.label);
     pass = untried !== undefined;
-    rationale = untried === undefined ? "Barrett discriminator is missing." : untried.action ?? untried.question;
+    rationale = untried === undefined ? "Barrett discriminator is missing." : untried.question;
   }
   return { caseId: userCase.id, question: userCase.question, gold: userCase.gold, answer, pass, rationale };
 }
@@ -315,8 +239,8 @@ export function analyzeUserRepresentationExperiment(
     totals,
     adoptedRepresentation,
     reason: adoptedRepresentation === "working_knowledge"
-      ? "The working-knowledge brief answered every user decision question; ranking ideas by promotions misled on mechanism identity."
-      : "The working-knowledge brief did not earn adoption under the preregistered user-decision gate.",
+      ? "The working-knowledge brief answered every frozen knowledge question; ranking ideas by promotions misled on mechanism identity."
+      : "The working-knowledge brief did not earn adoption under the preregistered knowledge gate.",
     results,
   };
 }
@@ -342,12 +266,14 @@ function signed(value: number): string {
 }
 
 export function renderWorkingKnowledgePage(view: EcdsaUserView): string {
-  const { brief, decision } = view;
+  const { brief } = view;
   const frontier = brief.currentFrontier[0];
   const spacetime = brief.boundAndGap.find((item) => item.constraintId === "constraint:ecdsa:spacetime-product");
   const qubits = brief.boundAndGap.find((item) => item.constraintId === "constraint:ecdsa:qubit-count");
   const toffoli = brief.boundAndGap.find((item) => item.constraintId === "constraint:ecdsa:toffoli-count");
   const measuredBounds = brief.boundAndGap.filter((item) => item.baseline !== null || item.frontier !== null);
+  const openCuts = [...brief.nextDiscriminators].sort((left, right) => compareText(left.status, right.status)
+    || compareText(left.discriminatorId, right.discriminatorId));
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -368,8 +294,6 @@ export function renderWorkingKnowledgePage(view: EcdsaUserView): string {
     .stat, .card { background: #fff; border: 1px solid #d7e0d8; border-radius: 12px; padding: 14px 16px; }
     .stat .label, .eyebrow { font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; color: #5b6b62; }
     .stat .value { font-size: 1.25rem; font-weight: 650; margin-top: 4px; }
-    .do { border-left: 4px solid #17603a; }
-    .dont { border-left: 4px solid #8a2f1d; }
     .card + .card { margin-top: 10px; }
     .muted { color: #5b6b62; font-size: 0.92rem; }
     table { width: 100%; border-collapse: collapse; background: #fff; }
@@ -385,12 +309,13 @@ export function renderWorkingKnowledgePage(view: EcdsaUserView): string {
 <main>
   <p class="eyebrow">Yukon KG · ECDSA.fail</p>
   <h1>Working knowledge</h1>
-  <p class="lede">The user-facing packet for the pinned scorer. Isolated one-change effects only. Promotion counts, nonce grinding, and published Pareto points are not treated as mechanisms.</p>
+  <p class="lede">Compiled state of the pinned scorer: scores, bounds, admitted isolations, open cuts, and negative knowledge. This page does not recommend a next experiment.</p>
   <nav>
-    <a href="#decision">Decision</a>
-    <a href="#mechanisms">Mechanisms</a>
+    <a href="#bounds">Bounds</a>
+    <a href="#mechanisms">Admitted effects</a>
+    <a href="#open">Open cuts</a>
     <a href="#hazards">Hazards</a>
-    <a href="#next">Next</a>
+    <a href="#negative">Negative</a>
     <a href="./working-knowledge.json">JSON packet</a>
     <a href="./index.json">Sealed archive</a>
   </nav>
@@ -417,75 +342,8 @@ export function renderWorkingKnowledgePage(view: EcdsaUserView): string {
     </div>
   </section>
 
-  <h2 id="decision">Decision</h2>
-  <p data-testid="decision" data-section="decision"><strong>${escapeHtml(decision.primaryQuestion)}</strong></p>
-  ${decision.doNow.slice(0, 6).map((item) => `
-  <article class="card do" data-decision="do" data-item-id="${escapeHtml(item.id)}">
-    <div class="eyebrow">Do</div>
-    <h3>${escapeHtml(item.action)}</h3>
-    <p class="muted">${escapeHtml(item.reason)}</p>
-  </article>`).join("")}
-  ${decision.avoid.map((item) => `
-  <article class="card dont" data-decision="avoid" data-item-id="${escapeHtml(item.id)}">
-    <div class="eyebrow">Don't</div>
-    <h3>${escapeHtml(item.action)}</h3>
-    <p class="muted">${escapeHtml(item.reason)}</p>
-  </article>`).join("")}
-  <h3>Already known local moves</h3>
-  <p class="muted">Reuse these; they are already jointly qualified. They are not the next experiment.</p>
-  ${decision.knownLocalMoves.slice(0, 4).map((item) => `
-  <article class="card" data-decision="known" data-item-id="${escapeHtml(item.id)}">
-    <div class="eyebrow">Reuse</div>
-    <h3>${escapeHtml(item.action)}</h3>
-    <p class="muted">${escapeHtml(item.reason)}</p>
-  </article>`).join("")}
-
-  <h2 id="mechanisms">Supported mechanisms</h2>
-  <p class="muted">Jointly qualified one-change ablations. Deltas are scoped to their parent artifacts and are not additive with the frontier score ${escapeHtml(formatNumber(spacetime?.frontier))}.</p>
-  <div class="table-wrap">
-    <table data-section="mechanisms">
-      <thead><tr><th>Move</th><th>Family</th><th>Official Δ</th><th>Toffoli Δ</th><th>Qubit Δ</th></tr></thead>
-      <tbody>
-        ${brief.supportedMechanisms.map((item) => `
-        <tr data-mechanism-id="${escapeHtml(item.ideaId)}">
-          <td>${escapeHtml(item.title)}</td>
-          <td>${escapeHtml(item.family)}</td>
-          <td>${escapeHtml(signed(item.officialDelta))}</td>
-          <td>${escapeHtml(item.toffoliDelta === null ? "—" : signed(item.toffoliDelta))}</td>
-          <td>${escapeHtml(item.qubitDelta === null ? "—" : signed(item.qubitDelta))}</td>
-        </tr>`).join("")}
-      </tbody>
-    </table>
-  </div>
-  <p class="muted">Reuse these on a new parent. Solinas can raise Toffoli and still win the qubit–Toffoli product.</p>
-
-  <h2 id="hazards">Evaluator hazards</h2>
-  ${brief.evaluatorHazards.map((item) => `
-  <article class="card dont" data-hazard-id="${escapeHtml(item.hazardId)}">
-    <h3>${escapeHtml(item.title)} · ${escapeHtml(formatNumber(item.count))}</h3>
-    <p>${escapeHtml(item.why)}</p>
-    <p class="muted">${escapeHtml(item.recommendedAction)}</p>
-  </article>`).join("")}
-
-  <h2 id="next">Next discriminators</h2>
-  ${brief.nextDiscriminators.filter((item) => item.status === "untried_in_atlas").map((item) => `
-  <article class="card do" data-discriminator-id="${escapeHtml(item.discriminatorId)}" data-status="${escapeHtml(item.status)}">
-    <div class="eyebrow">${escapeHtml(item.status.replaceAll("_", " "))}</div>
-    <h3>${escapeHtml(item.question)}</h3>
-    <p class="muted">${escapeHtml(item.predictedDistinction)}</p>
-  </article>`).join("")}
-  <details>
-    <summary>Historical and qualification-failed isolations</summary>
-    ${brief.nextDiscriminators.filter((item) => item.status !== "untried_in_atlas").map((item) => `
-    <article class="card" data-discriminator-id="${escapeHtml(item.discriminatorId)}" data-status="${escapeHtml(item.status)}">
-      <div class="eyebrow">${escapeHtml(item.status.replaceAll("_", " "))}</div>
-      <h3>${escapeHtml(item.question)}</h3>
-      <p class="muted">${escapeHtml(item.predictedDistinction)}</p>
-    </article>`).join("")}
-  </details>
-
-  <h2>Contract and bounds</h2>
-  <p>${escapeHtml(brief.contract.objective)} Editable surface: ${escapeHtml(brief.contract.mutableSurface)} ${escapeHtml(String(brief.contract.shots))} shots. Degenerate optimum: ${escapeHtml(brief.contract.degenerateOptimum)}</p>
+  <h2 id="bounds">Contract and bounds</h2>
+  <p data-testid="inventory" data-section="bounds">${escapeHtml(brief.contract.objective)} Editable surface: ${escapeHtml(brief.contract.mutableSurface)} ${escapeHtml(String(brief.contract.shots))} shots. Degenerate optimum: ${escapeHtml(brief.contract.degenerateOptimum)}</p>
   <div class="table-wrap">
     <table>
       <thead><tr><th>Bound</th><th>Baseline</th><th>Frontier</th><th>Limit</th></tr></thead>
@@ -501,7 +359,51 @@ export function renderWorkingKnowledgePage(view: EcdsaUserView): string {
     </table>
   </div>
 
-  <h2>Negative knowledge</h2>
+  <h2 id="mechanisms">Admitted one-change effects</h2>
+  <p class="muted">Jointly qualified isolations. Official deltas are scoped to their parent artifacts and are not additive with the frontier score ${escapeHtml(formatNumber(spacetime?.frontier))}. Ranked by measured delta, not as a search policy.</p>
+  <div class="table-wrap">
+    <table data-section="mechanisms">
+      <thead><tr><th>Effect</th><th>Family</th><th>Official Δ</th><th>Toffoli Δ</th><th>Qubit Δ</th></tr></thead>
+      <tbody>
+        ${brief.supportedMechanisms.map((item) => `
+        <tr data-mechanism-id="${escapeHtml(item.ideaId)}">
+          <td>${escapeHtml(item.title)}</td>
+          <td>${escapeHtml(item.family)}</td>
+          <td>${escapeHtml(signed(item.officialDelta))}</td>
+          <td>${escapeHtml(item.toffoliDelta === null ? "—" : signed(item.toffoliDelta))}</td>
+          <td>${escapeHtml(item.qubitDelta === null ? "—" : signed(item.qubitDelta))}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table>
+  </div>
+  <p class="muted">Solinas can raise Toffoli and still improve the qubit–Toffoli product. That is a measured trade, not a recommendation.</p>
+
+  <h2 id="open">Open cuts</h2>
+  <p class="muted">Questions the sealed snapshot does not answer. Status is an evidence label, not a priority.</p>
+  <div class="table-wrap">
+    <table data-section="open-cuts">
+      <thead><tr><th>Status</th><th>Question</th><th>Distinction</th></tr></thead>
+      <tbody>
+        ${openCuts.map((item) => `
+        <tr data-discriminator-id="${escapeHtml(item.discriminatorId)}" data-status="${escapeHtml(item.status)}">
+          <td>${escapeHtml(item.status.replaceAll("_", " "))}</td>
+          <td>${escapeHtml(item.question)}</td>
+          <td>${escapeHtml(item.predictedDistinction)}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="hazards">Evaluator classifications</h2>
+  ${brief.evaluatorHazards.map((item) => `
+  <article class="card" data-hazard-id="${escapeHtml(item.hazardId)}">
+    <div class="eyebrow">Classification</div>
+    <h3>${escapeHtml(item.title)} · ${escapeHtml(formatNumber(item.count))}</h3>
+    <p>${escapeHtml(item.why)}</p>
+    <p class="muted">${escapeHtml(item.recommendedAction)}</p>
+  </article>`).join("")}
+
+  <h2 id="negative">Negative knowledge</h2>
   ${brief.negativeKnowledge.slice(0, 8).map((item) => `
   <details data-negative-id="${escapeHtml(item.ideaId)}">
     <summary>${escapeHtml(item.title)} · ${escapeHtml(String(item.submissions))} attempts, 0 promoted</summary>
@@ -533,7 +435,6 @@ export function buildEcdsaUserView(brief: WorkingKnowledgeBrief, briefSha256: st
     schemaVersion: ECDSA_USER_VIEW_SCHEMA_VERSION,
     protocolVersion: ECDSA_USER_PROTOCOL_VERSION,
     briefSha256,
-    decision: compileUserDecision(brief),
     brief,
   };
 }

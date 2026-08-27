@@ -1,6 +1,6 @@
 {
   "schema": "yukon-kg.ecdsa-user-representation-experiment.v1",
-  "protocolVersion": "yukon-kg.ecdsa-user-representation.v1",
+  "protocolVersion": "yukon-kg.ecdsa-user-representation.v2",
   "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
   "totals": {
     "archive_promotions": {
@@ -13,7 +13,7 @@
     }
   },
   "adoptedRepresentation": "working_knowledge",
-  "reason": "The working-knowledge brief answered every user decision question; ranking ideas by promotions misled on mechanism identity.",
+  "reason": "The working-knowledge brief answered every frozen knowledge question; ranking ideas by promotions misled on mechanism identity.",
   "results": {
     "archive_promotions": [
       {

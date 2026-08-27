@@ -5,11 +5,11 @@ import { loadIndexedAtlasRelease } from "../src/atlas-local.js";
 import {
   ECDSA_USER_CASES,
   ECDSA_USER_VIEW_SCHEMA,
+  ECDSA_USER_VIEW_SCHEMA_VERSION,
   WORKING_KNOWLEDGE_SCHEMA,
   analyzeUserRepresentationExperiment,
   buildEcdsaUserView,
   buildEcdsaWorkingKnowledgeBrief,
-  compileUserDecision,
   ideasFromRelease,
   renderWorkingKnowledgePage,
 } from "../src/atlas-runtime/index.ts";
@@ -21,38 +21,21 @@ const view = buildEcdsaUserView(brief, sha256(brief));
 const html = renderWorkingKnowledgePage(view);
 const experiment = analyzeUserRepresentationExperiment(brief, ideasFromRelease(loaded.release));
 
-describe("compileUserDecision", () => {
-  test("doNow leads with Barrett and keeps admitted isolations out of the next-action list", () => {
-    const decision = compileUserDecision(brief);
-    expect(decision.doNow[0]?.id).toBe("disc:barrett-vs-solinas");
-    expect(decision.doNow.some((item) => item.id === "disc:barrett-vs-solinas")).toBe(true);
-    expect(decision.doNow.some((item) => item.id.includes("adaptive-phase"))).toBe(false);
-    expect(decision.knownLocalMoves[0]?.id).toContain("adaptive-phase-correction");
-    expect(decision.avoid.some((item) => item.id === "hazard:seed-grinding")).toBe(true);
-    expect(decision.avoid.some((item) => item.id === "avoid:karatsuba-ping-pong")).toBe(true);
-    expect(decision.avoid.some((item) => item.id.includes("fermat-inversion"))).toBe(true);
-  });
-
-  test("knownLocalMoves include Solinas as a Toffoli-up product win", () => {
-    const decision = compileUserDecision(brief);
-    const solinas = decision.knownLocalMoves.find((item) => item.id.includes("solinas-reduction"));
-    expect(solinas).toBeDefined();
-    expect(solinas?.reason).toMatch(/Toffoli rose/i);
-  });
-});
-
 describe("user view packet", () => {
-  test("wraps the brief and pins the SHA-256", () => {
+  test("wraps the brief without a doNow ranking", () => {
     expect(view.schema).toBe(ECDSA_USER_VIEW_SCHEMA);
+    expect(view.schemaVersion).toBe(ECDSA_USER_VIEW_SCHEMA_VERSION);
     expect(view.briefSha256).toHaveLength(64);
     expect(view.briefSha256).toBe(sha256(brief));
     expect(view.brief.schema).toBe(WORKING_KNOWLEDGE_SCHEMA);
-    expect(view.decision.doNow[0]?.id).toBe("disc:barrett-vs-solinas");
+    expect(view).not.toHaveProperty("decision");
+    expect(view.brief.supportedMechanisms[0]?.ideaId).toBe("candidate:adaptive-phase-correction:a391ebef3b");
+    expect(view.brief.nextDiscriminators.some((item) => item.discriminatorId === "disc:barrett-vs-solinas")).toBe(true);
   });
 });
 
 describe("HTML landing page", () => {
-  test("leads with frontier, qubits, Toffoli, and the admitted isolations", () => {
+  test("leads with frontier, qubits, Toffoli, and admitted isolations", () => {
     expect(html).toContain('data-testid="frontier-score"');
     expect(html).toContain('data-frontier-score="1182644586"');
     expect(html).toContain('data-qubits="1150"');
@@ -61,11 +44,17 @@ describe("HTML landing page", () => {
     expect(html).toContain("Quantum–classical comparator");
   });
 
-  test("names the do / don't packet and Barrett as the next discriminator", () => {
-    expect(html).toContain('data-testid="decision"');
-    expect(html).toContain("Do not treat nonce / seed grinding as a circuit mechanism");
+  test("is an inventory of scores and open cuts, not a next-move ranking", () => {
+    expect(html).toContain("does not recommend a next experiment");
+    expect(html).not.toContain("What isolated move is worth trying next");
+    expect(html).not.toContain('data-decision="do"');
+    expect(html).not.toContain("<div class=\"eyebrow\">Do</div>");
+    expect(html).not.toContain("<div class=\"eyebrow\">Don't</div>");
+    expect(html).not.toContain("<div class=\"eyebrow\">Reuse</div>");
     expect(html).toContain("Barrett reciprocal reduction");
     expect(html).toContain('data-discriminator-id="disc:barrett-vs-solinas"');
+    expect(html).toContain("untried in atlas");
+    expect(html).toContain("Nonce / seed grinding");
     expect(html).toContain('href="./working-knowledge.json"');
     expect(html).toContain('href="./index.json"');
   });

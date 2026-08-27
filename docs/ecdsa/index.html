@@ -18,8 +18,6 @@
     .stat, .card { background: #fff; border: 1px solid #d7e0d8; border-radius: 12px; padding: 14px 16px; }
     .stat .label, .eyebrow { font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; color: #5b6b62; }
     .stat .value { font-size: 1.25rem; font-weight: 650; margin-top: 4px; }
-    .do { border-left: 4px solid #17603a; }
-    .dont { border-left: 4px solid #8a2f1d; }
     .card + .card { margin-top: 10px; }
     .muted { color: #5b6b62; font-size: 0.92rem; }
     table { width: 100%; border-collapse: collapse; background: #fff; }
@@ -35,12 +33,13 @@
 <main>
   <p class="eyebrow">Yukon KG · ECDSA.fail</p>
   <h1>Working knowledge</h1>
-  <p class="lede">The user-facing packet for the pinned scorer. Isolated one-change effects only. Promotion counts, nonce grinding, and published Pareto points are not treated as mechanisms.</p>
+  <p class="lede">Compiled state of the pinned scorer: scores, bounds, admitted isolations, open cuts, and negative knowledge. This page does not recommend a next experiment.</p>
   <nav>
-    <a href="#decision">Decision</a>
-    <a href="#mechanisms">Mechanisms</a>
+    <a href="#bounds">Bounds</a>
+    <a href="#mechanisms">Admitted effects</a>
+    <a href="#open">Open cuts</a>
     <a href="#hazards">Hazards</a>
-    <a href="#next">Next</a>
+    <a href="#negative">Negative</a>
     <a href="./working-knowledge.json">JSON packet</a>
     <a href="./index.json">Sealed archive</a>
   </nav>
@@ -67,89 +66,40 @@
     </div>
   </section>
 
-  <h2 id="decision">Decision</h2>
-  <p data-testid="decision" data-section="decision"><strong>What isolated move is worth trying next on the pinned ECDSA.fail scorer?</strong></p>
-  
-  <article class="card do" data-decision="do" data-item-id="disc:barrett-vs-solinas">
-    <div class="eyebrow">Do</div>
-    <h3>Does Barrett reciprocal reduction beat the pinned Solinas fold on the verified scorer?</h3>
-    <p class="muted">A genuine Barrett construction would not be a pseudo-Mersenne fold, even if nearby Solinas receipts exist.</p>
-  </article>
-  <article class="card do" data-decision="do" data-item-id="disc:fourier-comparator">
-    <div class="eyebrow">Do</div>
-    <h3>Does a Fourier-basis sign test beat the ripple-borrow quantum-classical comparator?</h3>
-    <p class="muted">Phase-rotation comparison is not a carry-chain width or truncation variant.</p>
-  </article>
-  <article class="card do" data-decision="do" data-item-id="disc:half-gcd">
-    <div class="eyebrow">Do</div>
-    <h3>Does recursive half-GCD matrix inversion beat the fixed-stream Kaliski / dialog replay?</h3>
-    <p class="muted">Divide-and-conquer Bézout updates are a representation change relative to a recorded forward/reverse stream.</p>
-  </article>
-  <article class="card do" data-decision="do" data-item-id="disc:qrom-vs-location">
-    <div class="eyebrow">Do</div>
-    <h3>Does a bucket-brigade QROM constant load beat location-controlled arithmetic synthesis?</h3>
-    <p class="muted">Table lookup plus uncompute is a different mechanism from position-guarded local arithmetic.</p>
-  </article>
-  <article class="card do" data-decision="do" data-item-id="disc:isolate:experiment:ecdsafail-borrowed-dirty-carry-c69b6c1-v2">
-    <div class="eyebrow">Do</div>
-    <h3>What is the isolated resource effect of Borrowed dirty ancillae under a matched one-change ablation?</h3>
-    <p class="muted">Historical or bundled observation cannot identify the component.</p>
-  </article>
-  <article class="card do" data-decision="do" data-item-id="disc:isolate:experiment:ecdsafail-dialog-gcd-special-clean-conditional-replay-8e62-v1">
-    <div class="eyebrow">Do</div>
-    <h3>What is the isolated resource effect of Conditionally clean ancillae under a matched one-change ablation?</h3>
-    <p class="muted">Historical or bundled observation cannot identify the component.</p>
-  </article>
-  
-  <article class="card dont" data-decision="avoid" data-item-id="hazard:seed-grinding">
-    <div class="eyebrow">Don't</div>
-    <h3>Do not treat nonce / seed grinding as a circuit mechanism.</h3>
-    <p class="muted">Exclude nonce, reroll, and tail grinding from mechanism briefs. Factor them out of causal comparisons.</p>
-  </article>
-  <article class="card dont" data-decision="avoid" data-item-id="hazard:bundled-diffs">
-    <div class="eyebrow">Don't</div>
-    <h3>Do not treat bundled multi-idea submissions as a circuit mechanism.</h3>
-    <p class="muted">Use one-change ablations or factorials for mechanism claims. Keep mixed submissions as search history only.</p>
-  </article>
-  <article class="card dont" data-decision="avoid" data-item-id="avoid:candidate:fermat-inversion:b1eff02f73">
-    <div class="eyebrow">Don't</div>
-    <h3>Do not retry Fermat inversion without a representation or scorer change.</h3>
-    <p class="muted">Reopen only if the inversion representation itself changes; a failed Fermat attempt does not bound dialog/Kaliski inversion.</p>
-  </article>
-  <article class="card dont" data-decision="avoid" data-item-id="avoid:karatsuba-ping-pong">
-    <div class="eyebrow">Don't</div>
-    <h3>Do not treat Karatsuba or ping-pong inversion as an isolated mechanism.</h3>
-    <p class="muted">No jointly qualified controlled comparison is attached.</p>
-  </article>
-  <h3>Already known local moves</h3>
-  <p class="muted">Reuse these; they are already jointly qualified. They are not the next experiment.</p>
-  
-  <article class="card" data-decision="known" data-item-id="move:candidate:adaptive-phase-correction:a391ebef3b">
-    <div class="eyebrow">Reuse</div>
-    <h3>Reuse Adaptive phase correction on a new parent; do not rediscover it.</h3>
-    <p class="muted">Admitted one-change official delta -66073800 under matched_control_scoped_to_workload_block.</p>
-  </article>
-  <article class="card" data-decision="known" data-item-id="move:candidate:quantum-classical-comparator:d9ffd5fcec">
-    <div class="eyebrow">Reuse</div>
-    <h3>Reuse Quantum–classical comparator on a new parent; do not rediscover it.</h3>
-    <p class="muted">Admitted one-change official delta -17007168 under matched_control_scoped_to_workload_block.</p>
-  </article>
-  <article class="card" data-decision="known" data-item-id="move:candidate:solinas-reduction:5a45b2514d">
-    <div class="eyebrow">Reuse</div>
-    <h3>Reuse Solinas reduction on a new parent; do not rediscover it.</h3>
-    <p class="muted">Admitted one-change official delta -7288088; Toffoli rose by 192 while the qubit–Toffoli product still improved.</p>
-  </article>
-  <article class="card" data-decision="known" data-item-id="move:candidate:measurement-and-feed-forward:069984c0e1">
-    <div class="eyebrow">Reuse</div>
-    <h3>Reuse Measurement and feed-forward on a new parent; do not rediscover it.</h3>
-    <p class="muted">Admitted one-change official delta -3015004 under matched_control_scoped_to_workload_block.</p>
-  </article>
+  <h2 id="bounds">Contract and bounds</h2>
+  <p data-testid="inventory" data-section="bounds">Optimize verified ECDSA circuit resource cost under the pinned ECDSA Fail scorer. Editable surface: src/point_add/** only; harness, Cargo.toml, and evaluator remain frozen. 9024 shots. Degenerate optimum: Identity-pair nonce grinding and operation-stream padding can move the Fiat-Shamir sample without a structural circuit change.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Bound</th><th>Baseline</th><th>Frontier</th><th>Limit</th></tr></thead>
+      <tbody>
+        
+        <tr data-constraint-id="constraint:ecdsa:qubit-count">
+          <td>Qubit count</td>
+          <td>2,715</td>
+          <td>1,150</td>
+          <td>pinned_floor: 512</td>
+        </tr>
+        <tr data-constraint-id="constraint:ecdsa:spacetime-product">
+          <td>Spacetime product</td>
+          <td>10,704,574,395</td>
+          <td>1,182,644,586</td>
+          <td>unknown</td>
+        </tr>
+        <tr data-constraint-id="constraint:ecdsa:toffoli-count">
+          <td>Toffoli count</td>
+          <td>3,942,753</td>
+          <td>925,387</td>
+          <td>unknown</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-  <h2 id="mechanisms">Supported mechanisms</h2>
-  <p class="muted">Jointly qualified one-change ablations. Deltas are scoped to their parent artifacts and are not additive with the frontier score 1,182,644,586.</p>
+  <h2 id="mechanisms">Admitted one-change effects</h2>
+  <p class="muted">Jointly qualified isolations. Official deltas are scoped to their parent artifacts and are not additive with the frontier score 1,182,644,586. Ranked by measured delta, not as a search policy.</p>
   <div class="table-wrap">
     <table data-section="mechanisms">
-      <thead><tr><th>Move</th><th>Family</th><th>Official Δ</th><th>Toffoli Δ</th><th>Qubit Δ</th></tr></thead>
+      <thead><tr><th>Effect</th><th>Family</th><th>Official Δ</th><th>Toffoli Δ</th><th>Qubit Δ</th></tr></thead>
       <tbody>
         
         <tr data-mechanism-id="candidate:adaptive-phase-correction:a391ebef3b">
@@ -204,118 +154,95 @@
       </tbody>
     </table>
   </div>
-  <p class="muted">Reuse these on a new parent. Solinas can raise Toffoli and still win the qubit–Toffoli product.</p>
+  <p class="muted">Solinas can raise Toffoli and still improve the qubit–Toffoli product. That is a measured trade, not a recommendation.</p>
 
-  <h2 id="hazards">Evaluator hazards</h2>
-  
-  <article class="card dont" data-hazard-id="hazard:seed-grinding">
-    <h3>Nonce / seed grinding · 422</h3>
-    <p>345 of 422 seed-grinding-tagged submissions were promoted. The evaluator hashes the operation stream, so identity tails select a new workload rather than proving a circuit identity.</p>
-    <p class="muted">Exclude nonce, reroll, and tail grinding from mechanism briefs. Factor them out of causal comparisons.</p>
-  </article>
-  <article class="card dont" data-hazard-id="hazard:bundled-diffs">
-    <h3>Bundled multi-idea submissions · 579</h3>
-    <p>579 of 949 submissions are mixed-idea routes. Promotion counts on those ideas are not component effects.</p>
-    <p class="muted">Use one-change ablations or factorials for mechanism claims. Keep mixed submissions as search history only.</p>
-  </article>
-
-  <h2 id="next">Next discriminators</h2>
-  
-  <article class="card do" data-discriminator-id="disc:barrett-vs-solinas" data-status="untried_in_atlas">
-    <div class="eyebrow">untried in atlas</div>
-    <h3>Does Barrett reciprocal reduction beat the pinned Solinas fold on the verified scorer?</h3>
-    <p class="muted">A genuine Barrett construction would not be a pseudo-Mersenne fold, even if nearby Solinas receipts exist.</p>
-  </article>
-  <article class="card do" data-discriminator-id="disc:fourier-comparator" data-status="untried_in_atlas">
-    <div class="eyebrow">untried in atlas</div>
-    <h3>Does a Fourier-basis sign test beat the ripple-borrow quantum-classical comparator?</h3>
-    <p class="muted">Phase-rotation comparison is not a carry-chain width or truncation variant.</p>
-  </article>
-  <article class="card do" data-discriminator-id="disc:half-gcd" data-status="untried_in_atlas">
-    <div class="eyebrow">untried in atlas</div>
-    <h3>Does recursive half-GCD matrix inversion beat the fixed-stream Kaliski / dialog replay?</h3>
-    <p class="muted">Divide-and-conquer Bézout updates are a representation change relative to a recorded forward/reverse stream.</p>
-  </article>
-  <article class="card do" data-discriminator-id="disc:qrom-vs-location" data-status="untried_in_atlas">
-    <div class="eyebrow">untried in atlas</div>
-    <h3>Does a bucket-brigade QROM constant load beat location-controlled arithmetic synthesis?</h3>
-    <p class="muted">Table lookup plus uncompute is a different mechanism from position-guarded local arithmetic.</p>
-  </article>
-  <details>
-    <summary>Historical and qualification-failed isolations</summary>
-    
-    <article class="card" data-discriminator-id="disc:isolate:experiment:ecdsafail-borrowed-dirty-carry-c69b6c1-v2" data-status="historical_only">
-      <div class="eyebrow">historical only</div>
-      <h3>What is the isolated resource effect of Borrowed dirty ancillae under a matched one-change ablation?</h3>
-      <p class="muted">Historical or bundled observation cannot identify the component.</p>
-    </article>
-    <article class="card" data-discriminator-id="disc:isolate:experiment:ecdsafail-dialog-gcd-special-clean-conditional-replay-8e62-v1" data-status="historical_only">
-      <div class="eyebrow">historical only</div>
-      <h3>What is the isolated resource effect of Conditionally clean ancillae under a matched one-change ablation?</h3>
-      <p class="muted">Historical or bundled observation cannot identify the component.</p>
-    </article>
-    <article class="card" data-discriminator-id="disc:isolate:experiment:ecdsafail-pingpong-fused-inverse-522d-v3" data-status="historical_only">
-      <div class="eyebrow">historical only</div>
-      <h3>What is the isolated resource effect of Fused inverse replay under a matched one-change ablation?</h3>
-      <p class="muted">Historical or bundled observation cannot identify the component.</p>
-    </article>
-    <article class="card" data-discriminator-id="disc:isolate:experiment:ecdsafail-pingpong-replay-exact-prefix-layout-522d-v3" data-status="historical_only">
-      <div class="eyebrow">historical only</div>
-      <h3>What is the isolated resource effect of Exact-prefix segmentation under a matched one-change ablation?</h3>
-      <p class="muted">Historical or bundled observation cannot identify the component.</p>
-    </article>
-    <article class="card" data-discriminator-id="disc:isolate:experiment:ecdsafail-round84-xtail-karatsuba-8e62-v1" data-status="historical_only">
-      <div class="eyebrow">historical only</div>
-      <h3>What is the isolated resource effect of Product-register squaring under a matched one-change ablation?</h3>
-      <p class="muted">Historical or bundled observation cannot identify the component.</p>
-    </article>
-    <article class="card" data-discriminator-id="disc:requalify:experiment:ecdsafail-pingpong-interleaved-replay-schedule-522d-v3" data-status="qualification_failed">
-      <div class="eyebrow">qualification failed</div>
-      <h3>Can Fused walk-replay schedule be re-run with a jointly valid matched control?</h3>
-      <p class="muted">The treatment arm produced a numeric score while the control did not, so no official effect is admitted.</p>
-    </article>
-    <article class="card" data-discriminator-id="disc:requalify:experiment:ecdsafail-pingpong-sparse-endpoint-recovery-522d-v3" data-status="qualification_failed">
-      <div class="eyebrow">qualification failed</div>
-      <h3>Can Sparse endpoint recovery be re-run with a jointly valid matched control?</h3>
-      <p class="muted">The treatment arm produced a numeric score while the control did not, so no official effect is admitted.</p>
-    </article>
-    <article class="card" data-discriminator-id="disc:requalify:experiment:ecdsafail-pingpong-terminal-passenger-loan-522d-v3" data-status="qualification_failed">
-      <div class="eyebrow">qualification failed</div>
-      <h3>Can Conditionally clean ancillae be re-run with a jointly valid matched control?</h3>
-      <p class="muted">The treatment arm produced a numeric score while the control did not, so no official effect is admitted.</p>
-    </article>
-  </details>
-
-  <h2>Contract and bounds</h2>
-  <p>Optimize verified ECDSA circuit resource cost under the pinned ECDSA Fail scorer. Editable surface: src/point_add/** only; harness, Cargo.toml, and evaluator remain frozen. 9024 shots. Degenerate optimum: Identity-pair nonce grinding and operation-stream padding can move the Fiat-Shamir sample without a structural circuit change.</p>
+  <h2 id="open">Open cuts</h2>
+  <p class="muted">Questions the sealed snapshot does not answer. Status is an evidence label, not a priority.</p>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Bound</th><th>Baseline</th><th>Frontier</th><th>Limit</th></tr></thead>
+    <table data-section="open-cuts">
+      <thead><tr><th>Status</th><th>Question</th><th>Distinction</th></tr></thead>
       <tbody>
         
-        <tr data-constraint-id="constraint:ecdsa:qubit-count">
-          <td>Qubit count</td>
-          <td>2,715</td>
-          <td>1,150</td>
-          <td>pinned_floor: 512</td>
+        <tr data-discriminator-id="disc:isolate:experiment:ecdsafail-borrowed-dirty-carry-c69b6c1-v2" data-status="historical_only">
+          <td>historical only</td>
+          <td>What is the isolated resource effect of Borrowed dirty ancillae under a matched one-change ablation?</td>
+          <td>Historical or bundled observation cannot identify the component.</td>
         </tr>
-        <tr data-constraint-id="constraint:ecdsa:spacetime-product">
-          <td>Spacetime product</td>
-          <td>10,704,574,395</td>
-          <td>1,182,644,586</td>
-          <td>unknown</td>
+        <tr data-discriminator-id="disc:isolate:experiment:ecdsafail-dialog-gcd-special-clean-conditional-replay-8e62-v1" data-status="historical_only">
+          <td>historical only</td>
+          <td>What is the isolated resource effect of Conditionally clean ancillae under a matched one-change ablation?</td>
+          <td>Historical or bundled observation cannot identify the component.</td>
         </tr>
-        <tr data-constraint-id="constraint:ecdsa:toffoli-count">
-          <td>Toffoli count</td>
-          <td>3,942,753</td>
-          <td>925,387</td>
-          <td>unknown</td>
+        <tr data-discriminator-id="disc:isolate:experiment:ecdsafail-pingpong-fused-inverse-522d-v3" data-status="historical_only">
+          <td>historical only</td>
+          <td>What is the isolated resource effect of Fused inverse replay under a matched one-change ablation?</td>
+          <td>Historical or bundled observation cannot identify the component.</td>
+        </tr>
+        <tr data-discriminator-id="disc:isolate:experiment:ecdsafail-pingpong-replay-exact-prefix-layout-522d-v3" data-status="historical_only">
+          <td>historical only</td>
+          <td>What is the isolated resource effect of Exact-prefix segmentation under a matched one-change ablation?</td>
+          <td>Historical or bundled observation cannot identify the component.</td>
+        </tr>
+        <tr data-discriminator-id="disc:isolate:experiment:ecdsafail-round84-xtail-karatsuba-8e62-v1" data-status="historical_only">
+          <td>historical only</td>
+          <td>What is the isolated resource effect of Product-register squaring under a matched one-change ablation?</td>
+          <td>Historical or bundled observation cannot identify the component.</td>
+        </tr>
+        <tr data-discriminator-id="disc:requalify:experiment:ecdsafail-pingpong-interleaved-replay-schedule-522d-v3" data-status="qualification_failed">
+          <td>qualification failed</td>
+          <td>Can Fused walk-replay schedule be re-run with a jointly valid matched control?</td>
+          <td>The treatment arm produced a numeric score while the control did not, so no official effect is admitted.</td>
+        </tr>
+        <tr data-discriminator-id="disc:requalify:experiment:ecdsafail-pingpong-sparse-endpoint-recovery-522d-v3" data-status="qualification_failed">
+          <td>qualification failed</td>
+          <td>Can Sparse endpoint recovery be re-run with a jointly valid matched control?</td>
+          <td>The treatment arm produced a numeric score while the control did not, so no official effect is admitted.</td>
+        </tr>
+        <tr data-discriminator-id="disc:requalify:experiment:ecdsafail-pingpong-terminal-passenger-loan-522d-v3" data-status="qualification_failed">
+          <td>qualification failed</td>
+          <td>Can Conditionally clean ancillae be re-run with a jointly valid matched control?</td>
+          <td>The treatment arm produced a numeric score while the control did not, so no official effect is admitted.</td>
+        </tr>
+        <tr data-discriminator-id="disc:barrett-vs-solinas" data-status="untried_in_atlas">
+          <td>untried in atlas</td>
+          <td>Does Barrett reciprocal reduction beat the pinned Solinas fold on the verified scorer?</td>
+          <td>A genuine Barrett construction would not be a pseudo-Mersenne fold, even if nearby Solinas receipts exist.</td>
+        </tr>
+        <tr data-discriminator-id="disc:fourier-comparator" data-status="untried_in_atlas">
+          <td>untried in atlas</td>
+          <td>Does a Fourier-basis sign test beat the ripple-borrow quantum-classical comparator?</td>
+          <td>Phase-rotation comparison is not a carry-chain width or truncation variant.</td>
+        </tr>
+        <tr data-discriminator-id="disc:half-gcd" data-status="untried_in_atlas">
+          <td>untried in atlas</td>
+          <td>Does recursive half-GCD matrix inversion beat the fixed-stream Kaliski / dialog replay?</td>
+          <td>Divide-and-conquer Bézout updates are a representation change relative to a recorded forward/reverse stream.</td>
+        </tr>
+        <tr data-discriminator-id="disc:qrom-vs-location" data-status="untried_in_atlas">
+          <td>untried in atlas</td>
+          <td>Does a bucket-brigade QROM constant load beat location-controlled arithmetic synthesis?</td>
+          <td>Table lookup plus uncompute is a different mechanism from position-guarded local arithmetic.</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <h2>Negative knowledge</h2>
+  <h2 id="hazards">Evaluator classifications</h2>
+  
+  <article class="card" data-hazard-id="hazard:seed-grinding">
+    <div class="eyebrow">Classification</div>
+    <h3>Nonce / seed grinding · 422</h3>
+    <p>345 of 422 seed-grinding-tagged submissions were promoted. The evaluator hashes the operation stream, so identity tails select a new workload rather than proving a circuit identity.</p>
+    <p class="muted">Exclude nonce, reroll, and tail grinding from mechanism briefs. Factor them out of causal comparisons.</p>
+  </article>
+  <article class="card" data-hazard-id="hazard:bundled-diffs">
+    <div class="eyebrow">Classification</div>
+    <h3>Bundled multi-idea submissions · 579</h3>
+    <p>579 of 949 submissions are mixed-idea routes. Promotion counts on those ideas are not component effects.</p>
+    <p class="muted">Use one-change ablations or factorials for mechanism claims. Keep mixed submissions as search history only.</p>
+  </article>
+
+  <h2 id="negative">Negative knowledge</h2>
   
   <details data-negative-id="candidate:resource-estimation:d951023c40">
     <summary>Resource estimation · 35 attempts, 0 promoted</summary>

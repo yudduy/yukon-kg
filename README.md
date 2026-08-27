@@ -12,7 +12,7 @@ Given the same ECDSA.fail evidence, task, model, and retrieval budget, which inp
 
 The earlier six-case pilot was not decisive: flat search and the brief each passed 2/6 cases. Its result is preserved in [`evidence/atlas-retrieval-v3/pilot.json`](evidence/atlas-retrieval-v3/pilot.json). The current v4 protocol first proves that every reviewed answer is reachable through the same search interface. Its latest preflight stopped before model calls because 9/30 frozen cases were not reachable. The parity, reachability, and decision reports are preserved under [`evidence/atlas-retrieval-v4-preflight/`](evidence/atlas-retrieval-v4-preflight/). No retrieval representation has earned promotion yet.
 
-As of August 2026, the public literature that actually moved verified search is **an executable candidate plus a hard evaluator**, with a compact de-narrativized decision packet as the agent-facing view. Undifferentiated graphs, winner-only memory, and high-volume archive injection are not the recipe. This repository therefore compiles a disposable ECDSA working-knowledge brief from the current Atlas snapshot without editing sealed releases:
+As of August 2026, the public literature that actually moved verified search is **an executable candidate plus a hard evaluator**, with a compact de-narrativized **state packet** as the agent-facing view — scores, bounds, admitted effects, and open cuts, not a ranked next move. Undifferentiated graphs, winner-only memory, and high-volume archive injection are not the recipe. This repository therefore compiles a disposable ECDSA working-knowledge brief from the current Atlas snapshot without editing sealed releases:
 
 ```text
 immutable Atlas records
@@ -21,10 +21,9 @@ immutable Atlas records
 → evaluator hazards (nonce grinding, bundled diffs)
 → next discriminators
 → literature overlay labeled source_reported, not Atlas-verified
-→ user decision packet (do / don't / reuse)
 ```
 
-The ECDSA user default is that packet, not the 949-submission archive. Compile and publish it with:
+The ECDSA user default is that compiled state, not the 949-submission archive and not a ranked next-experiment list. Compile and publish it with:
 
 ```bash
 bun run knowledge:ecdsa
