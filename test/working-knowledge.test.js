@@ -53,13 +53,42 @@ describe("ECDSA working-knowledge compiler", () => {
     expect(brief.supportedMechanisms.some((item) => item.ideaId.includes("karatsuba"))).toBe(false);
     expect(brief.unverifiedObservations.some((item) => item.ideaId.includes("karatsuba") || item.title.toLowerCase().includes("karatsuba"))).toBe(true);
     expect(brief.nextDiscriminators.some((item) => item.status === "historical_only")).toBe(true);
-    expect(brief.nextDiscriminators.some((item) => item.status === "untried_in_atlas" && item.discriminatorId === "disc:barrett-vs-solinas")).toBe(true);
+    expect(brief.nextDiscriminators.some((item) => item.status === "proposed_unverified" && item.discriminatorId === "disc:barrett-vs-solinas")).toBe(true);
   });
 
-  test("records Fermat inversion as scoped negative knowledge, not a permanent veto", () => {
-    const fermat = brief.negativeKnowledge.find((item) => item.ideaId.includes("fermat-inversion"));
+  test("does not turn zero promotions into negative knowledge", () => {
+    const fermat = brief.coverageSignals.find((item) => item.ideaId.includes("fermat-inversion"));
     expect(fermat?.promoted).toBe(0);
-    expect(fermat?.reopenCondition).toMatch(/inversion representation/i);
+    expect(fermat?.status).toBe("archive_observation_only");
+    expect(brief.negativeKnowledge.some((item) => item.ideaId.includes("fermat-inversion"))).toBe(false);
+    expect(brief.negativeKnowledge.every((item) => item.evidenceLevel === "one_change_ablation" && item.officialDelta >= 0)).toBe(true);
+  });
+
+  test("emits no-qualifying-receipt only from scoped matcher evidence", () => {
+    const discriminatorId = "disc:barrett-vs-solinas";
+    const scoped = buildEcdsaWorkingKnowledgeBrief(loaded.release, loaded.experimentDetails, {
+      discriminatorCoverage: new Map([[
+        discriminatorId,
+        {
+          discriminatorId,
+          matcherId: "matcher:barrett",
+          matcherVersion: "1",
+          evaluatorSha256: "a".repeat(64),
+          qualifyingReceiptCount: 0,
+          sourceRefs: ["ledger:campaign-001"],
+        },
+      ]]),
+    });
+    const barrett = scoped.nextDiscriminators.find((item) => item.discriminatorId === discriminatorId);
+    expect(barrett?.status).toBe("no_qualifying_receipt");
+    expect(barrett?.verification).toEqual({
+      method: "evidence_ledger_matcher",
+      releaseId: loaded.release.pointer.id,
+      matcherId: "matcher:barrett",
+      matcherVersion: "1",
+      evaluatorSha256: "a".repeat(64),
+      qualifyingReceiptCount: 0,
+    });
   });
 
   test("separates literature overlay predicates from Atlas measurements", () => {
@@ -78,6 +107,7 @@ describe("ECDSA working-knowledge compiler", () => {
       ...brief.supportedMechanisms,
       ...brief.unverifiedObservations,
       ...brief.liveAlternatives,
+      ...brief.coverageSignals,
       ...brief.negativeKnowledge,
       ...brief.evaluatorHazards,
       ...brief.nextDiscriminators,

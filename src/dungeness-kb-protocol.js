@@ -123,10 +123,20 @@ export function compileKnowledgeVariants(brief, ideas, submissions) {
       ideaId: item.ideaId,
       title: item.title,
       family: item.family,
+      experimentId: item.experimentId,
+      comparisonId: item.comparisonId,
+      officialDelta: item.officialDelta,
+      why: item.why,
+      reopenCondition: item.reopenCondition,
+    })),
+    coverageSignals: brief.coverageSignals.map((item) => ({
+      ideaId: item.ideaId,
+      title: item.title,
+      family: item.family,
+      status: item.status,
       submissions: item.submissions,
       promoted: item.promoted,
       why: item.why,
-      reopenCondition: item.reopenCondition,
     })),
   };
   const payloads = {
@@ -158,7 +168,7 @@ export function goldNeedles(userCase) {
   if (userCase.id === "seed-grinding-mechanism") needles.push("Nonce / seed grinding", "seed-grinding");
   if (userCase.id === "toffoli-can-rise") needles.push("Solinas");
   if (userCase.id === "frontier-mixed") needles.push("mixed");
-  if (userCase.id === "next-untried") needles.push("Barrett");
+  if (userCase.id === "representation-proposal") needles.push("Barrett", "half-GCD");
   return needles;
 }
 
@@ -209,7 +219,7 @@ export function scoreAnswer(answer, userCase) {
   if (gold === "yes" && /^(yes|true)$/u.test(actual)) return true;
   if (gold === "no" && /^(no|false)$/u.test(actual)) return true;
   if (gold.length > 0 && (actual.includes(gold) || gold.includes(actual))) return true;
-  if (userCase.id === "next-untried" && actual.includes("barrett")) return true;
+  if (userCase.id === "representation-proposal" && (actual.includes("barrett") || actual.includes("half gcd"))) return true;
   if (userCase.id === "largest-isolated-effect" && actual.includes("adaptive phase")) return true;
   if (userCase.gold.ideaId && actual.includes(normalizeAnswer(userCase.gold.ideaId))) return true;
   return false;

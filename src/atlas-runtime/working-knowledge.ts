@@ -11,7 +11,7 @@ import type {
 } from "./types";
 
 export const WORKING_KNOWLEDGE_SCHEMA = "yukon.atlas-working-knowledge-brief";
-export const WORKING_KNOWLEDGE_SCHEMA_VERSION = 1 as const;
+export const WORKING_KNOWLEDGE_SCHEMA_VERSION = 2 as const;
 
 export type WorkingKnowledgeClaimPredicate =
   | "source_reported"
@@ -102,12 +102,27 @@ export interface WorkingKnowledgeNegative {
   ideaId: string;
   title: string;
   family: WorkingKnowledgeInterventionFamily;
+  experimentId: string;
+  comparisonId: string;
+  evidenceLevel: "one_change_ablation";
+  officialDelta: number;
+  controlScore: number;
+  treatmentScore: number;
+  why: string;
+  reopenCondition: string;
+  sourceRefs: string[];
+}
+
+export interface WorkingKnowledgeCoverageSignal {
+  ideaId: string;
+  title: string;
+  family: WorkingKnowledgeInterventionFamily;
+  status: "archive_observation_only";
   submissions: number;
   promoted: number;
   rejected: number;
   failed: number;
   why: string;
-  reopenCondition: string;
   sourceRefs: string[];
 }
 
@@ -124,9 +139,30 @@ export interface WorkingKnowledgeDiscriminator {
   discriminatorId: string;
   question: string;
   predictedDistinction: string;
-  status: "untried_in_atlas" | "historical_only" | "qualification_failed";
+  status: "proposed_unverified" | "no_qualifying_receipt" | "historical_only" | "qualification_failed";
   relatedIdeaIds: string[];
   sourceRefs: string[];
+  verification: {
+    method: "proposal_only" | "evidence_ledger_matcher" | "atlas_experiment";
+    releaseId: string;
+    matcherId: string | null;
+    matcherVersion: string | null;
+    evaluatorSha256: string | null;
+    qualifyingReceiptCount: number | null;
+  };
+}
+
+export interface WorkingKnowledgeDiscriminatorCoverage {
+  discriminatorId: string;
+  matcherId: string;
+  matcherVersion: string;
+  evaluatorSha256: string;
+  qualifyingReceiptCount: number;
+  sourceRefs: string[];
+}
+
+export interface WorkingKnowledgeCompileOptions {
+  discriminatorCoverage?: ReadonlyMap<string, WorkingKnowledgeDiscriminatorCoverage>;
 }
 
 export interface WorkingKnowledgeBrief {
@@ -151,6 +187,7 @@ export interface WorkingKnowledgeBrief {
   supportedMechanisms: WorkingKnowledgeMechanism[];
   unverifiedObservations: WorkingKnowledgeObservation[];
   liveAlternatives: WorkingKnowledgeObservation[];
+  coverageSignals: WorkingKnowledgeCoverageSignal[];
   negativeKnowledge: WorkingKnowledgeNegative[];
   evaluatorHazards: WorkingKnowledgeHazard[];
   nextDiscriminators: WorkingKnowledgeDiscriminator[];
@@ -360,6 +397,24 @@ function admittedImprovement(comparison: AtlasExperimentControlledComparison): {
   return { delta: official.benchmarkEffect.delta, controlScore, treatmentScore };
 }
 
+function admittedNonImprovement(comparison: AtlasExperimentControlledComparison): {
+  delta: number;
+  controlScore: number;
+  treatmentScore: number;
+} | null {
+  const official = comparison.result?.officialObservation;
+  if (official === undefined) return null;
+  if (official.qualification.control.status !== "passed" || official.qualification.treatment.status !== "passed") {
+    return null;
+  }
+  if (official.benchmarkEffect.status !== "estimated") return null;
+  const controlScore = official.qualification.control.score;
+  const treatmentScore = official.qualification.treatment.score;
+  if (controlScore === null || treatmentScore === null) return null;
+  if (official.benchmarkEffect.delta < 0) return null;
+  return { delta: official.benchmarkEffect.delta, controlScore, treatmentScore };
+}
+
 function coverageFor(release: AtlasRelease, ideaId: string) {
   const dossier = release.dossierByIdeaId?.get(ideaId);
   if (dossier === undefined) return null;
@@ -392,33 +447,33 @@ function interpretationCounts(release: AtlasRelease): Record<string, number> {
   return counts;
 }
 
-const UNTRIED_DISCRIMINATORS: readonly Omit<WorkingKnowledgeDiscriminator, "sourceRefs">[] = [
+const PROPOSED_DISCRIMINATORS: readonly Omit<WorkingKnowledgeDiscriminator, "sourceRefs" | "verification">[] = [
   {
     discriminatorId: "disc:barrett-vs-solinas",
     question: "Does Barrett reciprocal reduction beat the pinned Solinas fold on the verified scorer?",
     predictedDistinction: "A genuine Barrett construction would not be a pseudo-Mersenne fold, even if nearby Solinas receipts exist.",
-    status: "untried_in_atlas",
+    status: "proposed_unverified",
     relatedIdeaIds: ["candidate:solinas-reduction:5a45b2514d"],
   },
   {
     discriminatorId: "disc:half-gcd",
     question: "Does recursive half-GCD matrix inversion beat the fixed-stream Kaliski / dialog replay?",
     predictedDistinction: "Divide-and-conquer Bézout updates are a representation change relative to a recorded forward/reverse stream.",
-    status: "untried_in_atlas",
+    status: "proposed_unverified",
     relatedIdeaIds: ["candidate:extended-euclidean-algorithm:f11501d92a", "candidate:kaliski-inversion:e79f263674"],
   },
   {
     discriminatorId: "disc:qrom-vs-location",
     question: "Does a bucket-brigade QROM constant load beat location-controlled arithmetic synthesis?",
     predictedDistinction: "Table lookup plus uncompute is a different mechanism from position-guarded local arithmetic.",
-    status: "untried_in_atlas",
+    status: "proposed_unverified",
     relatedIdeaIds: ["candidate:location-controlled-arithmetic:0efa7e6ff7"],
   },
   {
     discriminatorId: "disc:fourier-comparator",
     question: "Does a Fourier-basis sign test beat the ripple-borrow quantum-classical comparator?",
     predictedDistinction: "Phase-rotation comparison is not a carry-chain width or truncation variant.",
-    status: "untried_in_atlas",
+    status: "proposed_unverified",
     relatedIdeaIds: ["candidate:quantum-classical-comparator:d9ffd5fcec"],
   },
 ];
@@ -432,6 +487,7 @@ function requireV5(release: AtlasRelease): void {
 export function buildEcdsaWorkingKnowledgeBrief(
   release: AtlasRelease,
   experimentDetailById: ReadonlyMap<string, AtlasExperimentDetail> = new Map(),
+  options: WorkingKnowledgeCompileOptions = {},
 ): WorkingKnowledgeBrief {
   requireV5(release);
   const assessments = [...(release.decomposition?.constraintAssessments ?? [])]
@@ -487,10 +543,25 @@ export function buildEcdsaWorkingKnowledgeBrief(
   const supportedMechanisms: WorkingKnowledgeMechanism[] = [];
   const unverifiedObservations: WorkingKnowledgeObservation[] = [];
   const liveAlternatives: WorkingKnowledgeObservation[] = [];
-  const nextDiscriminators: WorkingKnowledgeDiscriminator[] = UNTRIED_DISCRIMINATORS.map((item) => ({
-    ...item,
-    sourceRefs: item.relatedIdeaIds.map((ideaId) => sourceRef("idea", ideaId)),
-  }));
+  const negativeKnowledge: WorkingKnowledgeNegative[] = [];
+  const nextDiscriminators: WorkingKnowledgeDiscriminator[] = PROPOSED_DISCRIMINATORS.flatMap((item) => {
+    const coverage = options.discriminatorCoverage?.get(item.discriminatorId);
+    if (coverage !== undefined && coverage.qualifyingReceiptCount > 0) return [];
+    return [{
+      ...item,
+      status: coverage === undefined ? "proposed_unverified" : "no_qualifying_receipt",
+      sourceRefs: coverage?.sourceRefs
+        ?? item.relatedIdeaIds.map((ideaId) => sourceRef("idea", ideaId)),
+      verification: {
+        method: coverage === undefined ? "proposal_only" : "evidence_ledger_matcher",
+        releaseId: release.pointer.id,
+        matcherId: coverage?.matcherId ?? null,
+        matcherVersion: coverage?.matcherVersion ?? null,
+        evaluatorSha256: coverage?.evaluatorSha256 ?? null,
+        qualifyingReceiptCount: coverage?.qualifyingReceiptCount ?? null,
+      },
+    }];
+  });
 
   for (const experiment of experiments) {
     const detail = experimentDetailById.get(experiment.id);
@@ -523,6 +594,28 @@ export function buildEcdsaWorkingKnowledgeBrief(
         });
         continue;
       }
+      const nonImprovement = admittedNonImprovement(comparison);
+      if (nonImprovement !== null && experiment.evidenceLevel === "one_change_ablation") {
+        negativeKnowledge.push({
+          ideaId: experiment.ideaId,
+          title: ideaTitle(release, experiment.ideaId),
+          family: ideaFamily(release, experiment.ideaId),
+          experimentId: experiment.id,
+          comparisonId: comparison.comparisonId,
+          evidenceLevel: experiment.evidenceLevel,
+          officialDelta: nonImprovement.delta,
+          controlScore: nonImprovement.controlScore,
+          treatmentScore: nonImprovement.treatmentScore,
+          why: "A jointly qualified one-change comparison did not improve the official score.",
+          reopenCondition: reopenCondition(experiment.ideaId, ideaFamily(release, experiment.ideaId)),
+          sourceRefs: [
+            sourceRef("experiment", experiment.id),
+            sourceRef("comparison", comparison.comparisonId),
+            sourceRef("idea", experiment.ideaId),
+          ],
+        });
+        continue;
+      }
       const official = comparison.result?.officialObservation;
       if (official?.benchmarkEffect.status === "unavailable") {
         const treatmentPassed = official.qualification.treatment.status === "passed";
@@ -541,6 +634,14 @@ export function buildEcdsaWorkingKnowledgeBrief(
             status: "qualification_failed",
             relatedIdeaIds: [experiment.ideaId],
             sourceRefs: [sourceRef("experiment", experiment.id), sourceRef("comparison", comparison.comparisonId)],
+            verification: {
+              method: "atlas_experiment",
+              releaseId: release.pointer.id,
+              matcherId: null,
+              matcherVersion: null,
+              evaluatorSha256: null,
+              qualifyingReceiptCount: null,
+            },
           });
         } else {
           unverifiedObservations.push(record);
@@ -566,7 +667,7 @@ export function buildEcdsaWorkingKnowledgeBrief(
   supportedMechanisms.sort((left, right) => compareNumber(left.officialDelta, right.officialDelta)
     || compareText(left.ideaId, right.ideaId));
 
-  const negativeKnowledge = [...(release.decomposition?.dossiers ?? [])]
+  const coverageSignals = [...(release.decomposition?.dossiers ?? [])]
     .filter((dossier) => dossier.coverage.submissions > 0 && dossier.coverage.promoted === 0)
     .map((dossier) => {
       const family = ideaFamily(release, dossier.ideaId);
@@ -574,18 +675,20 @@ export function buildEcdsaWorkingKnowledgeBrief(
         ideaId: dossier.ideaId,
         title: ideaTitle(release, dossier.ideaId),
         family,
+        status: "archive_observation_only" as const,
         submissions: dossier.coverage.submissions,
         promoted: dossier.coverage.promoted,
         rejected: dossier.coverage.rejected,
         failed: dossier.coverage.failed,
         why: family === "measurement"
-          ? "These records change accounting or tooling, not the scored circuit."
-          : "No promoted submission is routed to this idea in the sealed snapshot.",
-        reopenCondition: reopenCondition(dossier.ideaId, family),
+          ? "These records change accounting or tooling, not the scored circuit. Their archive status is not a mechanism result."
+          : "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result.",
         sourceRefs: [sourceRef("idea", dossier.ideaId), sourceRef("dossier", dossier.ideaId)],
       };
     })
     .sort((left, right) => compareNumber(right.submissions, left.submissions) || compareText(left.ideaId, right.ideaId));
+  negativeKnowledge.sort((left, right) => compareNumber(left.officialDelta, right.officialDelta)
+    || compareText(left.ideaId, right.ideaId));
 
   const seed = seedGrindingStats(release);
   const interpretations = interpretationCounts(release);
@@ -625,6 +728,14 @@ export function buildEcdsaWorkingKnowledgeBrief(
       status: "historical_only",
       relatedIdeaIds: [experiment.ideaId],
       sourceRefs: [sourceRef("experiment", experiment.id)],
+      verification: {
+        method: "atlas_experiment",
+        releaseId: release.pointer.id,
+        matcherId: null,
+        matcherVersion: null,
+        evaluatorSha256: null,
+        qualifyingReceiptCount: null,
+      },
     });
   }
   nextDiscriminators.sort((left, right) => compareText(left.discriminatorId, right.discriminatorId));
@@ -661,6 +772,7 @@ export function buildEcdsaWorkingKnowledgeBrief(
     supportedMechanisms,
     unverifiedObservations,
     liveAlternatives,
+    coverageSignals,
     negativeKnowledge,
     evaluatorHazards,
     nextDiscriminators,
@@ -680,6 +792,8 @@ export function buildEcdsaWorkingKnowledgeBrief(
     caveats: [
       "Official one-change deltas are scoped to their parent artifacts. They are not additive with each other or with the current frontier score.",
       "Frontier submissions in this snapshot still bundle nonce grinding with structural edits, so the champion score is not a pure mechanism effect.",
+      "Archive outcomes such as zero promotions are coverage signals, not controlled negative results.",
+      "Research proposals are not labeled untried unless an executable matcher finds no qualifying evaluator receipt in the stated scope.",
       spacetime === undefined
         ? "No spacetime-product assessment is present."
         : `Atlas reports baseline ${spacetime.baseline} and frontier ${spacetime.frontier} qubit-Toffoli product, with no compatible nontrivial product floor.`,

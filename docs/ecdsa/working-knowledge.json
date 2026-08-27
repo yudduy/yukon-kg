@@ -1,11 +1,11 @@
 {
   "schema": "yukon-kg.ecdsa-user-view",
-  "schemaVersion": 2,
-  "protocolVersion": "yukon-kg.ecdsa-user-representation.v2",
-  "briefSha256": "49ff0afe7d5421ab3ee09e7b72364226db26082f76b8439ca86332297d676bd9",
+  "schemaVersion": 3,
+  "protocolVersion": "yukon-kg.ecdsa-user-representation.v3",
+  "briefSha256": "46fef0632c7fcc5d1fd4fbb33e8d77af70d37b9cddbdecb367b040f2606dcaff",
   "brief": {
     "schema": "yukon.atlas-working-knowledge-brief",
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "compiledFrom": {
       "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
       "manifestSha256": "b9748c5a09e3af48b61b1feefb37e720c4acc40e09a15787a90b576b324b521d",
@@ -983,17 +983,17 @@
         ]
       }
     ],
-    "negativeKnowledge": [
+    "coverageSignals": [
       {
         "ideaId": "candidate:resource-estimation:d951023c40",
         "title": "Resource estimation",
         "family": "measurement",
+        "status": "archive_observation_only",
         "submissions": 35,
         "promoted": 0,
         "rejected": 20,
         "failed": 15,
-        "why": "These records change accounting or tooling, not the scored circuit.",
-        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "why": "These records change accounting or tooling, not the scored circuit. Their archive status is not a mechanism result.",
         "sourceRefs": [
           "idea:candidate:resource-estimation:d951023c40",
           "dossier:candidate:resource-estimation:d951023c40"
@@ -1003,12 +1003,12 @@
         "ideaId": "candidate:extended-euclidean-algorithm:f11501d92a",
         "title": "Extended Euclidean algorithm",
         "family": "algorithm",
+        "status": "archive_observation_only",
         "submissions": 10,
         "promoted": 0,
         "rejected": 6,
         "failed": 4,
-        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
-        "reopenCondition": "Reopen if a recursive half-GCD or other non-stream EEA is implemented; recorded neighbors are fixed forward/reverse streams.",
+        "why": "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result.",
         "sourceRefs": [
           "idea:candidate:extended-euclidean-algorithm:f11501d92a",
           "dossier:candidate:extended-euclidean-algorithm:f11501d92a"
@@ -1018,12 +1018,12 @@
         "ideaId": "candidate:incrementer:66950ae201",
         "title": "Incrementer",
         "family": "specialization",
+        "status": "archive_observation_only",
         "submissions": 10,
         "promoted": 0,
         "rejected": 3,
         "failed": 7,
-        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
-        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "why": "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result.",
         "sourceRefs": [
           "idea:candidate:incrementer:66950ae201",
           "dossier:candidate:incrementer:66950ae201"
@@ -1033,12 +1033,12 @@
         "ideaId": "candidate:unary-iteration:fc35cf45f0",
         "title": "Unary iteration",
         "family": "schedule",
+        "status": "archive_observation_only",
         "submissions": 7,
         "promoted": 0,
         "rejected": 5,
         "failed": 2,
-        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
-        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "why": "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result.",
         "sourceRefs": [
           "idea:candidate:unary-iteration:fc35cf45f0",
           "dossier:candidate:unary-iteration:fc35cf45f0"
@@ -1048,12 +1048,12 @@
         "ideaId": "candidate:ancilla-restoration:fbec918cac",
         "title": "Ancilla restoration",
         "family": "algorithm",
+        "status": "archive_observation_only",
         "submissions": 5,
         "promoted": 0,
         "rejected": 4,
         "failed": 1,
-        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
-        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "why": "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result.",
         "sourceRefs": [
           "idea:candidate:ancilla-restoration:fbec918cac",
           "dossier:candidate:ancilla-restoration:fbec918cac"
@@ -1063,12 +1063,12 @@
         "ideaId": "candidate:laddered-toggle-detection:f9621f9e49",
         "title": "Laddered toggle detection",
         "family": "algorithm",
+        "status": "archive_observation_only",
         "submissions": 3,
         "promoted": 0,
         "rejected": 2,
         "failed": 1,
-        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
-        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "why": "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result.",
         "sourceRefs": [
           "idea:candidate:laddered-toggle-detection:f9621f9e49",
           "dossier:candidate:laddered-toggle-detection:f9621f9e49"
@@ -1078,12 +1078,12 @@
         "ideaId": "idea:mul:in-place-multiply-accumulate",
         "title": "In-place multiply-accumulate",
         "family": "tuning",
+        "status": "archive_observation_only",
         "submissions": 3,
         "promoted": 0,
         "rejected": 2,
         "failed": 1,
-        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
-        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "why": "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result.",
         "sourceRefs": [
           "idea:idea:mul:in-place-multiply-accumulate",
           "dossier:idea:mul:in-place-multiply-accumulate"
@@ -1093,12 +1093,12 @@
         "ideaId": "idea:resource:phase-aware-accounting",
         "title": "Phase-aware accounting",
         "family": "measurement",
+        "status": "archive_observation_only",
         "submissions": 3,
         "promoted": 0,
         "rejected": 2,
         "failed": 1,
-        "why": "These records change accounting or tooling, not the scored circuit.",
-        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "why": "These records change accounting or tooling, not the scored circuit. Their archive status is not a mechanism result.",
         "sourceRefs": [
           "idea:idea:resource:phase-aware-accounting",
           "dossier:idea:resource:phase-aware-accounting"
@@ -1108,12 +1108,12 @@
         "ideaId": "idea:temporary-and:shared-conjunction-fanout",
         "title": "Shared conjunction fanout",
         "family": "algorithm",
+        "status": "archive_observation_only",
         "submissions": 3,
         "promoted": 0,
         "rejected": 1,
         "failed": 2,
-        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
-        "reopenCondition": "Reopen if the active point-add representation, scorer, or reachable-state regime changes, or if a later one-change ablation is jointly valid.",
+        "why": "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result.",
         "sourceRefs": [
           "idea:idea:temporary-and:shared-conjunction-fanout",
           "dossier:idea:temporary-and:shared-conjunction-fanout"
@@ -1123,12 +1123,12 @@
         "ideaId": "idea:resource:count-only-construction",
         "title": "Count-only construction",
         "family": "measurement",
+        "status": "archive_observation_only",
         "submissions": 2,
         "promoted": 0,
         "rejected": 2,
         "failed": 0,
-        "why": "These records change accounting or tooling, not the scored circuit.",
-        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "why": "These records change accounting or tooling, not the scored circuit. Their archive status is not a mechanism result.",
         "sourceRefs": [
           "idea:idea:resource:count-only-construction",
           "dossier:idea:resource:count-only-construction"
@@ -1138,12 +1138,12 @@
         "ideaId": "idea:resource:lifetime-tracing",
         "title": "Lifetime tracing",
         "family": "measurement",
+        "status": "archive_observation_only",
         "submissions": 2,
         "promoted": 0,
         "rejected": 0,
         "failed": 2,
-        "why": "These records change accounting or tooling, not the scored circuit.",
-        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "why": "These records change accounting or tooling, not the scored circuit. Their archive status is not a mechanism result.",
         "sourceRefs": [
           "idea:idea:resource:lifetime-tracing",
           "dossier:idea:resource:lifetime-tracing"
@@ -1153,12 +1153,12 @@
         "ideaId": "idea:simulation:static-support-checks",
         "title": "Static support checks",
         "family": "measurement",
+        "status": "archive_observation_only",
         "submissions": 2,
         "promoted": 0,
         "rejected": 2,
         "failed": 0,
-        "why": "These records change accounting or tooling, not the scored circuit.",
-        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "why": "These records change accounting or tooling, not the scored circuit. Their archive status is not a mechanism result.",
         "sourceRefs": [
           "idea:idea:simulation:static-support-checks",
           "dossier:idea:simulation:static-support-checks"
@@ -1168,12 +1168,12 @@
         "ideaId": "candidate:fermat-inversion:b1eff02f73",
         "title": "Fermat inversion",
         "family": "representation",
+        "status": "archive_observation_only",
         "submissions": 1,
         "promoted": 0,
         "rejected": 1,
         "failed": 0,
-        "why": "No promoted submission is routed to this idea in the sealed snapshot.",
-        "reopenCondition": "Reopen only if the inversion representation itself changes; a failed Fermat attempt does not bound dialog/Kaliski inversion.",
+        "why": "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result.",
         "sourceRefs": [
           "idea:candidate:fermat-inversion:b1eff02f73",
           "dossier:candidate:fermat-inversion:b1eff02f73"
@@ -1183,18 +1183,19 @@
         "ideaId": "idea:simulation:geometry-guards",
         "title": "Geometry guards",
         "family": "measurement",
+        "status": "archive_observation_only",
         "submissions": 1,
         "promoted": 0,
         "rejected": 1,
         "failed": 0,
-        "why": "These records change accounting or tooling, not the scored circuit.",
-        "reopenCondition": "Reopen if a new measurement becomes part of the official score or a verified bound.",
+        "why": "These records change accounting or tooling, not the scored circuit. Their archive status is not a mechanism result.",
         "sourceRefs": [
           "idea:idea:simulation:geometry-guards",
           "dossier:idea:simulation:geometry-guards"
         ]
       }
     ],
+    "negativeKnowledge": [],
     "evaluatorHazards": [
       {
         "hazardId": "hazard:seed-grinding",
@@ -1222,31 +1223,47 @@
         "discriminatorId": "disc:barrett-vs-solinas",
         "question": "Does Barrett reciprocal reduction beat the pinned Solinas fold on the verified scorer?",
         "predictedDistinction": "A genuine Barrett construction would not be a pseudo-Mersenne fold, even if nearby Solinas receipts exist.",
-        "status": "untried_in_atlas",
+        "status": "proposed_unverified",
         "relatedIdeaIds": [
           "candidate:solinas-reduction:5a45b2514d"
         ],
         "sourceRefs": [
           "idea:candidate:solinas-reduction:5a45b2514d"
-        ]
+        ],
+        "verification": {
+          "method": "proposal_only",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:fourier-comparator",
         "question": "Does a Fourier-basis sign test beat the ripple-borrow quantum-classical comparator?",
         "predictedDistinction": "Phase-rotation comparison is not a carry-chain width or truncation variant.",
-        "status": "untried_in_atlas",
+        "status": "proposed_unverified",
         "relatedIdeaIds": [
           "candidate:quantum-classical-comparator:d9ffd5fcec"
         ],
         "sourceRefs": [
           "idea:candidate:quantum-classical-comparator:d9ffd5fcec"
-        ]
+        ],
+        "verification": {
+          "method": "proposal_only",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:half-gcd",
         "question": "Does recursive half-GCD matrix inversion beat the fixed-stream Kaliski / dialog replay?",
         "predictedDistinction": "Divide-and-conquer Bézout updates are a representation change relative to a recorded forward/reverse stream.",
-        "status": "untried_in_atlas",
+        "status": "proposed_unverified",
         "relatedIdeaIds": [
           "candidate:extended-euclidean-algorithm:f11501d92a",
           "candidate:kaliski-inversion:e79f263674"
@@ -1254,7 +1271,15 @@
         "sourceRefs": [
           "idea:candidate:extended-euclidean-algorithm:f11501d92a",
           "idea:candidate:kaliski-inversion:e79f263674"
-        ]
+        ],
+        "verification": {
+          "method": "proposal_only",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:isolate:experiment:ecdsafail-borrowed-dirty-carry-c69b6c1-v2",
@@ -1266,7 +1291,15 @@
         ],
         "sourceRefs": [
           "experiment:experiment:ecdsafail-borrowed-dirty-carry-c69b6c1-v2"
-        ]
+        ],
+        "verification": {
+          "method": "atlas_experiment",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:isolate:experiment:ecdsafail-dialog-gcd-special-clean-conditional-replay-8e62-v1",
@@ -1278,7 +1311,15 @@
         ],
         "sourceRefs": [
           "experiment:experiment:ecdsafail-dialog-gcd-special-clean-conditional-replay-8e62-v1"
-        ]
+        ],
+        "verification": {
+          "method": "atlas_experiment",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:isolate:experiment:ecdsafail-pingpong-fused-inverse-522d-v3",
@@ -1290,7 +1331,15 @@
         ],
         "sourceRefs": [
           "experiment:experiment:ecdsafail-pingpong-fused-inverse-522d-v3"
-        ]
+        ],
+        "verification": {
+          "method": "atlas_experiment",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:isolate:experiment:ecdsafail-pingpong-replay-exact-prefix-layout-522d-v3",
@@ -1302,7 +1351,15 @@
         ],
         "sourceRefs": [
           "experiment:experiment:ecdsafail-pingpong-replay-exact-prefix-layout-522d-v3"
-        ]
+        ],
+        "verification": {
+          "method": "atlas_experiment",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:isolate:experiment:ecdsafail-round84-xtail-karatsuba-8e62-v1",
@@ -1314,19 +1371,35 @@
         ],
         "sourceRefs": [
           "experiment:experiment:ecdsafail-round84-xtail-karatsuba-8e62-v1"
-        ]
+        ],
+        "verification": {
+          "method": "atlas_experiment",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:qrom-vs-location",
         "question": "Does a bucket-brigade QROM constant load beat location-controlled arithmetic synthesis?",
         "predictedDistinction": "Table lookup plus uncompute is a different mechanism from position-guarded local arithmetic.",
-        "status": "untried_in_atlas",
+        "status": "proposed_unverified",
         "relatedIdeaIds": [
           "candidate:location-controlled-arithmetic:0efa7e6ff7"
         ],
         "sourceRefs": [
           "idea:candidate:location-controlled-arithmetic:0efa7e6ff7"
-        ]
+        ],
+        "verification": {
+          "method": "proposal_only",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:requalify:experiment:ecdsafail-pingpong-interleaved-replay-schedule-522d-v3",
@@ -1339,7 +1412,15 @@
         "sourceRefs": [
           "experiment:experiment:ecdsafail-pingpong-interleaved-replay-schedule-522d-v3",
           "comparison:comparison:ecdsafail-pingpong-interleaved-replay-schedule-522d-v3"
-        ]
+        ],
+        "verification": {
+          "method": "atlas_experiment",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:requalify:experiment:ecdsafail-pingpong-sparse-endpoint-recovery-522d-v3",
@@ -1352,7 +1433,15 @@
         "sourceRefs": [
           "experiment:experiment:ecdsafail-pingpong-sparse-endpoint-recovery-522d-v3",
           "comparison:comparison:ecdsafail-pingpong-sparse-endpoint-recovery-522d-v3"
-        ]
+        ],
+        "verification": {
+          "method": "atlas_experiment",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       },
       {
         "discriminatorId": "disc:requalify:experiment:ecdsafail-pingpong-terminal-passenger-loan-522d-v3",
@@ -1365,7 +1454,15 @@
         "sourceRefs": [
           "experiment:experiment:ecdsafail-pingpong-terminal-passenger-loan-522d-v3",
           "comparison:comparison:ecdsafail-pingpong-terminal-passenger-loan-522d-v3"
-        ]
+        ],
+        "verification": {
+          "method": "atlas_experiment",
+          "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+          "matcherId": null,
+          "matcherVersion": null,
+          "evaluatorSha256": null,
+          "qualifyingReceiptCount": null
+        }
       }
     ],
     "literatureOverlay": [
@@ -1536,6 +1633,8 @@
     "caveats": [
       "Official one-change deltas are scoped to their parent artifacts. They are not additive with each other or with the current frontier score.",
       "Frontier submissions in this snapshot still bundle nonce grinding with structural edits, so the champion score is not a pure mechanism effect.",
+      "Archive outcomes such as zero promotions are coverage signals, not controlled negative results.",
+      "Research proposals are not labeled untried unless an executable matcher finds no qualifying evaluator receipt in the stated scope.",
       "Atlas reports baseline 10704574395 and frontier 1182644586 qubit-Toffoli product, with no compatible nontrivial product floor.",
       "The 512-qubit floor is a pinned two-register interface bound, not a universal ECC lower bound. Current frontier width is 1150.",
       "Published Google/Schrottenloher Pareto points use a different contract than the pinned ECDSA.fail scorer.",

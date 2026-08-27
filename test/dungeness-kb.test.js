@@ -40,7 +40,8 @@ describe("dungeness knowledge variants", () => {
     expect(text).toContain("512");
     expect(text).toContain("Barrett");
     expect(text).toContain("Nonce / seed grinding");
-    expect(text).toContain("untried_in_atlas");
+    expect(text).toContain("proposed_unverified");
+    expect(text).toContain("archive_observation_only");
     expect(text).not.toContain("What isolated move is worth trying next");
   });
 
@@ -59,7 +60,7 @@ describe("dungeness knowledge variants", () => {
 
 describe("dungeness knowledge scoring", () => {
   test("accepts gold labels and Barrett shorthand", () => {
-    const next = PILOT_CASES.find((item) => item.id === "next-untried");
+    const next = PILOT_CASES.find((item) => item.id === "representation-proposal");
     const largest = PILOT_CASES.find((item) => item.id === "largest-isolated-effect");
     expect(scoreAnswer("Barrett", next)).toBe(true);
     expect(scoreAnswer("Adaptive phase correction", largest)).toBe(true);
@@ -84,12 +85,12 @@ describe("dungeness knowledge scoring", () => {
     const results = PILOT_CASES.flatMap((userCase) => ARMS.map((arm) => ({
       caseId: userCase.id,
       arm,
-      pass: arm === "state_brief" && userCase.id !== "next-untried",
+      pass: arm === "state_brief" && userCase.id !== "representation-proposal",
     })));
     const report = scorePilot(results);
     expect(report.adopted).toBeNull();
-    expect(report.missed).toEqual(["next-untried"]);
+    expect(report.missed).toEqual(["representation-proposal"]);
     expect(report.gate.every((item) => item.state_brief && !item.winner_only)).toBe(true);
-    expect(report.reason).toContain("next-untried");
+    expect(report.reason).toContain("representation-proposal");
   });
 });

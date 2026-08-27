@@ -1,11 +1,11 @@
 {
   "schema": "yukon-kg.ecdsa-user-representation-experiment.v1",
-  "protocolVersion": "yukon-kg.ecdsa-user-representation.v2",
+  "protocolVersion": "yukon-kg.ecdsa-user-representation.v3",
   "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
   "totals": {
     "archive_promotions": {
       "cases": 8,
-      "passed": 1
+      "passed": 0
     },
     "working_knowledge": {
       "cases": 8,
@@ -50,15 +50,15 @@
         "rationale": "Karatsuba has 11 promoted submissions in the idea catalog."
       },
       {
-        "caseId": "fermat-retry",
-        "question": "Should Fermat inversion be retried on the current representation?",
+        "caseId": "fermat-controlled-negative",
+        "question": "Does Fermat inversion's zero-promotion archive record prove a controlled negative result?",
         "gold": {
           "label": "no",
           "ideaId": "candidate:fermat-inversion:b1eff02f73"
         },
-        "answer": "no",
-        "pass": true,
-        "rationale": "Fermat inversion has 0 promotions."
+        "answer": "yes",
+        "pass": false,
+        "rationale": "The archive-only view treats 0 promotions as an outcome label without a matched control."
       },
       {
         "caseId": "toffoli-can-rise",
@@ -94,15 +94,19 @@
         "rationale": "Best-score rows are visible in submissions, but mixed-idea routing is not the default user view."
       },
       {
-        "caseId": "next-untried",
-        "question": "Name one untried representation-class discriminator.",
+        "caseId": "representation-proposal",
+        "question": "Name one unverified representation-class proposal.",
         "gold": {
           "label": "Barrett reciprocal reduction",
-          "discriminatorId": "disc:barrett-vs-solinas"
+          "discriminatorId": "disc:barrett-vs-solinas",
+          "acceptableDiscriminatorIds": [
+            "disc:barrett-vs-solinas",
+            "disc:half-gcd"
+          ]
         },
         "answer": "Nonce grinding, Iteration schedule, Fold schedule, Seed-tail search, Comparator width, Reroll selection, Toffoli gate network, Carry-chain layout",
         "pass": false,
-        "rationale": "Promotion rank cannot name an untried representation such as Barrett reduction."
+        "rationale": "Promotion rank cannot represent unverified proposals such as Barrett reduction."
       }
     ],
     "working_knowledge": [
@@ -140,15 +144,15 @@
         "rationale": "Karatsuba remains historical observation only."
       },
       {
-        "caseId": "fermat-retry",
-        "question": "Should Fermat inversion be retried on the current representation?",
+        "caseId": "fermat-controlled-negative",
+        "question": "Does Fermat inversion's zero-promotion archive record prove a controlled negative result?",
         "gold": {
           "label": "no",
           "ideaId": "candidate:fermat-inversion:b1eff02f73"
         },
         "answer": "no",
         "pass": true,
-        "rationale": "Reopen only if the inversion representation itself changes; a failed Fermat attempt does not bound dialog/Kaliski inversion."
+        "rationale": "No promoted submission is routed to this idea. Archive outcome alone is not a controlled negative result."
       },
       {
         "caseId": "toffoli-can-rise",
@@ -184,11 +188,15 @@
         "rationale": "Champion interpretation is mixed."
       },
       {
-        "caseId": "next-untried",
-        "question": "Name one untried representation-class discriminator.",
+        "caseId": "representation-proposal",
+        "question": "Name one unverified representation-class proposal.",
         "gold": {
           "label": "Barrett reciprocal reduction",
-          "discriminatorId": "disc:barrett-vs-solinas"
+          "discriminatorId": "disc:barrett-vs-solinas",
+          "acceptableDiscriminatorIds": [
+            "disc:barrett-vs-solinas",
+            "disc:half-gcd"
+          ]
         },
         "answer": "Barrett reciprocal reduction",
         "pass": true,

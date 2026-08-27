@@ -53,7 +53,9 @@ describe("HTML landing page", () => {
     expect(html).not.toContain("<div class=\"eyebrow\">Reuse</div>");
     expect(html).toContain("Barrett reciprocal reduction");
     expect(html).toContain('data-discriminator-id="disc:barrett-vs-solinas"');
-    expect(html).toContain("untried in atlas");
+    expect(html).toContain("proposed unverified");
+    expect(html).toContain("Archive-only coverage signals");
+    expect(html).toContain("inventory, not proof");
     expect(html).toContain("Nonce / seed grinding");
     expect(html).toContain('href="./working-knowledge.json"');
     expect(html).toContain('href="./index.json"');

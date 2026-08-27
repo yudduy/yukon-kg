@@ -17,9 +17,10 @@ As of August 2026, the public literature that actually moved verified search is 
 ```text
 immutable Atlas records
 → contract, bounds, frontier, admitted one-change mechanisms
-→ negative knowledge with reopen conditions
+→ controlled non-improvements with reopen conditions
+→ archive-only coverage signals
 → evaluator hazards (nonce grinding, bundled diffs)
-→ next discriminators
+→ unverified research proposals and evidence-scoped cuts
 → literature overlay labeled source_reported, not Atlas-verified
 ```
 

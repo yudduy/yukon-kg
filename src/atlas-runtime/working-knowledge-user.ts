@@ -1,9 +1,9 @@
 import type { AtlasIdea, AtlasRelease } from "./types";
 import type { WorkingKnowledgeBrief } from "./working-knowledge";
 
-export const ECDSA_USER_PROTOCOL_VERSION = "yukon-kg.ecdsa-user-representation.v2";
+export const ECDSA_USER_PROTOCOL_VERSION = "yukon-kg.ecdsa-user-representation.v3";
 export const ECDSA_USER_VIEW_SCHEMA = "yukon-kg.ecdsa-user-view";
-export const ECDSA_USER_VIEW_SCHEMA_VERSION = 2 as const;
+export const ECDSA_USER_VIEW_SCHEMA_VERSION = 3 as const;
 export const USER_REPRESENTATIONS = Object.freeze(["archive_promotions", "working_knowledge"] as const);
 
 export type UserRepresentation = (typeof USER_REPRESENTATIONS)[number];
@@ -22,6 +22,7 @@ export interface UserCaseGold {
   hazardId?: string;
   constraintId?: string;
   discriminatorId?: string;
+  acceptableDiscriminatorIds?: string[];
   interpretation?: string;
 }
 
@@ -57,8 +58,8 @@ export const ECDSA_USER_CASES: readonly UserCase[] = Object.freeze([
     gold: { label: "no" },
   },
   {
-    id: "fermat-retry",
-    question: "Should Fermat inversion be retried on the current representation?",
+    id: "fermat-controlled-negative",
+    question: "Does Fermat inversion's zero-promotion archive record prove a controlled negative result?",
     gold: { label: "no", ideaId: "candidate:fermat-inversion:b1eff02f73" },
   },
   {
@@ -77,9 +78,13 @@ export const ECDSA_USER_CASES: readonly UserCase[] = Object.freeze([
     gold: { label: "no", interpretation: "mixed" },
   },
   {
-    id: "next-untried",
-    question: "Name one untried representation-class discriminator.",
-    gold: { label: "Barrett reciprocal reduction", discriminatorId: "disc:barrett-vs-solinas" },
+    id: "representation-proposal",
+    question: "Name one unverified representation-class proposal.",
+    gold: {
+      label: "Barrett reciprocal reduction",
+      discriminatorId: "disc:barrett-vs-solinas",
+      acceptableDiscriminatorIds: ["disc:barrett-vs-solinas", "disc:half-gcd"],
+    },
   },
 ]);
 
@@ -115,11 +120,11 @@ function answerArchivePromotions(ideas: readonly AtlasIdea[], userCase: UserCase
     answer = promoted > 0 ? "yes" : "no";
     pass = answer === userCase.gold.label;
     rationale = `Karatsuba has ${promoted} promoted submissions in the idea catalog.`;
-  } else if (userCase.id === "fermat-retry") {
+  } else if (userCase.id === "fermat-controlled-negative") {
     const promoted = fermat?.aggregate.promoted ?? 0;
-    answer = promoted > 0 ? "yes" : "no";
+    answer = promoted === 0 ? "yes" : "no";
     pass = answer === userCase.gold.label;
-    rationale = `Fermat inversion has ${promoted} promotions.`;
+    rationale = `The archive-only view treats ${promoted} promotions as an outcome label without a matched control.`;
   } else if (userCase.id === "toffoli-can-rise") {
     answer = "unknown";
     pass = false;
@@ -132,10 +137,10 @@ function answerArchivePromotions(ideas: readonly AtlasIdea[], userCase: UserCase
     answer = "unknown";
     pass = false;
     rationale = "Best-score rows are visible in submissions, but mixed-idea routing is not the default user view.";
-  } else if (userCase.id === "next-untried") {
+  } else if (userCase.id === "representation-proposal") {
     answer = ranked.map((idea) => idea.name).join(", ");
     pass = false;
-    rationale = "Promotion rank cannot name an untried representation such as Barrett reduction.";
+    rationale = "Promotion rank cannot represent unverified proposals such as Barrett reduction.";
   }
   return { caseId: userCase.id, question: userCase.question, gold: userCase.gold, answer, pass, rationale };
 }
@@ -162,11 +167,12 @@ function answerWorkingKnowledge(brief: WorkingKnowledgeBrief, userCase: UserCase
     rationale = isolated
       ? "Karatsuba appears among admitted one-change mechanisms."
       : "Karatsuba remains historical observation only.";
-  } else if (userCase.id === "fermat-retry") {
-    const fermat = brief.negativeKnowledge.find((item) => item.ideaId.includes("fermat-inversion"));
-    answer = fermat === undefined ? "unknown" : "no";
+  } else if (userCase.id === "fermat-controlled-negative") {
+    const fermat = brief.coverageSignals.find((item) => item.ideaId.includes("fermat-inversion"));
+    const controlledNegative = brief.negativeKnowledge.some((item) => item.ideaId.includes("fermat-inversion"));
+    answer = fermat !== undefined && !controlledNegative ? "no" : "unknown";
     pass = answer === userCase.gold.label;
-    rationale = fermat?.reopenCondition ?? "Fermat inversion is not in negative knowledge.";
+    rationale = fermat?.why ?? "Fermat inversion has no archive coverage signal.";
   } else if (userCase.id === "toffoli-can-rise") {
     const example = brief.supportedMechanisms.find((item) => item.toffoliDelta !== null && item.toffoliDelta > 0 && item.officialDelta < 0);
     answer = example === undefined ? "no" : "yes";
@@ -184,11 +190,15 @@ function answerWorkingKnowledge(brief: WorkingKnowledgeBrief, userCase: UserCase
     answer = interpretation === "mixed" ? "no" : "yes";
     pass = answer === userCase.gold.label;
     rationale = `Champion interpretation is ${interpretation ?? "missing"}.`;
-  } else if (userCase.id === "next-untried") {
-    const untried = brief.nextDiscriminators.find((item) => item.discriminatorId === userCase.gold.discriminatorId);
-    answer = untried === undefined ? "unknown" : (userCase.gold.label);
-    pass = untried !== undefined;
-    rationale = untried === undefined ? "Barrett discriminator is missing." : untried.question;
+  } else if (userCase.id === "representation-proposal") {
+    const acceptable = new Set(userCase.gold.acceptableDiscriminatorIds ?? [userCase.gold.discriminatorId ?? ""]);
+    const proposal = brief.nextDiscriminators.find((item) => (
+      acceptable.has(item.discriminatorId)
+      && (item.status === "proposed_unverified" || item.status === "no_qualifying_receipt")
+    ));
+    answer = proposal === undefined ? "unknown" : userCase.gold.label;
+    pass = proposal !== undefined;
+    rationale = proposal === undefined ? "No representation proposal is present." : proposal.question;
   }
   return { caseId: userCase.id, question: userCase.question, gold: userCase.gold, answer, pass, rationale };
 }
@@ -379,7 +389,7 @@ export function renderWorkingKnowledgePage(view: EcdsaUserView): string {
   <p class="muted">Solinas can raise Toffoli and still improve the qubit–Toffoli product. That is a measured trade, not a recommendation.</p>
 
   <h2 id="open">Open cuts</h2>
-  <p class="muted">Questions the sealed snapshot does not answer. Status is an evidence label, not a priority.</p>
+  <p class="muted">Questions the sealed snapshot does not answer. Proposed rows are not claims that Atlas has exhaustively ruled out prior work. Status is evidence scope, not priority.</p>
   <div class="table-wrap">
     <table data-section="open-cuts">
       <thead><tr><th>Status</th><th>Question</th><th>Distinction</th></tr></thead>
@@ -403,10 +413,20 @@ export function renderWorkingKnowledgePage(view: EcdsaUserView): string {
     <p class="muted">${escapeHtml(item.recommendedAction)}</p>
   </article>`).join("")}
 
-  <h2 id="negative">Negative knowledge</h2>
-  ${brief.negativeKnowledge.slice(0, 8).map((item) => `
+  <h2 id="coverage">Archive-only coverage signals</h2>
+  <p class="muted">These ideas have submissions but no promotions. That is inventory, not proof that the mechanism failed.</p>
+  ${brief.coverageSignals.slice(0, 8).map((item) => `
+  <details data-coverage-id="${escapeHtml(item.ideaId)}">
+    <summary>${escapeHtml(item.title)} · ${escapeHtml(String(item.submissions))} submissions, ${escapeHtml(String(item.promoted))} promoted</summary>
+    <p>${escapeHtml(item.why)}</p>
+  </details>`).join("")}
+
+  <h2 id="negative">Controlled non-improvements</h2>
+  ${brief.negativeKnowledge.length === 0
+    ? '<p class="muted">No jointly qualified one-change non-improvement is admitted in this release.</p>'
+    : brief.negativeKnowledge.slice(0, 8).map((item) => `
   <details data-negative-id="${escapeHtml(item.ideaId)}">
-    <summary>${escapeHtml(item.title)} · ${escapeHtml(String(item.submissions))} attempts, 0 promoted</summary>
+    <summary>${escapeHtml(item.title)} · official Δ ${escapeHtml(signed(item.officialDelta))}</summary>
     <p>${escapeHtml(item.why)}</p>
     <p class="muted">Reopen: ${escapeHtml(item.reopenCondition)}</p>
   </details>`).join("")}

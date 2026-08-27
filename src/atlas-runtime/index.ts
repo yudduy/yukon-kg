@@ -53,8 +53,13 @@ export {
 export type {
   WorkingKnowledgeBrief,
   WorkingKnowledgeClaimPredicate,
+  WorkingKnowledgeCompileOptions,
+  WorkingKnowledgeCoverageSignal,
+  WorkingKnowledgeDiscriminator,
+  WorkingKnowledgeDiscriminatorCoverage,
   WorkingKnowledgeInterventionFamily,
   WorkingKnowledgeLiteratureClaim,
+  WorkingKnowledgeNegative,
 } from "./working-knowledge";
 export {
   ECDSA_USER_CASES,
