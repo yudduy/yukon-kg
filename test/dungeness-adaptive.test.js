@@ -53,9 +53,9 @@ function adapterValue(repoSha = "a".repeat(40)) {
       runnerSha256: "9".repeat(64),
     },
     evaluator: {
-      attestationCommand: ["bun", "evaluator.js", "attest"],
-      developmentCommand: ["bun", "evaluator.js", "development"],
-      hiddenCommand: ["bun", "evaluator.js", "hidden"],
+      attestationCommand: [process.execPath, "evaluator.js", "attest"],
+      developmentCommand: [process.execPath, "evaluator.js", "development"],
+      hiddenCommand: [process.execPath, "evaluator.js", "hidden"],
       timeoutMs: 10_000,
     },
     checkpoints: Array.from({ length: 8 }, (_, index) => (
@@ -71,6 +71,7 @@ function campaign(pairId, checkpointId, arm, gain, overrides = {}) {
     arm,
     normalizedGain: gain,
     invalidRate: 0,
+    proposalInvalidRate: 0,
     costUsd: 1,
     provenanceViolations: [],
     ...overrides,
@@ -128,6 +129,8 @@ describe("adaptive campaign protocol", () => {
       runtimeSha256: "4".repeat(64),
       model: "openai/gpt-5.4",
       provider: "OpenAI",
+      baseUrl: "https://openrouter.ai/api/v1",
+      pricing: { inputUsdPerMillion: 2.5, outputUsdPerMillion: 15 },
       decoding: { temperature: 0, maxTokens: 2048 },
       signer: protocolSigning.signer,
       seed: "protocol-seed",
@@ -165,14 +168,24 @@ describe("adaptive campaign protocol", () => {
     expect(report.decision).toBe("ADOPT_ADAPTIVE_STATE");
     expect(report.positiveCheckpoints).toBe(8);
     expect(report.provenanceViolations).toBe(0);
+    expect(report.invalidNoninferiority.upper).toBeLessThan(0.05);
     const interim = analyzeAdaptiveCampaigns(confirmatory.slice(0, 40));
     expect(interim.pairCount).toBe(20);
     expect(interim.isFinal).toBe(false);
     expect(interim.decision).toBe("CONTINUE");
+
+    const oneAdaptiveOnlyInvalid = structuredClone(confirmatory);
+    oneAdaptiveOnlyInvalid[1].invalidRate = 1;
+    const unsafe = analyzeAdaptiveCampaigns(oneAdaptiveOnlyInvalid);
+    expect(unsafe.invalidNoninferiority.upper).toBeGreaterThan(0.05);
+    expect(unsafe.decision).toBe("RETAIN_STATIC_STATE");
+    const violated = structuredClone(confirmatory);
+    violated[0].provenanceViolations = ["tampered"];
+    expect(analyzeAdaptiveCampaigns(violated).decision).toBe("INVALID_PROTOCOL");
   });
 
   test("isolates adaptive procedure and knowledge effects in a 2x2", () => {
-    const campaigns = Array.from({ length: 40 }, (_, index) => {
+    const campaigns = Array.from({ length: 80 }, (_, index) => {
       const blockId = `prime:checkpoint-${index % 8}:p${index}`;
       const checkpointId = `checkpoint-${index % 8}`;
       return [
@@ -202,7 +215,7 @@ describe("adaptive campaign protocol", () => {
   });
 
   test("does not adopt procedures that hurt the deployed adaptive-state cell", () => {
-    const campaigns = Array.from({ length: 40 }, (_, index) => {
+    const campaigns = Array.from({ length: 80 }, (_, index) => {
       const blockId = `prime-harm:checkpoint-${index % 8}:p${index}`;
       const checkpointId = `checkpoint-${index % 8}`;
       const cell = (mode, arm, gain) => campaign(`${blockId}:${mode}`, checkpointId, arm, gain, {
@@ -280,6 +293,8 @@ describe("Dungeness evaluator and campaign runner", () => {
       runtimeSha256: "4".repeat(64),
       model: "openai/gpt-5.4",
       provider: "fixture",
+      baseUrl: "https://example.invalid/api/v1",
+      pricing: { inputUsdPerMillion: 1, outputUsdPerMillion: 1 },
       decoding: { temperature: 0, maxTokens: 512 },
       signer: protocolSigning.signer,
       seed: "fixture-seed",
@@ -314,6 +329,7 @@ describe("Dungeness evaluator and campaign runner", () => {
           },
         ],
         usage: { total_tokens: 100, cost: 0.01 },
+        model: "openai/gpt-5.4",
         provider: "fixture",
         systemFingerprint: "fixture-v1",
       },
@@ -324,6 +340,7 @@ describe("Dungeness evaluator and campaign runner", () => {
           function: { name: "finish", arguments: JSON.stringify({ summary: "done" }) },
         }],
         usage: { total_tokens: 20, cost: 0.002 },
+        model: "openai/gpt-5.4",
         provider: "fixture",
         systemFingerprint: "fixture-v1",
       },
@@ -349,5 +366,18 @@ describe("Dungeness evaluator and campaign runner", () => {
     expect(result.providerRoutes).toEqual(["fixture"]);
     const { attestation, ...resultBody } = result;
     expect(verifyEvidenceValue(resultBody, attestation, protocolSigning.signer)).toBe(true);
+    await expect(runDungenessCampaign({
+      assignment,
+      protocol,
+      adapter,
+      checkpoint: adapter.checkpoints[0],
+      briefText: "{}",
+      dungenessRepo: repo,
+      runRoot: runs,
+      completionFn: async () => {
+        throw new Error("a second attempt must never reach the model");
+      },
+      signingPrivateKeyPem: protocolSigning.privateKeyPem,
+    })).rejects.toThrow(/exist/i);
   });
 });

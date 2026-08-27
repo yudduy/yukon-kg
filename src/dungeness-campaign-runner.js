@@ -372,6 +372,27 @@ async function appendLedgerFile(pathname, ledger) {
   await fs.rename(temporary, pathname);
 }
 
+async function createAttemptMarker(campaignRoot, assignment, protocol, privateKeyPem) {
+  const body = {
+    schema: "yukon-kg.dungeness-campaign-attempt.v1",
+    createdAt: new Date().toISOString(),
+    campaignId: assignment.campaignId,
+    assignmentSha256: sha256(assignment),
+    protocolSha256: protocol.protocolSha256,
+  };
+  const marker = {
+    ...body,
+    attestation: signEvidenceValue(body, privateKeyPem),
+  };
+  await fs.mkdir(campaignRoot, { recursive: true });
+  await fs.writeFile(
+    path.join(campaignRoot, "attempt.json"),
+    `${JSON.stringify(marker, null, 2)}\n`,
+    { flag: "wx", mode: 0o600 },
+  );
+  return marker;
+}
+
 function commandReceipt(result) {
   return {
     argv: [result.command[0], ...result.command.slice(1)],
@@ -413,6 +434,36 @@ function parseToolArguments(toolCall) {
 
 function remainingWallMs(state) {
   return Math.max(0, state.budget.wallClockMs - (Date.now() - state.startedAt));
+}
+
+function boundedRequest(state, tools, messages) {
+  const inputTokenUpperBound = Buffer.byteLength(
+    JSON.stringify({ messages, tools }),
+    "utf8",
+  ) + 1024;
+  const remainingTokens = Math.floor(state.budget.rootTokens - state.rootTokens);
+  const remainingCost = state.budget.costUsd - state.costUsd;
+  if (inputTokenUpperBound >= remainingTokens || remainingCost <= 0) return null;
+  const inputCostUpper = inputTokenUpperBound
+    * state.protocol.model.pricing.inputUsdPerMillion / 1_000_000;
+  if (inputCostUpper >= remainingCost) return null;
+  const outputByToken = remainingTokens - inputTokenUpperBound;
+  const outputByCost = Math.floor(
+    (remainingCost - inputCostUpper)
+    * 1_000_000 / state.protocol.model.pricing.outputUsdPerMillion,
+  );
+  const maxTokens = Math.min(
+    state.protocol.model.decoding.maxTokens,
+    outputByToken,
+    outputByCost,
+  );
+  if (maxTokens < 1) return null;
+  return {
+    inputTokenUpperBound,
+    maxTokens,
+    requestCostUpper: inputCostUpper
+      + maxTokens * state.protocol.model.pricing.outputUsdPerMillion / 1_000_000,
+  };
 }
 
 async function executeTool(name, args, state) {
@@ -505,7 +556,7 @@ async function executeTool(name, args, state) {
     return { finished: true };
   }
   if (name === "evaluate") {
-    if (state.developmentCalls >= Math.floor(state.budget.evaluatorCalls / 2)) {
+    if (state.developmentCalls >= state.budget.evaluatorCalls - 1) {
       throw new Error("development evaluator call budget exhausted; hidden adjudication is reserved");
     }
     if (remainingWallMs(state) <= 0) throw new Error("campaign wall-clock budget exhausted");
@@ -532,6 +583,7 @@ async function executeTool(name, args, state) {
       timeoutMs: remainingWallMs(state),
       runProcessFn: state.runProcessFn,
     });
+    await assertNoMutableSymlinks(state.worktree, state.adapter);
     const postEvaluationSha256 = await mutableSourceDigest(state.worktree, state.adapter);
     if (postEvaluationSha256 !== artifactSha256) {
       state.provenanceViolations.push("development evaluator mutated the candidate source");
@@ -643,6 +695,7 @@ async function hiddenAdjudication({
       timeoutMs: remainingWallMs(state),
       runProcessFn: state.runProcessFn,
     });
+    await assertNoMutableSymlinks(worktree, state.adapter);
     const postEvaluationSha256 = await mutableSourceDigest(worktree, state.adapter);
     if (postEvaluationSha256 !== candidate.artifactSha256) {
       state.provenanceViolations.push("hidden evaluator mutated the candidate source");
@@ -694,9 +747,11 @@ async function hiddenAdjudication({
   }
 }
 
-async function completeWithRetry(completionFn, options, remainingMs) {
+async function completeWithRetry(completionFn, options, deadlineMs) {
   let lastError = null;
   for (let attempt = 0; attempt < 4; attempt += 1) {
+    const remainingMs = deadlineMs - Date.now();
+    if (remainingMs <= 0) throw new Error("campaign wall-clock budget exhausted during model retry");
     try {
       return await completionFn({
         ...options,
@@ -708,7 +763,6 @@ async function completeWithRetry(completionFn, options, remainingMs) {
       const delayMs = 1000 * 2 ** attempt;
       if (!retryable || attempt === 3 || delayMs >= remainingMs) throw error;
       await new Promise((resolve) => setTimeout(resolve, delayMs));
-      remainingMs -= delayMs;
     }
   }
   throw lastError;
@@ -735,6 +789,12 @@ export async function runDungenessCampaign({
   if (signer.publicKeySha256 !== protocol.signer.publicKeySha256) {
     throw new Error("ledger private key does not match the frozen protocol signer");
   }
+  const attempt = await createAttemptMarker(
+    campaignRoot,
+    assignment,
+    protocol,
+    signingPrivateKeyPem,
+  );
   const ledger = createEvidenceLedger({
     campaignId: assignment.campaignId,
     createdAt: new Date().toISOString(),
@@ -802,20 +862,24 @@ export async function runDungenessCampaign({
         || state.rootTokens >= protocol.budget.rootTokens
         || state.costUsd >= protocol.budget.costUsd
       ) break;
+      const tools = campaignTools(assignment.arm, assignment.procedureMode);
+      const requestBudget = boundedRequest(state, tools, messages);
+      if (requestBudget === null) break;
       const completion = await completeWithRetry(completionFn, {
         model: protocol.model.id || pinnedOpenRouterModel(),
+        baseUrl: protocol.model.baseUrl,
         provider: {
           order: [protocol.model.provider],
           allow_fallbacks: false,
           require_parameters: true,
         },
         temperature: protocol.model.decoding.temperature,
-        maxTokens: protocol.model.decoding.maxTokens,
+        maxTokens: requestBudget.maxTokens,
         seed: assignment.seed + turn,
-        tools: campaignTools(assignment.arm, assignment.procedureMode),
+        tools,
         toolChoice: "auto",
         messages,
-      }, remainingMs);
+      }, state.startedAt + state.budget.wallClockMs);
       if (
         !Number.isFinite(completion.usage?.total_tokens)
         || completion.usage.total_tokens < 0
@@ -826,6 +890,22 @@ export async function runDungenessCampaign({
       }
       state.rootTokens += completion.usage.total_tokens;
       state.costUsd += completion.usage.cost;
+      if (
+        completion.usage.total_tokens > requestBudget.inputTokenUpperBound + requestBudget.maxTokens
+        || completion.usage.cost > requestBudget.requestCostUpper + 1e-9
+      ) {
+        state.provenanceViolations.push("provider usage exceeded the frozen per-request upper bound");
+        break;
+      }
+      if (
+        completion.model !== protocol.model.id
+        || completion.provider !== protocol.model.provider
+      ) {
+        state.provenanceViolations.push(
+          `model route mismatch: expected ${protocol.model.provider}/${protocol.model.id}, got ${completion.provider}/${completion.model}`,
+        );
+        break;
+      }
       if (
         state.rootTokens > protocol.budget.rootTokens
         || state.costUsd > protocol.budget.costUsd
@@ -878,6 +958,7 @@ export async function runDungenessCampaign({
       schema: "yukon-kg.dungeness-campaign.v1",
       protocolVersion: protocol.protocolVersion,
       protocolSha256: protocol.protocolSha256,
+      attemptSha256: sha256(attempt),
       campaignId: assignment.campaignId,
       blockId: assignment.blockId,
       pairId: assignment.pairId,

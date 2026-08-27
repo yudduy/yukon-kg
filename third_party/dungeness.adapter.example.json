@@ -13,18 +13,18 @@
   },
   "evaluator": {
     "attestationCommand": [
-      "dungeness-sandbox-evaluator",
+      "/usr/local/bin/dungeness-sandbox-evaluator",
       "--attest"
     ],
     "developmentCommand": [
-      "dungeness-sandbox-evaluator",
+      "/usr/local/bin/dungeness-sandbox-evaluator",
       "--panel",
       "development",
       "--checkpoint",
       "{checkpointId}"
     ],
     "hiddenCommand": [
-      "dungeness-sandbox-evaluator",
+      "/usr/local/bin/dungeness-sandbox-evaluator",
       "--panel",
       "hidden",
       "--checkpoint",

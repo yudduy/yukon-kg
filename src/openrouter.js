@@ -67,13 +67,15 @@ export async function chatCompletion({
   tools,
   toolChoice,
   timeoutMs,
+  baseUrl: baseUrlOverride,
 } = {}) {
   if (!Array.isArray(messages) || messages.length === 0) {
     throw new OpenRouterError("messages must be a non-empty array");
   }
   if (!model?.trim()) throw new OpenRouterError("OPENROUTER_MODEL is required");
 
-  const baseUrl = (process.env.OPENROUTER_BASE_URL?.trim() || DEFAULT_BASE_URL).replace(/\/$/u, "");
+  const baseUrl = (baseUrlOverride?.trim() || process.env.OPENROUTER_BASE_URL?.trim() || DEFAULT_BASE_URL)
+    .replace(/\/$/u, "");
   const headers = {
     Authorization: `Bearer ${requiredEnv("OPENROUTER_API_KEY")}`,
     "Content-Type": "application/json",

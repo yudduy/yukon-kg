@@ -12,6 +12,7 @@ import {
   ideasFromRelease,
   ledgerSha256,
   parseEvidenceLedger,
+  signEvidenceValue,
   verifyEvidenceValue,
 } from "./atlas-runtime/index.ts";
 import { inspectDungenessCheckout, readDungenessPin } from "./dungeness-clone.js";
@@ -46,14 +47,6 @@ const REPORT_PATH = path.join(EVIDENCE_ROOT, "report.json");
 const PRIME_PROTOCOL_PATH = path.join(EVIDENCE_ROOT, "prime-factor-protocol.json");
 const PRIME_REPORT_PATH = path.join(EVIDENCE_ROOT, "prime-factor-report.json");
 const DEFAULT_SIGNING_KEY_PATH = "/cursor/stores/self/yukon-kg/dungeness-ledger-ed25519.pem";
-const RUNTIME_FILES = [
-  "src/atlas-runtime/evidence-ledger.ts",
-  "src/dungeness-adaptive-mve.js",
-  "src/dungeness-adaptive-protocol.js",
-  "src/dungeness-campaign-runner.js",
-  "src/dungeness-kb-protocol.js",
-  "src/openrouter.js",
-];
 
 function nowIso() {
   return new Date().toISOString();
@@ -81,14 +74,44 @@ async function writeJson(pathname, value) {
 
 async function runtimeSha256() {
   const files = {};
-  for (const relative of RUNTIME_FILES) {
+  async function walk(directory, prefix) {
+    const entries = await fs.readdir(directory, { withFileTypes: true });
+    for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+      const relative = path.join(prefix, entry.name);
+      if (entry.isDirectory()) await walk(path.join(directory, entry.name), relative);
+      else if (entry.isFile() && /\.(?:js|ts)$/u.test(entry.name)) {
+        files[relative] = sha256(await fs.readFile(path.join(directory, entry.name)));
+      }
+    }
+  }
+  await walk(path.join(ROOT, "src"), "src");
+  for (const relative of ["package.json"]) {
     files[relative] = sha256(await fs.readFile(path.join(ROOT, relative)));
   }
-  return sha256(files);
+  return sha256({
+    files,
+    runtime: {
+      bun: Bun.version,
+      node: process.version,
+      platform: process.platform,
+      architecture: process.arch,
+    },
+  });
 }
 
 function providerName() {
   return process.env.OPENROUTER_PROVIDER?.trim() || "OpenAI";
+}
+
+function openRouterBaseUrl() {
+  return (process.env.OPENROUTER_BASE_URL?.trim() || "https://openrouter.ai/api/v1").replace(/\/$/u, "");
+}
+
+function modelPricing() {
+  return {
+    inputUsdPerMillion: environmentNumber("OPENROUTER_INPUT_USD_PER_MILLION", 2.5),
+    outputUsdPerMillion: environmentNumber("OPENROUTER_OUTPUT_USD_PER_MILLION", 15),
+  };
 }
 
 function environmentNumber(name, fallback) {
@@ -311,6 +334,8 @@ export async function runAdaptivePreflight() {
     model: {
       id: pinnedOpenRouterModel(),
       provider: providerName(),
+      baseUrl: openRouterBaseUrl(),
+      pricing: modelPricing(),
       decoding: adaptiveDecoding(),
     },
   };
@@ -352,13 +377,18 @@ export async function freezeProtocol() {
     runtimeSha256: await runtimeSha256(),
     model: pinnedOpenRouterModel(),
     provider: providerName(),
+    baseUrl: openRouterBaseUrl(),
+    pricing: modelPricing(),
     decoding: adaptiveDecoding(),
     signer: signing.signer,
     seed: process.env.DUNGENESS_PROTOCOL_SEED?.trim() || "dungeness-adaptive-v1",
     budget: campaignBudget(),
     createdAt: nowIso(),
   });
-  const calibrationSpendCapUsd = environmentNumber("DUNGENESS_CALIBRATION_SPEND_CAP_USD", 100);
+  const calibrationSpendCapUsd = environmentNumber(
+    "DUNGENESS_CALIBRATION_SPEND_CAP_USD",
+    protocol.calibration.assignments.length * protocol.budget.costUsd,
+  );
   const frozen = {
     ...protocol,
     calibration: {
@@ -396,6 +426,15 @@ async function loadCampaignResults(assignments, protocol) {
     if (!verifyEvidenceValue(resultBody, attestation, protocol.signer)) {
       throw new Error(`campaign ${assignment.campaignId} result signature mismatch`);
     }
+    const attempt = await readJson(path.join(path.dirname(resultPath), "attempt.json"));
+    const { attestation: attemptAttestation, ...attemptBody } = attempt;
+    if (
+      !verifyEvidenceValue(attemptBody, attemptAttestation, protocol.signer)
+      || attempt.campaignId !== assignment.campaignId
+      || attempt.assignmentSha256 !== sha256(assignment)
+      || attempt.protocolSha256 !== protocol.protocolSha256
+      || result.attemptSha256 !== sha256(attempt)
+    ) throw new Error(`campaign ${assignment.campaignId} attempt binding mismatch`);
     if (
       result.protocolSha256 !== protocol.protocolSha256
       || result.campaignId !== assignment.campaignId
@@ -404,7 +443,7 @@ async function loadCampaignResults(assignments, protocol) {
       || result.arm !== assignment.arm
       || result.procedureMode !== assignment.procedureMode
       || result.seed !== assignment.seed
-    ) continue;
+    ) throw new Error(`campaign ${assignment.campaignId} identity mismatch`);
     const ledgerText = await fs.readFile(path.join(path.dirname(resultPath), "ledger.jsonl"), "utf8");
     const ledger = parseEvidenceLedger(ledgerText, {
       expectedSignerSha256: protocol.signer.publicKeySha256,
@@ -420,6 +459,9 @@ async function loadCampaignResults(assignments, protocol) {
     const hiddenReceipts = ledger.receipts.filter((receipt) => (
       receipt.panelSha256 === checkpoint?.hiddenPanelSha256
     ));
+    const developmentReceipts = ledger.receipts.filter((receipt) => (
+      receipt.panelSha256 === checkpoint?.developmentPanelSha256
+    ));
     if (
       hiddenReceipts.length !== result.hiddenAdjudication.length
       || hiddenReceipts.length > 1
@@ -431,9 +473,36 @@ async function loadCampaignResults(assignments, protocol) {
       hiddenReceipts.length === 1
       && hiddenReceipts[0].receiptSha256 !== result.hiddenAdjudication[0]?.receiptSha256
     ) throw new Error(`campaign ${assignment.campaignId} hidden receipt ID mismatch`);
-    const recomputedGain = Math.max(0, (result.baselineScore - result.bestValidScore) / result.baselineScore);
-    if (Math.abs(recomputedGain - result.normalizedGain) > 1e-12) {
-      throw new Error(`campaign ${assignment.campaignId} normalized gain mismatch`);
+    const hidden = hiddenReceipts[0] ?? null;
+    const hiddenValid = hidden !== null
+      && hidden.qualification !== null
+      && Object.values(hidden.qualification).every((status) => status === "passed")
+      && Number.isFinite(hidden.score);
+    const expectedBestScore = hiddenValid
+      ? Math.min(checkpoint.baselineScore, hidden.score)
+      : checkpoint.baselineScore;
+    const expectedGain = Math.max(
+      0,
+      (checkpoint.baselineScore - expectedBestScore) / checkpoint.baselineScore,
+    );
+    const developmentInvalid = developmentReceipts.filter((receipt) => (
+      receipt.qualification === null
+      || !Object.values(receipt.qualification).every((status) => status === "passed")
+    )).length;
+    const expectedProposalInvalidRate = developmentReceipts.length === 0
+      ? 1
+      : developmentInvalid / developmentReceipts.length;
+    if (
+      result.baselineScore !== checkpoint.baselineScore
+      || result.bestValidScore !== expectedBestScore
+      || Math.abs(expectedGain - result.normalizedGain) > 1e-12
+      || result.finalOutputValid !== hiddenValid
+      || result.invalidRate !== (hiddenValid ? 0 : 1)
+      || result.candidateCount !== developmentReceipts.length
+      || Math.abs(result.proposalInvalidRate - expectedProposalInvalidRate) > 1e-12
+      || result.evaluatorCalls !== ledger.receipts.length
+    ) {
+      throw new Error(`campaign ${assignment.campaignId} derived result mismatch`);
     }
     results.push(result);
   }
@@ -486,6 +555,14 @@ async function loadFrozenContext() {
   }
   if (protocol.dungeness.sha !== inspection.sha || protocol.dungeness.sha !== pin?.sha) {
     throw new Error("frozen protocol no longer matches Dungeness checkout");
+  }
+  if (
+    protocol.model.id !== pinnedOpenRouterModel()
+    || protocol.model.provider !== providerName()
+    || protocol.model.baseUrl !== openRouterBaseUrl()
+    || sha256(protocol.model.pricing) !== sha256(modelPricing())
+  ) {
+    throw new Error("frozen protocol no longer matches the model route");
   }
   if (sha256(loaded.adapter) !== protocol.dungeness.adapterSha256) {
     throw new Error("frozen protocol no longer matches the Dungeness adapter");
@@ -547,11 +624,6 @@ export async function freezePower() {
     "DUNGENESS_CONFIRMATORY_SPEND_CAP_USD",
     guaranteedMaxSpendUsd,
   );
-  if (spendCapUsd < guaranteedMaxSpendUsd) {
-    throw new Error(
-      `confirmatory spend cap ${spendCapUsd} is below the guaranteed campaign maximum ${guaranteedMaxSpendUsd}`,
-    );
-  }
   const body = {
     schema: "yukon-kg.dungeness-adaptive-power.v1",
     protocolSha256: protocol.protocolSha256,
@@ -601,7 +673,7 @@ function confirmatoryProtocol(protocol, power) {
 }
 
 export async function analyzeConfirmatory() {
-  const { protocol } = await loadFrozenContext();
+  const { protocol, signing } = await loadFrozenContext();
   const power = await loadPower(protocol);
   const phaseProtocol = confirmatoryProtocol(protocol, power);
   const results = await loadCampaignResults(power.assignments, phaseProtocol);
@@ -612,14 +684,19 @@ export async function analyzeConfirmatory() {
   const analysis = analyzeAdaptiveCampaigns(results, {
     maximumPairs: power.scheduledPairs,
   });
-  const report = {
+  const reportBody = {
     ...analysis,
+    analysisSha256: sha256(analysis),
     protocolSha256: phaseProtocol.protocolSha256,
     parentProtocolSha256: protocol.protocolSha256,
     powerSha256: power.powerSha256,
     createdAt: nowIso(),
     spentUsd: results.reduce((total, result) => total + result.costUsd, 0),
     results,
+  };
+  const report = {
+    ...reportBody,
+    attestation: signEvidenceValue(reportBody, signing.privateKeyPem),
   };
   await writeJson(REPORT_PATH, report);
   return report;
@@ -641,16 +718,42 @@ export async function runConfirmatory() {
   return analyzeConfirmatory();
 }
 
-export async function freezePrimeFactorProtocol() {
+async function verifiedConfirmatoryDecision() {
   const report = await readJsonIfPresent(REPORT_PATH);
-  if (report?.decision !== "ADOPT_ADAPTIVE_STATE") {
+  if (report === null) return { report: null, analysis: null };
+  const { protocol } = await loadFrozenContext();
+  const { attestation, ...reportBody } = report;
+  if (!verifyEvidenceValue(reportBody, attestation, protocol.signer)) {
+    throw new Error("confirmatory report signature mismatch");
+  }
+  const power = await loadPower(protocol);
+  const phaseProtocol = confirmatoryProtocol(protocol, power);
+  const results = await loadCampaignResults(power.assignments, phaseProtocol);
+  if (results.length !== power.assignments.length) {
+    throw new Error("confirmatory report is not backed by every frozen signed campaign");
+  }
+  const analysis = analyzeAdaptiveCampaigns(results, {
+    maximumPairs: power.scheduledPairs,
+  });
+  if (
+    report.analysisSha256 !== sha256(analysis)
+    || report.decision !== analysis.decision
+    || report.protocolSha256 !== phaseProtocol.protocolSha256
+    || report.powerSha256 !== power.powerSha256
+  ) throw new Error("confirmatory report differs from recomputed signed evidence");
+  return { report, analysis };
+}
+
+export async function freezePrimeFactorProtocol() {
+  const { report, analysis } = await verifiedConfirmatoryDecision();
+  if (analysis?.decision !== "ADOPT_ADAPTIVE_STATE") {
     const notWarranted = {
       schema: "yukon-kg.dungeness-prime-factor-decision.v1",
       createdAt: nowIso(),
       status: "NOT_WARRANTED",
       reason: report === null
         ? "no confirmatory adaptive-evidence result exists"
-        : `adaptive evidence decision is ${report.decision}`,
+        : `adaptive evidence decision is ${analysis.decision}`,
       parentReportSha256: report === null ? null : sha256(report),
     };
     await writeJson(PRIME_REPORT_PATH, notWarranted);
@@ -672,11 +775,11 @@ export async function freezePrimeFactorProtocol() {
     createdAt: nowIso(),
     parentProtocolSha256: protocol.protocolSha256,
     parentReportSha256: sha256(report),
-    pairCount: 40,
+    pairCount: 80,
     procedureModes: [...PROCEDURE_MODES],
     assignments: buildPairedAssignments({
       checkpoints: adapter.checkpoints,
-      pairCount: 40,
+      pairCount: 80,
       phase: "prime_factor",
       seed: `${protocol.seed}:prime-factor`,
       procedureModes: PROCEDURE_MODES,
@@ -698,21 +801,22 @@ export async function runPrimeFactor() {
   };
   const guaranteedMaxSpendUsd = frozen.assignments.length * protocol.budget.costUsd;
   const spendCapUsd = environmentNumber("DUNGENESS_PRIME_SPEND_CAP_USD", guaranteedMaxSpendUsd);
-  if (spendCapUsd < guaranteedMaxSpendUsd) {
-    throw new Error(`Prime-factor spend cap is below the guaranteed campaign maximum ${guaranteedMaxSpendUsd}`);
-  }
   const results = await runAssignments(phaseProtocol, adapter, frozen.assignments, {
     spendCapUsd,
     signingPrivateKeyPem: signing.privateKeyPem,
   });
   const analysis = analyzePrimeFactorCampaigns(results);
-  const report = {
+  const reportBody = {
     ...analysis,
     createdAt: nowIso(),
     parentProtocolSha256: protocol.protocolSha256,
     primeProtocolSha256: frozen.protocolSha256,
     spentUsd: results.reduce((total, result) => total + result.costUsd, 0),
     results,
+  };
+  const report = {
+    ...reportBody,
+    attestation: signEvidenceValue(reportBody, signing.privateKeyPem),
   };
   await writeJson(PRIME_REPORT_PATH, report);
   return report;

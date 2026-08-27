@@ -1,4 +1,5 @@
-import { canonicalStringify, mean, sha256 } from "./protocol.js";
+import { canonicalStringify, createPrng, mean, sha256 } from "./protocol.js";
+import path from "node:path";
 
 export const DUNGENESS_ADAPTIVE_SCHEMA = "yukon-kg.dungeness-adaptive";
 export const DUNGENESS_ADAPTIVE_PROTOCOL_VERSION = "yukon-kg.dungeness-adaptive.v1";
@@ -8,9 +9,10 @@ export const PROCEDURE_MODES = Object.freeze(["fixed", "adaptive_procedures"]);
 export const CALIBRATION_PAIR_COUNT = 16;
 export const CONFIRMATORY_INTERIMS = Object.freeze([20, 40, 60, 80]);
 export const CONFIRMATORY_MAX_PAIRS = CONFIRMATORY_INTERIMS.at(-1);
-export const CONFIRMATORY_FINAL_PAIR_COUNTS = Object.freeze([40, 80]);
+export const CONFIRMATORY_FINAL_PAIR_COUNTS = Object.freeze([80]);
 export const CONFIRMATORY_ALPHA = 0.025;
 export const CONFIRMATORY_POWER = 0.90;
+export const POWER_SIMULATION_DRAWS = 20_000;
 export const PRACTICAL_MDE = 0.05;
 export const TARGET_ADVANTAGE = 0.10;
 export const INVALID_NONINFERIORITY_MARGIN = 0.05;
@@ -68,6 +70,10 @@ function requireBudget(value) {
     if (!valid) throw new Error(`budget.${key} must be ${key === "descendantTokens" ? "non-negative" : "positive"}`);
     parsed[key] = item;
   }
+  if (!Number.isInteger(parsed.evaluatorCalls) || parsed.evaluatorCalls < 2) {
+    throw new Error("budget.evaluatorCalls must be an integer of at least 2");
+  }
+  if (!Number.isInteger(parsed.turns)) throw new Error("budget.turns must be an integer");
   return parsed;
 }
 
@@ -93,6 +99,21 @@ export function parseDungenessAdapter(value, { expectedRepoSha = null } = {}) {
     throw new Error("Dungeness evaluation requires a networkless external microVM without the host workspace mounted");
   }
   const evaluator = requireObject(input.evaluator, "evaluator");
+  const attestationCommand = requireCommand(evaluator.attestationCommand, "evaluator.attestationCommand");
+  const developmentCommand = requireCommand(evaluator.developmentCommand, "evaluator.developmentCommand");
+  const hiddenCommand = requireCommand(evaluator.hiddenCommand, "evaluator.hiddenCommand");
+  const evaluatorRunner = developmentCommand[0];
+  if (
+    !path.isAbsolute(evaluatorRunner)
+    || attestationCommand[0] !== evaluatorRunner
+    || hiddenCommand[0] !== evaluatorRunner
+  ) {
+    throw new Error("all evaluator commands must use the same absolute microVM runner path");
+  }
+  const setupCommand = input.setupCommand == null ? null : requireCommand(input.setupCommand, "setupCommand");
+  if (setupCommand !== null && setupCommand[0] !== evaluatorRunner) {
+    throw new Error("setupCommand must run through the same absolute microVM runner");
+  }
   const checkpoints = input.checkpoints;
   if (!Array.isArray(checkpoints) || checkpoints.length !== 8) {
     throw new Error("the confirmatory adapter must freeze exactly eight checkpoints");
@@ -124,7 +145,7 @@ export function parseDungenessAdapter(value, { expectedRepoSha = null } = {}) {
     schema: DUNGENESS_ADAPTER_SCHEMA,
     repoSha,
     mutableGlobs: [...input.mutableGlobs],
-    setupCommand: input.setupCommand == null ? null : requireCommand(input.setupCommand, "setupCommand"),
+    setupCommand,
     isolation: {
       kind: "external_microvm",
       network: "none",
@@ -132,9 +153,9 @@ export function parseDungenessAdapter(value, { expectedRepoSha = null } = {}) {
       runnerSha256: requireSha(isolation.runnerSha256, "isolation.runnerSha256"),
     },
     evaluator: {
-      attestationCommand: requireCommand(evaluator.attestationCommand, "evaluator.attestationCommand"),
-      developmentCommand: requireCommand(evaluator.developmentCommand, "evaluator.developmentCommand"),
-      hiddenCommand: requireCommand(evaluator.hiddenCommand, "evaluator.hiddenCommand"),
+      attestationCommand,
+      developmentCommand,
+      hiddenCommand,
       timeoutMs: Number.isFinite(evaluator.timeoutMs) && evaluator.timeoutMs > 0
         ? evaluator.timeoutMs
         : 15 * 60_000,
@@ -179,7 +200,7 @@ export function buildPairedAssignments({
         checkpointGitRef: checkpoint.gitRef,
         arm,
         procedureMode,
-        seed: cellSeed(seed, phase, checkpoint.id, pairIndex, arm, procedureMode),
+        seed: cellSeed(seed, phase, checkpoint.id, pairIndex),
       })));
     }
     const ordered = blockCells.sort((left, right) => (
@@ -203,6 +224,8 @@ export function freezeAdaptiveProtocol({
   runtimeSha256,
   model,
   provider,
+  baseUrl,
+  pricing,
   decoding,
   signer,
   seed,
@@ -212,6 +235,13 @@ export function freezeAdaptiveProtocol({
   if (dungenessPin?.sha !== adapter.repoSha) throw new Error("Dungeness pin and adapter SHA differ");
   requireString(model, "model");
   requireString(provider, "provider");
+  requireString(baseUrl, "baseUrl");
+  if (
+    !Number.isFinite(pricing?.inputUsdPerMillion)
+    || pricing.inputUsdPerMillion <= 0
+    || !Number.isFinite(pricing?.outputUsdPerMillion)
+    || pricing.outputUsdPerMillion <= 0
+  ) throw new Error("positive model pricing is required");
   requireString(seed, "seed");
   requireString(createdAt, "createdAt");
   if (signer?.algorithm !== "ed25519") throw new Error("an Ed25519 ledger signer is required");
@@ -241,6 +271,11 @@ export function freezeAdaptiveProtocol({
     model: {
       id: model,
       provider,
+      baseUrl,
+      pricing: {
+        inputUsdPerMillion: pricing.inputUsdPerMillion,
+        outputUsdPerMillion: pricing.outputUsdPerMillion,
+      },
       decoding: requireObject(decoding, "decoding"),
     },
     signer,
@@ -284,6 +319,35 @@ function sampleStandardDeviation(values) {
   return Math.sqrt(values.reduce((sum, value) => sum + (value - center) ** 2, 0) / (values.length - 1));
 }
 
+function standardNormal(random) {
+  const first = Math.max(Number.MIN_VALUE, random());
+  const second = random();
+  return Math.sqrt(-2 * Math.log(first)) * Math.cos(2 * Math.PI * second);
+}
+
+function simulatedNoncentralTPower({
+  sampleSize,
+  standardizedEffect,
+  criticalValue,
+  draws = POWER_SIMULATION_DRAWS,
+  seed,
+}) {
+  const random = createPrng(seed);
+  const degreesOfFreedom = sampleSize - 1;
+  const noncentrality = standardizedEffect * Math.sqrt(sampleSize);
+  let rejected = 0;
+  for (let draw = 0; draw < draws; draw += 1) {
+    let chiSquare = 0;
+    for (let index = 0; index < degreesOfFreedom; index += 1) {
+      chiSquare += standardNormal(random) ** 2;
+    }
+    const statistic = (standardNormal(random) + noncentrality)
+      / Math.sqrt(chiSquare / degreesOfFreedom);
+    if (statistic > criticalValue) rejected += 1;
+  }
+  return rejected / draws;
+}
+
 function pairedRows(campaigns) {
   const byPair = new Map();
   for (const campaign of campaigns) {
@@ -319,14 +383,23 @@ export function estimateConfirmatoryPairs(calibrationCampaigns, {
   if (pairs.length !== CALIBRATION_PAIR_COUNT) {
     throw new Error(`power calibration requires exactly ${CALIBRATION_PAIR_COUNT} matched pairs`);
   }
+  if (maximum !== CONFIRMATORY_MAX_PAIRS || minimum > maximum) {
+    throw new Error(`confirmatory design is frozen at ${CONFIRMATORY_MAX_PAIRS} pairs`);
+  }
   const differences = pairs.map((pair) => pair.difference);
   const observedSd = sampleStandardDeviation(differences);
   const conservativeSd = Math.max(0.05, observedSd * 1.5);
   if (targetAdvantage <= practicalMde) throw new Error("target advantage must exceed the practical MDE");
-  const finalCritical = 2.023;
+  const finalCritical = studentTCritical975(maximum - 1);
   const raw = Math.ceil(((finalCritical + 1.2815515655446004) * conservativeSd
     / (targetAdvantage - practicalMde)) ** 2);
-  const scheduled = CONFIRMATORY_FINAL_PAIR_COUNTS.find((count) => count >= Math.max(minimum, raw)) ?? maximum;
+  const scheduled = maximum;
+  const simulatedPower = simulatedNoncentralTPower({
+    sampleSize: scheduled,
+    standardizedEffect: (targetAdvantage - practicalMde) / conservativeSd,
+    criticalValue: finalCritical,
+    seed: sha256(differences),
+  });
   const pairCosts = pairs.map((pair) => pair.static.costUsd + pair.adaptive.costUsd);
   const projectedMaxSpendUsd = 1.1 * mean(pairCosts) * scheduled;
   return {
@@ -341,7 +414,9 @@ export function estimateConfirmatoryPairs(calibrationCampaigns, {
     inference: "final-only paired Student interval; interim reports are descriptive",
     rawRequiredPairs: raw,
     scheduledPairs: Math.min(maximum, scheduled),
-    attainableAtCap: raw <= maximum,
+    attainableAtCap: simulatedPower >= CONFIRMATORY_POWER,
+    powerSimulationDraws: POWER_SIMULATION_DRAWS,
+    simulatedPowerAtScheduled: simulatedPower,
     meanPairCostUsd: mean(pairCosts),
     projectedMaxSpendUsd,
   };
@@ -372,6 +447,34 @@ function interval(values, criticalZ) {
   };
 }
 
+function binomialCdf(k, n, probability) {
+  if (k >= n) return 1;
+  if (probability <= 0) return 1;
+  if (probability >= 1) return 0;
+  let term = (1 - probability) ** n;
+  let total = term;
+  for (let index = 0; index < k; index += 1) {
+    term *= ((n - index) / (index + 1)) * (probability / (1 - probability));
+    total += term;
+  }
+  return Math.min(1, total);
+}
+
+function clopperPearsonUpper(successes, trials, alpha = CONFIRMATORY_ALPHA) {
+  if (!Number.isInteger(successes) || successes < 0 || successes > trials || trials < 1) {
+    throw new Error("invalid binomial counts");
+  }
+  if (successes === trials) return 1;
+  let low = successes / trials;
+  let high = 1;
+  for (let iteration = 0; iteration < 100; iteration += 1) {
+    const midpoint = (low + high) / 2;
+    if (binomialCdf(successes, trials, midpoint) > alpha) low = midpoint;
+    else high = midpoint;
+  }
+  return high;
+}
+
 export function analyzeAdaptiveCampaigns(campaigns, {
   maximumPairs = CONFIRMATORY_MAX_PAIRS,
   practicalMde = PRACTICAL_MDE,
@@ -388,8 +491,19 @@ export function analyzeAdaptiveCampaigns(campaigns, {
   const isFinal = pairs.length === maximumPairs;
   const criticalValue = studentTCritical975(pairs.length - 1);
   const effect = interval(pairs.map((pair) => pair.difference), criticalValue);
-  const invalidEffect = interval(pairs.map((pair) => (
-    pair.adaptive.invalidRate - pair.static.invalidRate
+  const adaptiveOnlyInvalid = pairs.filter((pair) => (
+    pair.adaptive.invalidRate === 1 && pair.static.invalidRate === 0
+  )).length;
+  const staticOnlyInvalid = pairs.filter((pair) => (
+    pair.adaptive.invalidRate === 0 && pair.static.invalidRate === 1
+  )).length;
+  const invalidRiskDifference = (adaptiveOnlyInvalid - staticOnlyInvalid) / pairs.length;
+  const conservativeInvalidUpper = clopperPearsonUpper(
+    adaptiveOnlyInvalid,
+    pairs.length,
+  );
+  const proposalInvalidEffect = interval(pairs.map((pair) => (
+    pair.adaptive.proposalInvalidRate - pair.static.proposalInvalidRate
   )), criticalValue);
   const checkpointMeans = Object.fromEntries(
     [...new Set(pairs.map((pair) => pair.checkpointId))].sort().map((checkpointId) => {
@@ -409,11 +523,12 @@ export function analyzeAdaptiveCampaigns(campaigns, {
   if (Object.keys(checkpointMeans).length !== 8) {
     throw new Error("confirmatory analysis requires all eight frozen checkpoints");
   }
-  const safetyPass = invalidEffect.upper <= invalidMargin && provenanceViolations === 0;
+  const safetyPass = conservativeInvalidUpper <= invalidMargin && provenanceViolations === 0;
   const breadthPass = positiveCheckpoints >= 6
     && Object.values(leaveOneCheckpointOut).every((value) => value > 0);
   let decision = "CONTINUE";
-  if (isFinal && effect.lower > practicalMde && safetyPass && breadthPass) decision = "ADOPT_ADAPTIVE_STATE";
+  if (provenanceViolations > 0) decision = "INVALID_PROTOCOL";
+  else if (isFinal && effect.lower > practicalMde && safetyPass && breadthPass) decision = "ADOPT_ADAPTIVE_STATE";
   else if (isFinal) {
     decision = effect.upper < practicalMde || !safetyPass
       ? "RETAIN_STATIC_STATE"
@@ -432,9 +547,14 @@ export function analyzeAdaptiveCampaigns(campaigns, {
     effect,
     invalidNoninferiority: {
       margin: invalidMargin,
-      ...invalidEffect,
-      pass: invalidEffect.upper <= invalidMargin,
+      method: "conservative exact upper bound on adaptive-only final invalidity",
+      adaptiveOnlyInvalid,
+      staticOnlyInvalid,
+      riskDifference: invalidRiskDifference,
+      upper: conservativeInvalidUpper,
+      pass: conservativeInvalidUpper <= invalidMargin,
     },
+    proposalInvalidEffect,
     checkpointMeans,
     positiveCheckpoints,
     leaveOneCheckpointOut,
@@ -496,7 +616,7 @@ export function analyzePrimeFactorCampaigns(campaigns, {
       cells: Object.fromEntries(cells),
     };
   });
-  if (blocks.length !== 40) throw new Error("prime-factor analysis requires exactly 40 complete blocks");
+  if (blocks.length !== 80) throw new Error("prime-factor analysis requires exactly 80 complete blocks");
   const criticalValue = studentTCritical975(blocks.length - 1);
   const knowledge = interval(blocks.map((block) => block.knowledgeEffect), criticalValue);
   const procedure = interval(blocks.map((block) => block.procedureEffect), criticalValue);
@@ -504,10 +624,21 @@ export function analyzePrimeFactorCampaigns(campaigns, {
     blocks.map((block) => block.adaptiveStateProcedureEffect),
     criticalValue,
   );
-  const adaptiveStateInvalid = interval(
-    blocks.map((block) => block.adaptiveStateInvalidEffect),
-    criticalValue,
-  );
+  const adaptiveProcedureOnlyInvalid = blocks.filter((block) => (
+    block.cells["state_adaptive:adaptive_procedures"].invalidRate === 1
+    && block.cells["state_adaptive:fixed"].invalidRate === 0
+  )).length;
+  const fixedProcedureOnlyInvalid = blocks.filter((block) => (
+    block.cells["state_adaptive:adaptive_procedures"].invalidRate === 0
+    && block.cells["state_adaptive:fixed"].invalidRate === 1
+  )).length;
+  const adaptiveStateInvalid = {
+    method: "conservative exact upper bound on adaptive-procedure-only final invalidity",
+    adaptiveProcedureOnlyInvalid,
+    fixedProcedureOnlyInvalid,
+    riskDifference: (adaptiveProcedureOnlyInvalid - fixedProcedureOnlyInvalid) / blocks.length,
+    upper: clopperPearsonUpper(adaptiveProcedureOnlyInvalid, blocks.length),
+  };
   const interaction = interval(blocks.map((block) => block.interaction), criticalValue);
   const provenanceViolations = campaigns.reduce(
     (total, campaign) => total + (campaign.provenanceViolations?.length ?? 0),
@@ -526,7 +657,7 @@ export function analyzePrimeFactorCampaigns(campaigns, {
     interaction,
     provenanceViolations,
     decision: provenanceViolations > 0
-      ? "REJECT_ADAPTIVE_PROCEDURES"
+      ? "INVALID_PROTOCOL"
       : adaptiveStateInvalid.upper > INVALID_NONINFERIORITY_MARGIN
         ? "REJECT_ADAPTIVE_PROCEDURES"
         : adaptiveStateProcedure.lower > practicalMde
