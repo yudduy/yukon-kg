@@ -1,0 +1,9 @@
+{
+  "schema": "yukon-kg.dungeness-vendor-pin.v1",
+  "repo": "https://github.com/Layr-Labs/dungeness.git",
+  "sha": null,
+  "branch": null,
+  "kind": "missing",
+  "clonedAt": null,
+  "note": "Populate by running bun run src/dungeness-clone.js with a yudduy GITHUB_TOKEN."
+}

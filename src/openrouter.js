@@ -1,4 +1,30 @@
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 const DEFAULT_BASE_URL = "https://openrouter.ai/api/v1";
+const PINNED_OPENROUTER_MODEL = "openai/gpt-5.4";
+
+function loadDotEnv() {
+  const envPath = join(dirname(fileURLToPath(import.meta.url)), "..", ".env");
+  let text = "";
+  try {
+    text = readFileSync(envPath, "utf8");
+  } catch {
+    return;
+  }
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    if (line.length === 0 || line.startsWith("#")) continue;
+    const index = line.indexOf("=");
+    if (index <= 0) continue;
+    const name = line.slice(0, index).trim();
+    const value = line.slice(index + 1).trim();
+    if (name.length > 0 && process.env[name] === undefined) process.env[name] = value;
+  }
+}
+
+loadDotEnv();
 
 export class OpenRouterError extends Error {
   constructor(message, { status = null, body = null } = {}) {
@@ -24,7 +50,17 @@ function parseResponseBody(text) {
   }
 }
 
-export async function chat({ messages, model = process.env.OPENROUTER_MODEL, responseFormat } = {}) {
+export function pinnedOpenRouterModel() {
+  return process.env.OPENROUTER_MODEL?.trim() || PINNED_OPENROUTER_MODEL;
+}
+
+export { PINNED_OPENROUTER_MODEL };
+
+export async function chat({
+  messages,
+  model = pinnedOpenRouterModel(),
+  responseFormat,
+} = {}) {
   if (!Array.isArray(messages) || messages.length === 0) {
     throw new OpenRouterError("messages must be a non-empty array");
   }
@@ -67,3 +103,4 @@ export async function chat({ messages, model = process.env.OPENROUTER_MODEL, res
     usage: body.usage ?? null,
   };
 }
+

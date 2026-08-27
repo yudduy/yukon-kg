@@ -33,6 +33,19 @@ bun run knowledge:ecdsa -- --experiment
 
 `--write` refreshes `docs/ecdsa/index.html` and `docs/ecdsa/working-knowledge.json`. `--experiment` writes `evidence/ecdsa-user-representation/report.json`, comparing the working-knowledge packet against ranking ideas by promotion count on eight frozen user questions. The sealed archive remains at `docs/ecdsa/index.json` and under `docs/ecdsa/releases/`.
 
+## Dungeness knowledge court
+
+The OpenRouter court asks the same eight frozen questions of five equal-budget packets (`cold`, `raw`, `flat`, `state_brief`, `winner_only`). None of the packets include a ranked next move. Pin `openai/gpt-5.4`. The Dungeness checkout is a runtime substrate only; it is gitignored and recorded by `third_party/dungeness.pin.json`.
+
+```bash
+bun run dungeness:clone
+bun run kb:dungeness -- preflight
+bun run kb:dungeness -- bind
+bun run kb:dungeness -- pilot
+```
+
+`preflight` verifies Atlas hashes, packet budgets, OpenRouter smoke, and that `state_brief` contains every gold needle. `pilot` spends 40 model calls (8 cases × 5 arms) and writes `evidence/dungeness-kb/report.json`. Clone `https://github.com/Layr-Labs/dungeness.git` as yudduy with `GITHUB_TOKEN`; the cloud `cursor` GitHub user cannot see that repo. Do not mutate a Dungeness frozen harness.
+
 The working retrieval default remains the smallest useful workflow until a later equal-budget court says otherwise:
 
 ```text
