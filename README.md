@@ -54,7 +54,7 @@ The decisive experiment uses verified circuit progress, not QA. It compares only
 - `state_static`: the initial brief plus the append-only raw evaluator receipts.
 - `state_adaptive`: the same inputs plus a deterministic compact projection rebuilt after each receipt.
 
-The model may propose changes. Only the pinned Dungeness evaluator can sign receipts and move trusted state. Model-authored notes cannot label an idea tried, untried, successful, or failed.
+The model may propose changes. A protocol-anchored host key signs outputs from the pinned evaluator; the candidate never receives that key. Model-authored notes cannot label an idea tried, untried, successful, or failed. Evaluation must run through a hash-pinned, networkless external microVM wrapper that does not mount the host workspace.
 
 ```bash
 bun run dungeness:clone
@@ -68,7 +68,7 @@ bun run experiment:dungeness-adaptive -- confirmatory
 bun run experiment:dungeness-adaptive -- prime-factor
 ```
 
-Calibration uses 16 matched pairs to freeze variance, sample size, and a hard projected spend cap. Confirmatory analysis occurs only at 20/40/60/80 matched-pair boundaries. Adaptive state is adopted only if its confidence bound clears a five-point practical gain, validity is non-inferior, at least six of eight checkpoints improve, no one checkpoint explains the result, and provenance violations are zero.
+Calibration uses exactly 16 matched pairs to freeze variance, a balanced 40- or 80-pair final sample, and both projected and guaranteed hard spend caps. The 20/40/60/80 checkpoints are resumable reports, but adoption is allowed only at the frozen final sample using a paired Student interval. Adaptive state is adopted only if its confidence bound clears a five-point practical gain, final-output validity is non-inferior, at least six of eight checkpoints improve, no one checkpoint explains the result, and provenance violations are zero.
 
 The live commands hard-stop unless the private `Layr-Labs/dungeness` checkout, exact SHA, external adapter, eight checkpoint refs, OpenRouter model, and provider route are pinned. Clone as yudduy with `GITHUB_TOKEN`; the cloud `cursor` identity cannot read that repository. Do not mutate the Dungeness harness.
 

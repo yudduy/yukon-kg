@@ -3,7 +3,10 @@ import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { runProcess } from "../src/mve.js";
-import { createEvidenceSigningKeyPair } from "../src/atlas-runtime/evidence-ledger.ts";
+import {
+  createEvidenceSigningKeyPair,
+  verifyEvidenceValue,
+} from "../src/atlas-runtime/evidence-ledger.ts";
 import {
   CALIBRATION_PAIR_COUNT,
   CONFIRMATORY_INTERIMS,
@@ -344,5 +347,7 @@ describe("Dungeness evaluator and campaign runner", () => {
     expect(result.hiddenAdjudication[0].receiptSha256).toHaveLength(64);
     expect(result.finalOutputValid).toBe(true);
     expect(result.providerRoutes).toEqual(["fixture"]);
+    const { attestation, ...resultBody } = result;
+    expect(verifyEvidenceValue(resultBody, attestation, protocolSigning.signer)).toBe(true);
   });
 });

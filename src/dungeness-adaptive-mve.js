@@ -12,6 +12,7 @@ import {
   ideasFromRelease,
   ledgerSha256,
   parseEvidenceLedger,
+  verifyEvidenceValue,
 } from "./atlas-runtime/index.ts";
 import { inspectDungenessCheckout, readDungenessPin } from "./dungeness-clone.js";
 import { compileKnowledgeVariants, OPENROUTER_DECODING } from "./dungeness-kb-protocol.js";
@@ -108,6 +109,8 @@ function signingKeyPath() {
 async function ensureSigningKey() {
   const pathname = signingKeyPath();
   try {
+    const metadata = await fs.stat(pathname);
+    if ((metadata.mode & 0o077) !== 0) throw new Error("ledger signing key permissions must be 0600");
     const privateKeyPem = await fs.readFile(pathname, "utf8");
     return { pathname, privateKeyPem, signer: evidenceSignerFromPrivateKey(privateKeyPem) };
   } catch (error) {
@@ -121,6 +124,8 @@ async function ensureSigningKey() {
 
 async function loadSigningKey(expectedSignerSha256) {
   const pathname = signingKeyPath();
+  const metadata = await fs.stat(pathname);
+  if ((metadata.mode & 0o077) !== 0) throw new Error("ledger signing key permissions must be 0600");
   const privateKeyPem = await fs.readFile(pathname, "utf8");
   const signer = evidenceSignerFromPrivateKey(privateKeyPem);
   if (signer.publicKeySha256 !== expectedSignerSha256) {
@@ -206,7 +211,8 @@ async function isolationRunnerStatus(adapter) {
   if (adapter === null) return { ok: false, path: null, sha256: null };
   const development = adapter.evaluator.developmentCommand[0];
   const hidden = adapter.evaluator.hiddenCommand[0];
-  if (development !== hidden) {
+  const attestation = adapter.evaluator.attestationCommand[0];
+  if (development !== hidden || development !== attestation) {
     return { ok: false, path: null, sha256: null, error: "development and hidden evaluators use different runners" };
   }
   let pathname = development;
@@ -386,6 +392,10 @@ async function loadCampaignResults(assignments, protocol) {
     const resultPath = campaignResultPath(protocol.protocolSha256, assignment.campaignId);
     const result = await readJsonIfPresent(resultPath);
     if (result === null) continue;
+    const { attestation, ...resultBody } = result;
+    if (!verifyEvidenceValue(resultBody, attestation, protocol.signer)) {
+      throw new Error(`campaign ${assignment.campaignId} result signature mismatch`);
+    }
     if (
       result.protocolSha256 !== protocol.protocolSha256
       || result.campaignId !== assignment.campaignId
@@ -522,7 +532,11 @@ export async function freezePower() {
   const { protocol } = await loadFrozenContext();
   const calibration = await readJson(path.join(EVIDENCE_ROOT, "calibration.json"));
   if (calibration.protocolSha256 !== protocol.protocolSha256) throw new Error("calibration protocol mismatch");
-  const power = estimateConfirmatoryPairs(calibration.results);
+  const verifiedCalibration = await loadCampaignResults(protocol.calibration.assignments, protocol);
+  if (verifiedCalibration.length !== protocol.calibration.assignments.length) {
+    throw new Error("calibration is incomplete or contains an unverifiable campaign");
+  }
+  const power = estimateConfirmatoryPairs(verifiedCalibration);
   if (!power.attainableAtCap) throw new Error("the practical MDE is not attainable at the confirmatory cap");
   const assignments = protocol.confirmatory.assignments.slice(
     0,

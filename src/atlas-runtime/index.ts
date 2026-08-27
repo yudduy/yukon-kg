@@ -22,7 +22,9 @@ export {
   parseEvidenceLedger,
   reduceEvidenceLedger,
   serializeEvidenceLedger,
+  signEvidenceValue,
   verifyEvidenceLedger,
+  verifyEvidenceValue,
   verifySignedEvidenceReceipt,
 } from "./evidence-ledger";
 export type {
@@ -37,6 +39,7 @@ export type {
   EvidenceProjectionRow,
   EvidenceQualification,
   EvidenceReceiptInput,
+  EvidenceValueAttestation,
   MatcherMembership,
   OptimizationDirection,
   QualificationStatus,

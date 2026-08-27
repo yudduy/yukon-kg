@@ -11,6 +11,7 @@ import {
   ledgerSha256,
   reduceEvidenceLedger,
   serializeEvidenceLedger,
+  signEvidenceValue,
 } from "./atlas-runtime/evidence-ledger.ts";
 import { normalizedGain, sha256 } from "./dungeness-adaptive-protocol.js";
 
@@ -873,7 +874,7 @@ export async function runDungenessCampaign({
     const proposalInvalidRate = state.candidates.length === 0
       ? 1
       : state.candidates.filter((candidate) => !candidate.development.valid).length / state.candidates.length;
-    const result = {
+    const resultBody = {
       schema: "yukon-kg.dungeness-campaign.v1",
       protocolVersion: protocol.protocolVersion,
       protocolSha256: protocol.protocolSha256,
@@ -902,6 +903,10 @@ export async function runDungenessCampaign({
       finished: state.finished,
       summary: state.summary,
       hiddenAdjudication: hidden,
+    };
+    const result = {
+      ...resultBody,
+      attestation: signEvidenceValue(resultBody, state.privateKeyPem),
     };
     await fs.writeFile(path.join(campaignRoot, "result.json"), `${JSON.stringify(result, null, 2)}\n`);
     return result;

@@ -133,6 +133,13 @@ export interface UntrustedEvidenceAnnotation {
   trust: "untrusted_model_annotation";
 }
 
+export interface EvidenceValueAttestation {
+  algorithm: "ed25519";
+  publicKeySha256: string;
+  valueSha256: string;
+  signature: string;
+}
+
 const SHA256_PATTERN = /^[a-f0-9]{64}$/u;
 const COMMIT_PATTERN = /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u;
 const PROPOSAL_ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/u;
@@ -278,6 +285,46 @@ export function evidenceSignerFromPrivateKey(privateKeyPem: string): EvidenceLed
     publicKeyPem,
     publicKeySha256: ledgerSha256(publicKeyPem),
   };
+}
+
+export function signEvidenceValue(
+  value: unknown,
+  privateKeyPem: string,
+): EvidenceValueAttestation {
+  const signer = evidenceSignerFromPrivateKey(privateKeyPem);
+  const valueSha256 = ledgerSha256(value);
+  return {
+    algorithm: "ed25519",
+    publicKeySha256: signer.publicKeySha256,
+    valueSha256,
+    signature: signBytes(
+      null,
+      Buffer.from(valueSha256, "hex"),
+      privateKeyPem,
+    ).toString("base64"),
+  };
+}
+
+export function verifyEvidenceValue(
+  value: unknown,
+  attestation: EvidenceValueAttestation,
+  signer: EvidenceLedgerSigner,
+): boolean {
+  if (
+    attestation?.algorithm !== "ed25519"
+    || attestation.publicKeySha256 !== signer.publicKeySha256
+    || attestation.valueSha256 !== ledgerSha256(value)
+  ) return false;
+  try {
+    return verifyBytes(
+      null,
+      Buffer.from(attestation.valueSha256, "hex"),
+      signer.publicKeyPem,
+      Buffer.from(attestation.signature, "base64"),
+    );
+  } catch {
+    return false;
+  }
 }
 
 export function createEvidenceLedger(input: {

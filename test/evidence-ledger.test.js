@@ -5,8 +5,10 @@ import {
   createEvidenceSigningKeyPair,
   parseEvidenceLedger,
   reduceEvidenceLedger,
+  signEvidenceValue,
   serializeEvidenceLedger,
   verifyEvidenceLedger,
+  verifyEvidenceValue,
 } from "../src/atlas-runtime/evidence-ledger.ts";
 
 const hashes = {
@@ -181,5 +183,13 @@ describe("provenance-gated evaluator ledger", () => {
     expect(() => appendSignedEvidenceReceipt(empty, receipt("evaluation", {
       proposalId: "spaces are not trusted",
     }), privateKeyPem)).toThrow(/proposalId/i);
+  });
+
+  test("signs derived campaign results with the anchored host key", () => {
+    const signing = createEvidenceSigningKeyPair();
+    const result = { campaignId: "campaign-001", normalizedGain: 0.1 };
+    const attestation = signEvidenceValue(result, signing.privateKeyPem);
+    expect(verifyEvidenceValue(result, attestation, signing.signer)).toBe(true);
+    expect(verifyEvidenceValue({ ...result, normalizedGain: 1 }, attestation, signing.signer)).toBe(false);
   });
 });
