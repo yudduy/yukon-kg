@@ -4,11 +4,17 @@ import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import { mkdir, writeFile, readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { sha256 } from "./protocol.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VENDOR_DIR = join(ROOT, "third_party", "dungeness");
 const PIN_PATH = join(ROOT, "third_party", "dungeness.pin.json");
 const REPO_URL = "https://github.com/Layr-Labs/dungeness.git";
+const ADAPTER_CANDIDATES = [
+  "dungeness.adapter.json",
+  ".dungeness/adapter.json",
+  "yukon.adapter.json",
+];
 
 function githubToken() {
   return process.env.GITHUB_TOKEN?.trim()
@@ -17,17 +23,13 @@ function githubToken() {
     || "";
 }
 
-function authenticatedUrl(url, token) {
-  if (!token) return url;
-  const parsed = new URL(url);
-  parsed.username = "x-access-token";
-  parsed.password = token;
-  return parsed.href;
-}
-
-function run(command, args, { cwd } = {}) {
+function run(command, args, { cwd, env = {} } = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { cwd, stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn(command, args, {
+      cwd,
+      env: { ...process.env, ...env },
+      stdio: ["ignore", "pipe", "pipe"],
+    });
     let stdout = "";
     let stderr = "";
     child.stdout.on("data", (chunk) => { stdout += chunk; });
@@ -35,9 +37,18 @@ function run(command, args, { cwd } = {}) {
     child.on("error", reject);
     child.on("close", (code) => {
       if (code === 0) resolve({ stdout, stderr });
-      else reject(new Error(`${command} ${args.join(" ")} failed (${code}): ${stderr || stdout}`));
+      else reject(new Error(`${command} failed (${code}): ${stderr || stdout}`));
     });
   });
+}
+
+function gitAuthenticationEnvironment(token) {
+  if (!token) return {};
+  return {
+    GIT_CONFIG_COUNT: "1",
+    GIT_CONFIG_KEY_0: "http.extraHeader",
+    GIT_CONFIG_VALUE_0: `Authorization: Basic ${Buffer.from(`x-access-token:${token}`).toString("base64")}`,
+  };
 }
 
 export async function inspectDungenessCheckout(directory = VENDOR_DIR) {
@@ -45,7 +56,16 @@ export async function inspectDungenessCheckout(directory = VENDOR_DIR) {
     return { present: false, kind: "missing", directory, signals: [] };
   }
   const signals = [];
-  const files = ["Cargo.toml", "package.json", "pyproject.toml", "README.md", "src/point_add", "eval", "harness"];
+  const files = [
+    "Cargo.toml",
+    "package.json",
+    "pyproject.toml",
+    "README.md",
+    "src/point_add",
+    "eval",
+    "harness",
+    ...ADAPTER_CANDIDATES,
+  ];
   for (const relative of files) {
     if (existsSync(join(directory, relative))) signals.push(relative);
   }
@@ -60,7 +80,11 @@ export async function inspectDungenessCheckout(directory = VENDOR_DIR) {
   } catch {
     sha = null;
   }
-  return { present: true, kind, directory, signals, sha, branch };
+  const adapterPath = ADAPTER_CANDIDATES.find((relative) => signals.includes(relative)) ?? null;
+  const adapterSha256 = adapterPath === null
+    ? null
+    : sha256(await readFile(join(directory, adapterPath), "utf8"));
+  return { present: true, kind, directory, signals, sha, branch, adapterPath, adapterSha256 };
 }
 
 export async function cloneDungeness({ token = githubToken(), force = false } = {}) {
@@ -77,7 +101,9 @@ export async function cloneDungeness({ token = githubToken(), force = false } = 
       repo: REPO_URL,
     };
   }
-  await run("git", ["clone", "--depth", "1", authenticatedUrl(REPO_URL, token), VENDOR_DIR]);
+  await run("git", ["clone", "--depth", "1", REPO_URL, VENDOR_DIR], {
+    env: gitAuthenticationEnvironment(token),
+  });
   const inspection = await inspectDungenessCheckout(VENDOR_DIR);
   const pin = {
     schema: "yukon-kg.dungeness-vendor-pin.v1",
@@ -85,6 +111,8 @@ export async function cloneDungeness({ token = githubToken(), force = false } = 
     sha: inspection.sha,
     branch: inspection.branch,
     kind: inspection.kind,
+    adapterPath: inspection.adapterPath,
+    adapterSha256: inspection.adapterSha256,
     clonedAt: new Date().toISOString(),
   };
   await writeFile(PIN_PATH, `${JSON.stringify(pin, null, 2)}\n`);

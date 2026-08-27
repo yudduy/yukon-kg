@@ -56,7 +56,7 @@ export function pinnedOpenRouterModel() {
 
 export { PINNED_OPENROUTER_MODEL };
 
-export async function chat({
+export async function chatCompletion({
   messages,
   model = pinnedOpenRouterModel(),
   responseFormat,
@@ -64,6 +64,8 @@ export async function chat({
   seed,
   maxTokens,
   provider,
+  tools,
+  toolChoice,
 } = {}) {
   if (!Array.isArray(messages) || messages.length === 0) {
     throw new OpenRouterError("messages must be a non-empty array");
@@ -90,6 +92,8 @@ export async function chat({
       ...(seed === undefined ? {} : { seed }),
       ...(maxTokens === undefined ? {} : { max_tokens: maxTokens }),
       ...(provider === undefined ? {} : { provider }),
+      ...(tools === undefined ? {} : { tools }),
+      ...(toolChoice === undefined ? {} : { tool_choice: toolChoice }),
     }),
   });
   const body = parseResponseBody(await response.text());
@@ -100,14 +104,23 @@ export async function chat({
     });
   }
 
-  const content = body?.choices?.[0]?.message?.content;
-  if (typeof content !== "string") {
-    throw new OpenRouterError("OpenRouter returned no text content", { body });
+  const message = body?.choices?.[0]?.message;
+  if (message === undefined || message === null || typeof message !== "object") {
+    throw new OpenRouterError("OpenRouter returned no assistant message", { body });
+  }
+  const content = typeof message.content === "string" ? message.content : "";
+  const toolCalls = Array.isArray(message.tool_calls) ? message.tool_calls : [];
+  if (content.length === 0 && toolCalls.length === 0) {
+    throw new OpenRouterError("OpenRouter returned neither text nor tool calls", { body });
   }
   return {
     id: typeof body.id === "string" ? body.id : null,
     model: typeof body.model === "string" ? body.model : model,
     content,
+    toolCalls,
+    finishReason: typeof body?.choices?.[0]?.finish_reason === "string"
+      ? body.choices[0].finish_reason
+      : null,
     usage: body.usage ?? null,
     provider: typeof body.provider === "string" ? body.provider : null,
     systemFingerprint: typeof body.system_fingerprint === "string"
@@ -117,5 +130,13 @@ export async function chat({
         : null,
     requestId: response.headers.get("x-request-id"),
   };
+}
+
+export async function chat(options = {}) {
+  const result = await chatCompletion(options);
+  if (result.content.length === 0) {
+    throw new OpenRouterError("OpenRouter returned no text content", { body: result });
+  }
+  return result;
 }
 
