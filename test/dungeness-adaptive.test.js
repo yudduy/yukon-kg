@@ -294,7 +294,7 @@ describe("Dungeness evaluator and campaign runner", () => {
       model: "openai/gpt-5.4",
       provider: "fixture",
       baseUrl: "https://example.invalid/api/v1",
-      pricing: { inputUsdPerMillion: 1, outputUsdPerMillion: 1 },
+      pricing: { inputUsdPerMillion: 2.5, outputUsdPerMillion: 15 },
       decoding: { temperature: 0, maxTokens: 512 },
       signer: protocolSigning.signer,
       seed: "fixture-seed",
