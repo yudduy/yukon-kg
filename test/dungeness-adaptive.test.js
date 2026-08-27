@@ -301,7 +301,7 @@ describe("Dungeness evaluator and campaign runner", () => {
       createdAt: "2026-08-27T00:00:00.000Z",
       budget: {
         turns: 4,
-        rootTokens: 10_000,
+        rootTokens: 100_000,
         descendantTokens: 1,
         evaluatorCalls: 2,
         wallClockMs: 60_000,
