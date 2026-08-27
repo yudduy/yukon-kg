@@ -60,6 +60,10 @@ export async function chat({
   messages,
   model = pinnedOpenRouterModel(),
   responseFormat,
+  temperature,
+  seed,
+  maxTokens,
+  provider,
 } = {}) {
   if (!Array.isArray(messages) || messages.length === 0) {
     throw new OpenRouterError("messages must be a non-empty array");
@@ -82,6 +86,10 @@ export async function chat({
       model,
       messages,
       ...(responseFormat === undefined ? {} : { response_format: responseFormat }),
+      ...(temperature === undefined ? {} : { temperature }),
+      ...(seed === undefined ? {} : { seed }),
+      ...(maxTokens === undefined ? {} : { max_tokens: maxTokens }),
+      ...(provider === undefined ? {} : { provider }),
     }),
   });
   const body = parseResponseBody(await response.text());
@@ -101,6 +109,13 @@ export async function chat({
     model: typeof body.model === "string" ? body.model : model,
     content,
     usage: body.usage ?? null,
+    provider: typeof body.provider === "string" ? body.provider : null,
+    systemFingerprint: typeof body.system_fingerprint === "string"
+      ? body.system_fingerprint
+      : typeof body?.choices?.[0]?.system_fingerprint === "string"
+        ? body.choices[0].system_fingerprint
+        : null,
+    requestId: response.headers.get("x-request-id"),
   };
 }
 

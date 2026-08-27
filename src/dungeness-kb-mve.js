@@ -17,13 +17,16 @@ import {
   CONTEXT_BYTE_LIMIT,
   DUNGENESS_KB_PROTOCOL_VERSION,
   DUNGENESS_KB_SCHEMA,
+  OPENROUTER_DECODING,
   PILOT_CASES,
   PINNED_OPENROUTER_MODEL,
   RESPONSE_FORMAT,
   analyzeReachability,
+  buildKnowledgeEvidenceIndex,
   compileKnowledgeVariants,
+  deterministicShuffle,
   parseModelAnswer,
-  scoreAnswer,
+  scoreKnowledgeAnswer,
   scorePilot,
   sha256,
   systemPrompt,
@@ -75,17 +78,27 @@ export async function runPreflight() {
       error: error instanceof OpenRouterError ? error.message : String(error),
     };
   }
-  const variantReport = Object.fromEntries(ARMS.map((arm) => [arm, {
-    sha256: variants[arm].sha256,
-    bytes: variants[arm].bytes,
-    truncated: variants[arm].truncated,
-    hasDoNow: variants[arm].text.includes("\"doNow\""),
-  }]));
+  const variantReport = Object.fromEntries(ARMS.map((arm) => {
+    let validJson = true;
+    try {
+      JSON.parse(variants[arm].text);
+    } catch {
+      validJson = false;
+    }
+    return [arm, {
+      sha256: variants[arm].sha256,
+      bytes: variants[arm].bytes,
+      truncated: variants[arm].truncated,
+      validJson,
+      hasDoNow: variants[arm].text.includes("\"doNow\""),
+    }];
+  }));
   const stateReachable = reachability.every((row) => row.perArm.state_brief);
   const noDoNow = ARMS.every((arm) => !variantReport[arm].hasDoNow);
   const ok = atlas.status === "PASS"
     && stateReachable
     && noDoNow
+    && ARMS.every((arm) => variantReport[arm].validJson)
     && ARMS.every((arm) => variants[arm].bytes <= CONTEXT_BYTE_LIMIT)
     && openrouter.ok;
   return {
@@ -94,6 +107,8 @@ export async function runPreflight() {
     status: ok ? "PASS" : "FAIL",
     model: pinnedOpenRouterModel(),
     pinnedModel: PINNED_OPENROUTER_MODEL,
+    decoding: OPENROUTER_DECODING,
+    providerRoute: configuredProviderRoute() ?? null,
     releaseId: loaded.release.pointer.id,
     briefSha256: sha256(brief),
     atlas,
@@ -105,6 +120,7 @@ export async function runPreflight() {
       atlasPass: atlas.status === "PASS",
       stateBriefReachable: stateReachable,
       noDoNow,
+      validPacketJson: ARMS.every((arm) => variantReport[arm].validJson),
       openrouter: openrouter.ok,
       dungenessPresent: dungeness.present,
     },
@@ -127,15 +143,15 @@ async function chatWithRetry(options, { attempts = 4 } = {}) {
   throw lastError;
 }
 
-function reportNotes(results, summary) {
-  const notes = [];
-  if (summary.missed.includes("next-untried")) {
-    const answer = results.find((row) => row.caseId === "next-untried" && row.arm === "state_brief")?.answer;
-    notes.push(
-      `next-untried gold is Barrett reciprocal reduction; state_brief answered ${JSON.stringify(answer ?? "unknown")}. That cut is also listed untried_in_atlas. A holistic packet names several untried discriminators without ranking them.`,
-    );
-  }
-  return notes;
+function seedForCell(runId, caseId, arm) {
+  return Number.parseInt(sha256(`${runId}\0${caseId}\0${arm}`).slice(0, 8), 16);
+}
+
+function configuredProviderRoute() {
+  const provider = process.env.OPENROUTER_PROVIDER?.trim();
+  return provider
+    ? { order: [provider], allow_fallbacks: false, require_parameters: true }
+    : undefined;
 }
 
 export async function runPilot({ runId = makeRunId() } = {}) {
@@ -143,35 +159,49 @@ export async function runPilot({ runId = makeRunId() } = {}) {
   if (preflight.status !== "PASS") {
     throw new Error(`preflight failed: ${JSON.stringify(preflight.checks)}`);
   }
-  const { variants } = await loadCourtInputs();
+  const { brief, variants } = await loadCourtInputs();
+  const evidenceIndex = buildKnowledgeEvidenceIndex(brief);
   const runDir = join(RUNS_ROOT, runId);
   await mkdir(runDir, { recursive: true });
   const results = [];
-  for (const userCase of PILOT_CASES) {
-    for (const arm of ARMS) {
-      const completion = await chatWithRetry({
-        model: pinnedOpenRouterModel(),
-        responseFormat: RESPONSE_FORMAT,
-        messages: [
-          { role: "system", content: systemPrompt() },
-          { role: "user", content: userPrompt(variants[arm].text, userCase) },
-        ],
-      });
-      const parsed = parseModelAnswer(completion.content);
-      const pass = scoreAnswer(parsed.answer, userCase);
-      const row = {
-        caseId: userCase.id,
-        arm,
-        answer: parsed.answer,
-        rationale: parsed.rationale,
-        pass,
-        model: completion.model,
-        usage: completion.usage,
-        completionId: completion.id,
-      };
-      results.push(row);
-      await writeJson(join(runDir, `${userCase.id}.${arm}.json`), row);
-    }
+  const cells = deterministicShuffle(
+    PILOT_CASES.flatMap((userCase) => ARMS.map((arm) => ({ userCase, arm }))),
+    runId,
+  );
+  for (const [executionIndex, { userCase, arm }] of cells.entries()) {
+    const seed = seedForCell(runId, userCase.id, arm);
+    const completion = await chatWithRetry({
+      model: pinnedOpenRouterModel(),
+      responseFormat: RESPONSE_FORMAT,
+      ...OPENROUTER_DECODING,
+      seed,
+      provider: configuredProviderRoute(),
+      messages: [
+        { role: "system", content: systemPrompt() },
+        { role: "user", content: userPrompt(variants[arm].text, userCase) },
+      ],
+    });
+    const parsed = parseModelAnswer(completion.content);
+    const score = scoreKnowledgeAnswer(parsed, userCase, evidenceIndex);
+    const row = {
+      caseId: userCase.id,
+      arm,
+      answer: parsed.answer,
+      rationale: parsed.rationale,
+      sourceRefs: parsed.sourceRefs,
+      pass: score.pass,
+      score,
+      executionIndex,
+      seed,
+      model: completion.model,
+      provider: completion.provider,
+      systemFingerprint: completion.systemFingerprint,
+      requestId: completion.requestId,
+      usage: completion.usage,
+      completionId: completion.id,
+    };
+    results.push(row);
+    await writeJson(join(runDir, `${userCase.id}.${arm}.json`), row);
   }
   const summary = scorePilot(results);
   const report = {
@@ -180,10 +210,12 @@ export async function runPilot({ runId = makeRunId() } = {}) {
     runId,
     createdAt: nowIso(),
     model: pinnedOpenRouterModel(),
+    decoding: OPENROUTER_DECODING,
+    providerRoute: configuredProviderRoute() ?? null,
+    executionOrder: cells.map(({ userCase, arm }) => `${userCase.id}:${arm}`),
     releaseId: preflight.releaseId,
     dungeness: preflight.dungeness,
     ...summary,
-    notes: reportNotes(results, summary),
     results,
   };
   await writeJson(join(runDir, "report.json"), report);
@@ -221,7 +253,6 @@ export async function rescorePilot() {
   const report = {
     ...existing,
     ...summary,
-    notes: reportNotes(existing.results, summary),
     rescoredAt: nowIso(),
   };
   await writeJson(join(EVIDENCE_DIR, "report.json"), report);

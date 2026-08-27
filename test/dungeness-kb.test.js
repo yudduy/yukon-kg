@@ -9,9 +9,12 @@ import {
   CONTEXT_BYTE_LIMIT,
   PILOT_CASES,
   analyzeReachability,
+  buildKnowledgeEvidenceIndex,
   compileKnowledgeVariants,
+  deterministicShuffle,
   parseModelAnswer,
   scoreAnswer,
+  scoreKnowledgeAnswer,
   scorePilot,
 } from "../src/dungeness-kb-protocol.js";
 
@@ -22,6 +25,7 @@ const variants = compileKnowledgeVariants(
   ideasFromRelease(loaded.release),
   loaded.release.submissions.submissions,
 );
+const evidenceIndex = buildKnowledgeEvidenceIndex(brief);
 
 describe("dungeness knowledge variants", () => {
   test("compile five equal-budget arms without doNow", () => {
@@ -30,6 +34,7 @@ describe("dungeness knowledge variants", () => {
       expect(variants[arm].bytes).toBeLessThanOrEqual(CONTEXT_BYTE_LIMIT);
       expect(variants[arm].text).not.toContain('"doNow"');
       expect(variants[arm].sha256).toHaveLength(64);
+      expect(() => JSON.parse(variants[arm].text)).not.toThrow();
     }
   });
 
@@ -59,13 +64,66 @@ describe("dungeness knowledge variants", () => {
 });
 
 describe("dungeness knowledge scoring", () => {
-  test("accepts gold labels and Barrett shorthand", () => {
+  test("accepts exact answers and every allowed representation proposal", () => {
     const next = PILOT_CASES.find((item) => item.id === "representation-proposal");
     const largest = PILOT_CASES.find((item) => item.id === "largest-isolated-effect");
     expect(scoreAnswer("Barrett", next)).toBe(true);
+    expect(scoreAnswer("disc:half-gcd", next)).toBe(true);
     expect(scoreAnswer("Adaptive phase correction", largest)).toBe(true);
     expect(scoreAnswer("Nonce grinding", largest)).toBe(false);
-    expect(parseModelAnswer('{"answer":"no","rationale":"hazard"}').answer).toBe("no");
+    expect(scoreAnswer("", largest)).toBe(false);
+  });
+
+  test("requires a real directly supporting source reference", () => {
+    const seedGrinding = PILOT_CASES.find((item) => item.id === "seed-grinding-mechanism");
+    const valid = parseModelAnswer(JSON.stringify({
+      answer: "no",
+      rationale: "It is an evaluator hazard, not an admitted mechanism.",
+      sourceRefs: ["hazard:seed-grinding"],
+    }));
+    expect(scoreKnowledgeAnswer(valid, seedGrinding, evidenceIndex)).toMatchObject({
+      pass: true,
+      decisionCorrect: true,
+      citationCorrect: true,
+      fabricated: false,
+    });
+
+    const fabricated = parseModelAnswer(JSON.stringify({
+      answer: "no",
+      rationale: "Invented citation.",
+      sourceRefs: ["hazard:not-real"],
+    }));
+    expect(scoreKnowledgeAnswer(fabricated, seedGrinding, evidenceIndex)).toMatchObject({
+      pass: false,
+      fabricated: true,
+    });
+
+    const indirect = parseModelAnswer(JSON.stringify({
+      answer: "no",
+      rationale: "A neighboring idea does not prove the hazard.",
+      sourceRefs: ["idea:candidate:seed-grinding:7647dab7dc"],
+    }));
+    expect(scoreKnowledgeAnswer(indirect, seedGrinding, evidenceIndex)).toMatchObject({
+      pass: false,
+      citationCorrect: false,
+    });
+  });
+
+  test("rejects malformed, empty, oversized, and duplicate-citation responses", () => {
+    expect(parseModelAnswer("not json").valid).toBe(false);
+    expect(parseModelAnswer('{"answer":"","rationale":"","sourceRefs":["x"]}').valid).toBe(false);
+    expect(parseModelAnswer('{"answer":"no","rationale":"","sourceRefs":["x","x"]}').valid).toBe(false);
+    expect(parseModelAnswer(JSON.stringify({
+      answer: "no",
+      rationale: "x".repeat(3000),
+      sourceRefs: ["hazard:seed-grinding"],
+    })).valid).toBe(false);
+  });
+
+  test("randomizes cells deterministically from the run seed", () => {
+    const cells = PILOT_CASES.flatMap((userCase) => ARMS.map((arm) => ({ caseId: userCase.id, arm })));
+    expect(deterministicShuffle(cells, "run-a")).toEqual(deterministicShuffle(cells, "run-a"));
+    expect(deterministicShuffle(cells, "run-a")).not.toEqual(deterministicShuffle(cells, "run-b"));
   });
 
   test("adoption requires state_brief to beat winner_only on the gate", () => {
