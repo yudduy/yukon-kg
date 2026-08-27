@@ -1,12 +1,14 @@
 {
   "schema": "yukon-kg.dungeness-adaptive-preflight.v1",
-  "createdAt": "2026-08-27T05:49:46.591Z",
+  "createdAt": "2026-08-27T06:57:57.293Z",
   "status": "BLOCKED",
   "checks": {
     "atlasPass": true,
     "dungenessPresent": false,
     "dungenessPinned": false,
     "adapterValid": false,
+    "isolationRunnerPinned": false,
+    "evaluatorAttestation": false,
     "checkpointRefsPresent": false,
     "openRouterKeyPresent": true,
     "providerPinned": true,
@@ -51,11 +53,26 @@
     "path": null,
     "sha256": null,
     "error": "no Dungeness adapter file is available",
-    "missingCheckpointRefs": []
+    "missingCheckpointRefs": [],
+    "taskStateMismatches": [],
+    "isolationRunner": {
+      "ok": false,
+      "path": null,
+      "sha256": null
+    },
+    "evaluatorAttestation": {
+      "ok": false,
+      "sha256": null
+    }
   },
   "model": {
     "id": "openai/gpt-5.4",
     "provider": "OpenAI",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "pricing": {
+      "inputUsdPerMillion": 2.5,
+      "outputUsdPerMillion": 15
+    },
     "decoding": {
       "temperature": 0,
       "maxTokens": 4096

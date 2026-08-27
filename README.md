@@ -68,9 +68,11 @@ bun run experiment:dungeness-adaptive -- confirmatory
 bun run experiment:dungeness-adaptive -- prime-factor
 ```
 
-Calibration uses exactly 16 matched pairs to test whether the fixed 80-pair design has at least 90% simulated power and to freeze projected and hard spend caps. The 20/40/60 checkpoints are resumable descriptive reports; adoption is allowed only at 80 pairs using a paired Student interval. Adaptive state is adopted only if its confidence bound clears a five-point practical gain, the exact upper bound on adaptive-only invalid outputs is below five points, at least six of eight checkpoints improve, no one checkpoint explains the result, and provenance violations are zero.
+Calibration uses exactly 16 matched pairs to test whether the fixed 80-pair design has at least 90% simulated power and to freeze projected and hard spend caps. The 20/40/60 checkpoints are resumable descriptive reports; adoption is allowed only at 80 pairs using a paired Student interval. Adaptive state is adopted only if its confidence bound clears a five-point practical gain, the exact upper bound on adaptive-only invalid outputs is below five points, at least six of eight checkpoints improve, no one checkpoint explains the result, and provenance violations are zero. At 80 pairs, that validity rule permits zero adaptive-only invalid final outputs; this is deliberately a strict safety gate.
 
 The live commands hard-stop unless the private `Layr-Labs/dungeness` checkout, exact SHA, external adapter, eight checkpoint refs, OpenRouter model, and provider route are pinned. Clone as yudduy with `GITHUB_TOKEN`; the cloud `cursor` identity cannot read that repository. Do not mutate the Dungeness harness.
+
+Each local campaign keeps a signed, chained attempt log, including failed infrastructure attempts. This detects edits and rerolls once its hashes are published with the checked-in report; it is not an external WORM service and does not protect against a malicious host deleting an unpublished run.
 
 The working retrieval default remains the smallest useful workflow until a later equal-budget court says otherwise:
 

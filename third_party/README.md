@@ -22,9 +22,11 @@ The clone is a runtime substrate. Yukon-kg does not mutate a Dungeness frozen ha
 The adaptive experiment accepts an adapter only when it pins:
 
 - Eight distinct checkpoint commits and their baseline scores.
+- Eight distinct `src/point_add` task-state digests.
 - Separate development and hidden panel hashes.
-- A single hash-pinned evaluator wrapper.
+- A single absolute, hash-pinned evaluator wrapper.
+- The microVM image/rootfs and in-VM evaluator executable digests.
 - A networkless external microVM that does not mount the host workspace.
 - Strict JSON qualification for classical output, ancillae, global phase, and reverse execution.
 
-The wrapper's `--attest` command must reproduce those pins before protocol freeze. Model-generated code runs only inside that wrapper; the host ledger signing key remains outside the checkout.
+The wrapper's `--attest` command must reproduce those pins before protocol freeze. `taskStateSha256` is the SHA-256 of `git ls-tree -r --full-tree <checkpoint> -- src/point_add`. Model-generated code runs only inside that wrapper; the host ledger signing key remains outside the checkout.
