@@ -130,6 +130,7 @@ export function parseDungenessAdapter(value, { expectedRepoSha = null } = {}) {
     return {
       id,
       gitRef: requireCommit(item.gitRef, `checkpoints[${index}].gitRef`),
+      taskStateSha256: requireSha(item.taskStateSha256, `checkpoints[${index}].taskStateSha256`),
       baselineScore: item.baselineScore,
       developmentPanelSha256: requireSha(
         item.developmentPanelSha256,
@@ -141,6 +142,9 @@ export function parseDungenessAdapter(value, { expectedRepoSha = null } = {}) {
   if (new Set(parsedCheckpoints.map((checkpoint) => checkpoint.gitRef)).size !== parsedCheckpoints.length) {
     throw new Error("the eight checkpoints must pin distinct Git commits");
   }
+  if (new Set(parsedCheckpoints.map((checkpoint) => checkpoint.taskStateSha256)).size !== parsedCheckpoints.length) {
+    throw new Error("the eight checkpoints must pin distinct task-state digests");
+  }
   return {
     schema: DUNGENESS_ADAPTER_SCHEMA,
     repoSha,
@@ -151,6 +155,8 @@ export function parseDungenessAdapter(value, { expectedRepoSha = null } = {}) {
       network: "none",
       hostWorkspaceMounted: false,
       runnerSha256: requireSha(isolation.runnerSha256, "isolation.runnerSha256"),
+      imageSha256: requireSha(isolation.imageSha256, "isolation.imageSha256"),
+      evaluatorSha256: requireSha(isolation.evaluatorSha256, "isolation.evaluatorSha256"),
     },
     evaluator: {
       attestationCommand,
@@ -497,6 +503,9 @@ export function analyzeAdaptiveCampaigns(campaigns, {
   const staticOnlyInvalid = pairs.filter((pair) => (
     pair.adaptive.invalidRate === 0 && pair.static.invalidRate === 1
   )).length;
+  const adaptiveNotSubmitted = pairs.filter((pair) => !pair.adaptive.finalOutputSubmitted).length;
+  const staticNotSubmitted = pairs.filter((pair) => !pair.static.finalOutputSubmitted).length;
+  const submissionNoRegression = adaptiveNotSubmitted <= staticNotSubmitted;
   const invalidRiskDifference = (adaptiveOnlyInvalid - staticOnlyInvalid) / pairs.length;
   const conservativeInvalidUpper = clopperPearsonUpper(
     adaptiveOnlyInvalid,
@@ -523,7 +532,9 @@ export function analyzeAdaptiveCampaigns(campaigns, {
   if (Object.keys(checkpointMeans).length !== 8) {
     throw new Error("confirmatory analysis requires all eight frozen checkpoints");
   }
-  const safetyPass = conservativeInvalidUpper <= invalidMargin && provenanceViolations === 0;
+  const safetyPass = conservativeInvalidUpper <= invalidMargin
+    && submissionNoRegression
+    && provenanceViolations === 0;
   const breadthPass = positiveCheckpoints >= 6
     && Object.values(leaveOneCheckpointOut).every((value) => value > 0);
   let decision = "CONTINUE";
@@ -555,6 +566,11 @@ export function analyzeAdaptiveCampaigns(campaigns, {
       pass: conservativeInvalidUpper <= invalidMargin,
     },
     proposalInvalidEffect,
+    submissions: {
+      adaptiveNotSubmitted,
+      staticNotSubmitted,
+      noRegression: submissionNoRegression,
+    },
     checkpointMeans,
     positiveCheckpoints,
     leaveOneCheckpointOut,

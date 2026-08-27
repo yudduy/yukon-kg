@@ -12,6 +12,7 @@ import {
   reduceEvidenceLedger,
   serializeEvidenceLedger,
   signEvidenceValue,
+  verifyEvidenceValue,
 } from "./atlas-runtime/evidence-ledger.ts";
 import { normalizedGain, sha256 } from "./dungeness-adaptive-protocol.js";
 
@@ -372,25 +373,87 @@ async function appendLedgerFile(pathname, ledger) {
   await fs.rename(temporary, pathname);
 }
 
-async function createAttemptMarker(campaignRoot, assignment, protocol, privateKeyPem) {
+export function parseCampaignAttemptLog(text, signer) {
+  const entries = text.split("\n").filter((line) => line.trim()).map((line) => JSON.parse(line));
+  let parentEntrySha256 = null;
+  let openAttempt = null;
+  let completed = false;
+  for (const [index, entry] of entries.entries()) {
+    const { attestation, ...body } = entry;
+    if (!verifyEvidenceValue(body, attestation, signer)) {
+      throw new Error(`attempt log entry ${index} signature mismatch`);
+    }
+    if (body.parentEntrySha256 !== parentEntrySha256) {
+      throw new Error(`attempt log entry ${index} chain mismatch`);
+    }
+    if (body.kind === "start") {
+      if (openAttempt !== null || completed) throw new Error("attempt log contains an invalid start");
+      openAttempt = body.attempt;
+    } else if (body.kind === "outcome") {
+      if (openAttempt !== body.attempt || !["failed", "completed"].includes(body.status)) {
+        throw new Error("attempt log contains an invalid outcome");
+      }
+      openAttempt = null;
+      if (body.status === "completed") completed = true;
+    } else {
+      throw new Error(`attempt log entry ${index} has unknown kind`);
+    }
+    parentEntrySha256 = attestation.valueSha256;
+  }
+  return { entries, parentEntrySha256, openAttempt, completed };
+}
+
+async function appendAttemptEntry(logPath, body, privateKeyPem) {
+  const entry = {
+    ...body,
+    attestation: signEvidenceValue(body, privateKeyPem),
+  };
+  await fs.appendFile(logPath, `${JSON.stringify(entry)}\n`, { mode: 0o600 });
+  return entry;
+}
+
+async function beginAttempt(campaignRoot, assignment, protocol, privateKeyPem) {
+  const logPath = path.join(campaignRoot, "attempts.jsonl");
+  await fs.mkdir(campaignRoot, { recursive: true });
+  let parsed = { entries: [], parentEntrySha256: null, openAttempt: null, completed: false };
+  try {
+    parsed = parseCampaignAttemptLog(await fs.readFile(logPath, "utf8"), protocol.signer);
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
+  if (parsed.completed) throw new Error("campaign already has a completed signed attempt");
+  if (parsed.openAttempt !== null) throw new Error("campaign has an interrupted attempt without a signed failure outcome");
+  const attempt = parsed.entries.filter((entry) => entry.kind === "start").length + 1;
+  if (attempt > 4) throw new Error("campaign exhausted its four preregistered infrastructure attempts");
   const body = {
     schema: "yukon-kg.dungeness-campaign-attempt.v1",
+    kind: "start",
+    attempt,
+    parentEntrySha256: parsed.parentEntrySha256,
     createdAt: new Date().toISOString(),
     campaignId: assignment.campaignId,
     assignmentSha256: sha256(assignment),
     protocolSha256: protocol.protocolSha256,
   };
-  const marker = {
-    ...body,
-    attestation: signEvidenceValue(body, privateKeyPem),
-  };
-  await fs.mkdir(campaignRoot, { recursive: true });
-  await fs.writeFile(
-    path.join(campaignRoot, "attempt.json"),
-    `${JSON.stringify(marker, null, 2)}\n`,
-    { flag: "wx", mode: 0o600 },
-  );
-  return marker;
+  const entry = await appendAttemptEntry(logPath, body, privateKeyPem);
+  return { attempt, logPath, entry };
+}
+
+async function finishAttempt(context, protocol, privateKeyPem, status, error = null) {
+  const parsed = parseCampaignAttemptLog(await fs.readFile(context.logPath, "utf8"), protocol.signer);
+  if (parsed.openAttempt !== context.attempt) throw new Error("attempt outcome does not match the open attempt");
+  return appendAttemptEntry(context.logPath, {
+    schema: "yukon-kg.dungeness-campaign-attempt.v1",
+    kind: "outcome",
+    attempt: context.attempt,
+    parentEntrySha256: parsed.parentEntrySha256,
+    createdAt: new Date().toISOString(),
+    status,
+    error: error === null ? null : {
+      name: error?.name ?? "Error",
+      messageSha256: sha256(String(error?.message ?? error)),
+    },
+  }, privateKeyPem);
 }
 
 function commandReceipt(result) {
@@ -437,16 +500,27 @@ function remainingWallMs(state) {
 }
 
 function boundedRequest(state, tools, messages) {
-  const inputTokenUpperBound = Buffer.byteLength(
+  const promptBytes = Buffer.byteLength(
     JSON.stringify({ messages, tools }),
     "utf8",
-  ) + 1024;
+  );
+  const observedTokensPerByte = state.lastPromptBytes > 0
+    ? state.lastPromptTokens / state.lastPromptBytes
+    : 0.5;
+  const inputTokenUpperBound = Math.ceil(
+    promptBytes * Math.min(1, Math.max(0.25, observedTokensPerByte * 1.25)) + 256,
+  );
   const remainingTokens = Math.floor(state.budget.rootTokens - state.rootTokens);
   const remainingCost = state.budget.costUsd - state.costUsd;
-  if (inputTokenUpperBound >= remainingTokens || remainingCost <= 0) return null;
+  if (inputTokenUpperBound >= remainingTokens) {
+    return { allowed: false, reason: "root_token_reservation_exhausted" };
+  }
+  if (remainingCost <= 0) return { allowed: false, reason: "cost_budget_exhausted" };
   const inputCostUpper = inputTokenUpperBound
     * state.protocol.model.pricing.inputUsdPerMillion / 1_000_000;
-  if (inputCostUpper >= remainingCost) return null;
+  if (inputCostUpper >= remainingCost) {
+    return { allowed: false, reason: "input_cost_reservation_exhausted" };
+  }
   const outputByToken = remainingTokens - inputTokenUpperBound;
   const outputByCost = Math.floor(
     (remainingCost - inputCostUpper)
@@ -457,8 +531,10 @@ function boundedRequest(state, tools, messages) {
     outputByToken,
     outputByCost,
   );
-  if (maxTokens < 1) return null;
+  if (maxTokens < 1) return { allowed: false, reason: "output_reservation_exhausted" };
   return {
+    allowed: true,
+    promptBytes,
     inputTokenUpperBound,
     maxTokens,
     requestCostUpper: inputCostUpper
@@ -552,6 +628,7 @@ async function executeTool(name, args, state) {
   if (name === "read_procedures") return { procedures: [...state.procedures.values()] };
   if (name === "finish") {
     state.finished = true;
+    state.stopReason = "finish_tool";
     state.summary = typeof args.summary === "string" ? args.summary : "";
     return { finished: true };
   }
@@ -559,7 +636,11 @@ async function executeTool(name, args, state) {
     if (state.developmentCalls >= state.budget.evaluatorCalls - 1) {
       throw new Error("development evaluator call budget exhausted; hidden adjudication is reserved");
     }
-    if (remainingWallMs(state) <= 0) throw new Error("campaign wall-clock budget exhausted");
+    const hiddenWallReserveMs = state.adapter.evaluator.timeoutMs;
+    if (remainingWallMs(state) <= 2 * hiddenWallReserveMs) {
+      state.budgetStops.push("development evaluation would consume the hidden adjudication reserve");
+      throw new Error(state.budgetStops.at(-1));
+    }
     const outside = await trackedChangesOutsideMutable(
       state.worktree,
       state.adapter,
@@ -580,7 +661,7 @@ async function executeTool(name, args, state) {
       adapter: state.adapter,
       checkpoint: state.checkpoint,
       panel: "development",
-      timeoutMs: remainingWallMs(state),
+      timeoutMs: remainingWallMs(state) - hiddenWallReserveMs,
       runProcessFn: state.runProcessFn,
     });
     await assertNoMutableSymlinks(state.worktree, state.adapter);
@@ -672,11 +753,11 @@ async function hiddenAdjudication({
     .sort((left, right) => left.development.score - right.development.score)[0];
   if (candidate === undefined) return [];
   if (state.evaluatorCalls >= state.budget.evaluatorCalls) {
-    state.provenanceViolations.push("no evaluator-call budget remained for hidden adjudication");
+    state.budgetStops.push("no evaluator-call budget remained for hidden adjudication");
     return [];
   }
   if (remainingWallMs(state) <= 0) {
-    state.provenanceViolations.push("no wall-clock budget remained for hidden adjudication");
+    state.budgetStops.push("no wall-clock budget remained for hidden adjudication");
     return [];
   }
   const worktree = path.join(adjudicationRoot, "selected-candidate");
@@ -789,7 +870,7 @@ export async function runDungenessCampaign({
   if (signer.publicKeySha256 !== protocol.signer.publicKeySha256) {
     throw new Error("ledger private key does not match the frozen protocol signer");
   }
-  const attempt = await createAttemptMarker(
+  const attempt = await beginAttempt(
     campaignRoot,
     assignment,
     protocol,
@@ -805,7 +886,7 @@ export async function runDungenessCampaign({
     panelSha256s: [checkpoint.developmentPanelSha256, checkpoint.hiddenPanelSha256],
     signer: protocol.signer,
   });
-  await addWorktree(dungenessRepo, worktree, checkpoint.gitRef, runProcessFn);
+  let worktreeAdded = false;
   const state = {
     assignment,
     protocol,
@@ -821,12 +902,16 @@ export async function runDungenessCampaign({
     procedures: new Map(),
     rootTokens: 0,
     costUsd: 0,
+    lastPromptBytes: 0,
+    lastPromptTokens: 0,
     developmentCalls: 0,
     evaluatorCalls: 0,
     provenanceViolations: [],
+    budgetStops: [],
     allowedSetupChanges: new Set(),
     finished: false,
     summary: "",
+    stopReason: null,
     runProcessFn,
     startedAt: Date.now(),
   };
@@ -837,34 +922,52 @@ export async function runDungenessCampaign({
   const fingerprints = new Set();
   const providers = new Set();
   try {
+    await addWorktree(dungenessRepo, worktree, checkpoint.gitRef, runProcessFn);
+    worktreeAdded = true;
     await appendLedgerFile(state.ledgerPath, state.ledger);
     await assertNoMutableSymlinks(worktree, adapter);
     if (adapter.setupCommand !== null) {
+      if (remainingWallMs(state) <= adapter.evaluator.timeoutMs) {
+        throw new Error("setup would consume the hidden adjudication reserve");
+      }
       const setup = await runProcessFn(adapter.setupCommand[0], adapter.setupCommand.slice(1), {
         cwd: worktree,
-        timeoutMs: Math.min(adapter.evaluator.timeoutMs, remainingWallMs(state)),
+        timeoutMs: Math.min(
+          adapter.evaluator.timeoutMs,
+          remainingWallMs(state) - adapter.evaluator.timeoutMs,
+        ),
         unsetEnv: ["OPENROUTER_API_KEY", "GITHUB_TOKEN", "GH_TOKEN", "YUDDUY_GITHUB_TOKEN"],
       });
       if (setup.exitCode !== 0) throw new Error(`Dungeness setup failed: ${setup.stderr || setup.stdout}`);
       const setupChanges = await worktreeStatusPaths(worktree);
-      const mutableSetupChanges = setupChanges.filter((relative) => (
-        mutablePrefixes(adapter).some((prefix) => relative.startsWith(prefix))
-      ));
-      if (mutableSetupChanges.length > 0) {
-        throw new Error(`Dungeness setup mutated candidate source: ${mutableSetupChanges.join(", ")}`);
+      if (setupChanges.length > 0) {
+        throw new Error(`Dungeness setup mutated the frozen checkout: ${setupChanges.join(", ")}`);
       }
-      state.allowedSetupChanges = new Set(setupChanges);
     }
     for (let turn = 0; turn < protocol.budget.turns && !state.finished; turn += 1) {
       const remainingMs = remainingWallMs(state);
-      if (
-        remainingMs <= 0
-        || state.rootTokens >= protocol.budget.rootTokens
-        || state.costUsd >= protocol.budget.costUsd
-      ) break;
+      if (remainingMs <= adapter.evaluator.timeoutMs) {
+        state.stopReason = "hidden_wall_reserve_reached";
+        state.budgetStops.push(state.stopReason);
+        break;
+      }
+      if (state.rootTokens >= protocol.budget.rootTokens) {
+        state.stopReason = "root_token_budget_exhausted";
+        state.budgetStops.push(state.stopReason);
+        break;
+      }
+      if (state.costUsd >= protocol.budget.costUsd) {
+        state.stopReason = "cost_budget_exhausted";
+        state.budgetStops.push(state.stopReason);
+        break;
+      }
       const tools = campaignTools(assignment.arm, assignment.procedureMode);
       const requestBudget = boundedRequest(state, tools, messages);
-      if (requestBudget === null) break;
+      if (!requestBudget.allowed) {
+        state.stopReason = requestBudget.reason;
+        state.budgetStops.push(requestBudget.reason);
+        break;
+      }
       const completion = await completeWithRetry(completionFn, {
         model: protocol.model.id || pinnedOpenRouterModel(),
         baseUrl: protocol.model.baseUrl,
@@ -883,6 +986,8 @@ export async function runDungenessCampaign({
       if (
         !Number.isFinite(completion.usage?.total_tokens)
         || completion.usage.total_tokens < 0
+        || !Number.isFinite(completion.usage?.prompt_tokens)
+        || completion.usage.prompt_tokens < 0
         || !Number.isFinite(completion.usage?.cost)
         || completion.usage.cost < 0
       ) {
@@ -890,8 +995,11 @@ export async function runDungenessCampaign({
       }
       state.rootTokens += completion.usage.total_tokens;
       state.costUsd += completion.usage.cost;
+      state.lastPromptBytes = requestBudget.promptBytes;
+      state.lastPromptTokens = completion.usage.prompt_tokens;
       if (
-        completion.usage.total_tokens > requestBudget.inputTokenUpperBound + requestBudget.maxTokens
+        completion.usage.prompt_tokens > requestBudget.inputTokenUpperBound
+        || completion.usage.total_tokens > requestBudget.inputTokenUpperBound + requestBudget.maxTokens
         || completion.usage.cost > requestBudget.requestCostUpper + 1e-9
       ) {
         state.provenanceViolations.push("provider usage exceeded the frozen per-request upper bound");
@@ -911,7 +1019,8 @@ export async function runDungenessCampaign({
         || state.costUsd > protocol.budget.costUsd
         || remainingWallMs(state) <= 0
       ) {
-        state.provenanceViolations.push("campaign exceeded a frozen model or wall-clock budget");
+        state.stopReason = "provider_usage_exceeded_campaign_budget";
+        state.budgetStops.push(state.stopReason);
         break;
       }
       if (completion.provider) providers.add(completion.provider);
@@ -923,6 +1032,7 @@ export async function runDungenessCampaign({
       });
       if (completion.toolCalls.length === 0) {
         state.finished = true;
+        state.stopReason = "assistant_finished";
         state.summary = completion.content;
         break;
       }
@@ -941,6 +1051,10 @@ export async function runDungenessCampaign({
         });
       }
     }
+    if (!state.finished && state.stopReason === null) {
+      state.stopReason = "turn_budget_exhausted";
+      state.budgetStops.push(state.stopReason);
+    }
     const hidden = await hiddenAdjudication({
       state,
       dungenessRepo,
@@ -951,14 +1065,18 @@ export async function runDungenessCampaign({
       ? Math.min(checkpoint.baselineScore, ...validScores)
       : checkpoint.baselineScore;
     const finalOutputValid = hidden.length === 1 && hidden[0].valid === true;
+    const finalOutputSubmitted = hidden.length === 1;
     const proposalInvalidRate = state.candidates.length === 0
       ? 1
       : state.candidates.filter((candidate) => !candidate.development.valid).length / state.candidates.length;
+    await finishAttempt(attempt, protocol, signingPrivateKeyPem, "completed");
+    const attemptLogText = await fs.readFile(attempt.logPath, "utf8");
     const resultBody = {
       schema: "yukon-kg.dungeness-campaign.v1",
       protocolVersion: protocol.protocolVersion,
       protocolSha256: protocol.protocolSha256,
-      attemptSha256: sha256(attempt),
+      attemptCount: attempt.attempt,
+      attemptLogSha256: sha256(attemptLogText),
       campaignId: assignment.campaignId,
       blockId: assignment.blockId,
       pairId: assignment.pairId,
@@ -971,17 +1089,20 @@ export async function runDungenessCampaign({
       normalizedGain: normalizedGain(checkpoint.baselineScore, bestValidScore),
       invalidRate: finalOutputValid ? 0 : 1,
       proposalInvalidRate,
+      finalOutputSubmitted,
       finalOutputValid,
       candidateCount: state.candidates.length,
       evaluatorCalls: state.evaluatorCalls,
       rootTokens: state.rootTokens,
       costUsd: state.costUsd,
       provenanceViolations: state.provenanceViolations,
+      budgetStops: state.budgetStops,
       signerSha256: state.ledger.header.signer.publicKeySha256,
       ledgerSha256: ledgerSha256(serializeEvidenceLedger(state.ledger)),
       providerRoutes: [...providers].sort(),
       systemFingerprints: [...fingerprints].sort(),
       finished: state.finished,
+      stopReason: state.stopReason,
       summary: state.summary,
       hiddenAdjudication: hidden,
     };
@@ -991,7 +1112,14 @@ export async function runDungenessCampaign({
     };
     await fs.writeFile(path.join(campaignRoot, "result.json"), `${JSON.stringify(result, null, 2)}\n`);
     return result;
+  } catch (error) {
+    try {
+      await finishAttempt(attempt, protocol, signingPrivateKeyPem, "failed", error);
+    } catch (attemptError) {
+      error.attemptLogError = attemptError.message;
+    }
+    throw error;
   } finally {
-    await removeWorktree(dungenessRepo, worktree, runProcessFn);
+    if (worktreeAdded) await removeWorktree(dungenessRepo, worktree, runProcessFn);
   }
 }

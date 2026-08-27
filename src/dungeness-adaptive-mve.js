@@ -18,7 +18,10 @@ import {
 import { inspectDungenessCheckout, readDungenessPin } from "./dungeness-clone.js";
 import { compileKnowledgeVariants, OPENROUTER_DECODING } from "./dungeness-kb-protocol.js";
 import { pinnedOpenRouterModel } from "./openrouter.js";
-import { runDungenessCampaign } from "./dungeness-campaign-runner.js";
+import {
+  parseCampaignAttemptLog,
+  runDungenessCampaign,
+} from "./dungeness-campaign-runner.js";
 import {
   CONFIRMATORY_INTERIMS,
   DEFAULT_CAMPAIGN_BUDGET,
@@ -218,16 +221,32 @@ async function loadAdapter(inspection, pin) {
 }
 
 async function checkpointRefsPresent(adapter) {
-  if (adapter === null) return { ok: false, missing: [] };
+  if (adapter === null) return { ok: false, missing: [], taskStateMismatches: [] };
   const missing = [];
+  const taskStateMismatches = [];
   for (const checkpoint of adapter.checkpoints) {
     const result = await runProcess("git", ["cat-file", "-e", `${checkpoint.gitRef}^{commit}`], {
       cwd: DUNGENESS_REPO,
       timeoutMs: 30_000,
     });
-    if (result.exitCode !== 0) missing.push(checkpoint.id);
+    if (result.exitCode !== 0) {
+      missing.push(checkpoint.id);
+      continue;
+    }
+    const tree = await runProcess(
+      "git",
+      ["ls-tree", "-r", "--full-tree", checkpoint.gitRef, "--", "src/point_add"],
+      { cwd: DUNGENESS_REPO, timeoutMs: 30_000 },
+    );
+    if (tree.exitCode !== 0 || sha256(tree.stdout) !== checkpoint.taskStateSha256) {
+      taskStateMismatches.push(checkpoint.id);
+    }
   }
-  return { ok: missing.length === 0, missing };
+  return {
+    ok: missing.length === 0 && taskStateMismatches.length === 0,
+    missing,
+    taskStateMismatches,
+  };
 }
 
 async function isolationRunnerStatus(adapter) {
@@ -275,7 +294,7 @@ async function evaluatorAttestationStatus(adapter) {
     const expected = {
       schema: "yukon-kg.dungeness-evaluator-attestation.v1",
       repoSha: adapter.repoSha,
-      isolationRunnerSha256: adapter.isolation.runnerSha256,
+      isolation: adapter.isolation,
       checkpoints: adapter.checkpoints,
     };
     const ok = sha256(value) === sha256(expected);
@@ -296,7 +315,7 @@ export async function runAdaptivePreflight() {
   const loadedAdapter = await loadAdapter(inspection, pin);
   const refs = inspection.present
     ? await checkpointRefsPresent(loadedAdapter.adapter)
-    : { ok: false, missing: [] };
+    : { ok: false, missing: [], taskStateMismatches: [] };
   const isolationRunner = await isolationRunnerStatus(loadedAdapter.adapter);
   const evaluatorAttestation = inspection.present
     ? await evaluatorAttestationStatus(loadedAdapter.adapter)
@@ -328,6 +347,7 @@ export async function runAdaptivePreflight() {
       sha256: loadedAdapter.adapter === null ? null : sha256(loadedAdapter.adapter),
       error: loadedAdapter.error,
       missingCheckpointRefs: refs.missing,
+      taskStateMismatches: refs.taskStateMismatches,
       isolationRunner,
       evaluatorAttestation,
     },
@@ -426,14 +446,19 @@ async function loadCampaignResults(assignments, protocol) {
     if (!verifyEvidenceValue(resultBody, attestation, protocol.signer)) {
       throw new Error(`campaign ${assignment.campaignId} result signature mismatch`);
     }
-    const attempt = await readJson(path.join(path.dirname(resultPath), "attempt.json"));
-    const { attestation: attemptAttestation, ...attemptBody } = attempt;
+    const attemptLogText = await fs.readFile(path.join(path.dirname(resultPath), "attempts.jsonl"), "utf8");
+    const attemptLog = parseCampaignAttemptLog(attemptLogText, protocol.signer);
+    const starts = attemptLog.entries.filter((entry) => entry.kind === "start");
     if (
-      !verifyEvidenceValue(attemptBody, attemptAttestation, protocol.signer)
-      || attempt.campaignId !== assignment.campaignId
-      || attempt.assignmentSha256 !== sha256(assignment)
-      || attempt.protocolSha256 !== protocol.protocolSha256
-      || result.attemptSha256 !== sha256(attempt)
+      !attemptLog.completed
+      || attemptLog.openAttempt !== null
+      || starts.length !== result.attemptCount
+      || starts.some((attempt) => (
+        attempt.campaignId !== assignment.campaignId
+        || attempt.assignmentSha256 !== sha256(assignment)
+        || attempt.protocolSha256 !== protocol.protocolSha256
+      ))
+      || result.attemptLogSha256 !== sha256(attemptLogText)
     ) throw new Error(`campaign ${assignment.campaignId} attempt binding mismatch`);
     if (
       result.protocolSha256 !== protocol.protocolSha256
@@ -496,6 +521,7 @@ async function loadCampaignResults(assignments, protocol) {
       result.baselineScore !== checkpoint.baselineScore
       || result.bestValidScore !== expectedBestScore
       || Math.abs(expectedGain - result.normalizedGain) > 1e-12
+      || result.finalOutputSubmitted !== (hidden !== null)
       || result.finalOutputValid !== hiddenValid
       || result.invalidRate !== (hiddenValid ? 0 : 1)
       || result.candidateCount !== developmentReceipts.length

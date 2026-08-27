@@ -34,6 +34,7 @@ function checkpoint(id, gitRef = "a".repeat(40)) {
   return {
     id,
     gitRef,
+    taskStateSha256: sha256(`task-state:${id}`),
     baselineScore: 100,
     developmentPanelSha256: sha256(`development:${id}`),
     hiddenPanelSha256: sha256(`hidden:${id}`),
@@ -51,6 +52,8 @@ function adapterValue(repoSha = "a".repeat(40)) {
       network: "none",
       hostWorkspaceMounted: false,
       runnerSha256: "9".repeat(64),
+      imageSha256: "8".repeat(64),
+      evaluatorSha256: "7".repeat(64),
     },
     evaluator: {
       attestationCommand: [process.execPath, "evaluator.js", "attest"],
@@ -72,6 +75,7 @@ function campaign(pairId, checkpointId, arm, gain, overrides = {}) {
     normalizedGain: gain,
     invalidRate: 0,
     proposalInvalidRate: 0,
+    finalOutputSubmitted: true,
     costUsd: 1,
     provenanceViolations: [],
     ...overrides,
@@ -116,6 +120,13 @@ describe("adaptive campaign protocol", () => {
       ...adapterValue(),
       checkpoints: Array.from({ length: 8 }, (_, index) => checkpoint(`duplicate-${index}`, "a".repeat(40))),
     })).toThrow(/distinct Git commits/i);
+    expect(() => parseDungenessAdapter({
+      ...adapterValue(),
+      checkpoints: adapterValue().checkpoints.map((item) => ({
+        ...item,
+        taskStateSha256: "a".repeat(64),
+      })),
+    })).toThrow(/task-state/i);
   });
 
   test("freezes model, provider, budgets, pins, and assignments into one hash", () => {
@@ -328,7 +339,7 @@ describe("Dungeness evaluator and campaign runner", () => {
             },
           },
         ],
-        usage: { total_tokens: 100, cost: 0.01 },
+        usage: { prompt_tokens: 80, completion_tokens: 20, total_tokens: 100, cost: 0.01 },
         model: "openai/gpt-5.4",
         provider: "fixture",
         systemFingerprint: "fixture-v1",
@@ -339,7 +350,7 @@ describe("Dungeness evaluator and campaign runner", () => {
           id: "finish-1",
           function: { name: "finish", arguments: JSON.stringify({ summary: "done" }) },
         }],
-        usage: { total_tokens: 20, cost: 0.002 },
+        usage: { prompt_tokens: 15, completion_tokens: 5, total_tokens: 20, cost: 0.002 },
         model: "openai/gpt-5.4",
         provider: "fixture",
         systemFingerprint: "fixture-v1",
@@ -362,6 +373,7 @@ describe("Dungeness evaluator and campaign runner", () => {
     expect(result.provenanceViolations).toEqual([]);
     expect(result.hiddenAdjudication).toHaveLength(1);
     expect(result.hiddenAdjudication[0].receiptSha256).toHaveLength(64);
+    expect(result.finalOutputSubmitted).toBe(true);
     expect(result.finalOutputValid).toBe(true);
     expect(result.providerRoutes).toEqual(["fixture"]);
     const { attestation, ...resultBody } = result;
@@ -378,6 +390,6 @@ describe("Dungeness evaluator and campaign runner", () => {
         throw new Error("a second attempt must never reach the model");
       },
       signingPrivateKeyPem: protocolSigning.privateKeyPem,
-    })).rejects.toThrow(/exist/i);
+    })).rejects.toThrow(/completed/i);
   });
 });
