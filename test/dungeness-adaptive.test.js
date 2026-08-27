@@ -7,6 +7,7 @@ import {
   CALIBRATION_PAIR_COUNT,
   CONFIRMATORY_INTERIMS,
   analyzeAdaptiveCampaigns,
+  analyzePrimeFactorCampaigns,
   buildPairedAssignments,
   estimateConfirmatoryPairs,
   freezeAdaptiveProtocol,
@@ -143,6 +144,36 @@ describe("adaptive campaign protocol", () => {
     expect(report.decision).toBe("ADOPT_ADAPTIVE_STATE");
     expect(report.positiveCheckpoints).toBe(8);
     expect(report.provenanceViolations).toBe(0);
+  });
+
+  test("isolates adaptive procedure and knowledge effects in a 2x2", () => {
+    const campaigns = Array.from({ length: 20 }, (_, index) => {
+      const blockId = `prime:checkpoint-${index % 8}:p${index}`;
+      const checkpointId = `checkpoint-${index % 8}`;
+      return [
+        campaign(`${blockId}:fixed`, checkpointId, "state_static", 0, {
+          blockId,
+          procedureMode: "fixed",
+        }),
+        campaign(`${blockId}:fixed`, checkpointId, "state_adaptive", 0.1, {
+          blockId,
+          procedureMode: "fixed",
+        }),
+        campaign(`${blockId}:adaptive`, checkpointId, "state_static", 0.1, {
+          blockId,
+          procedureMode: "adaptive_procedures",
+        }),
+        campaign(`${blockId}:adaptive`, checkpointId, "state_adaptive", 0.2, {
+          blockId,
+          procedureMode: "adaptive_procedures",
+        }),
+      ];
+    }).flat();
+    const report = analyzePrimeFactorCampaigns(campaigns);
+    expect(report.knowledge.mean).toBeCloseTo(0.1);
+    expect(report.procedure.mean).toBeCloseTo(0.1);
+    expect(report.interaction.mean).toBeCloseTo(0);
+    expect(report.decision).toBe("ADOPT_ADAPTIVE_PROCEDURES");
   });
 });
 

@@ -145,9 +145,11 @@ export function buildPairedAssignments({
     const checkpoint = checkpoints[pairIndex % checkpoints.length];
     for (const procedureMode of procedureModes) {
       if (!PROCEDURE_MODES.includes(procedureMode)) throw new Error(`unknown procedure mode ${procedureMode}`);
-      const pairId = `${phase}:${checkpoint.id}:p${String(pairIndex + 1).padStart(3, "0")}:${procedureMode}`;
+      const blockId = `${phase}:${checkpoint.id}:p${String(pairIndex + 1).padStart(3, "0")}`;
+      const pairId = `${blockId}:${procedureMode}`;
       const cells = KNOWLEDGE_ARMS.map((arm) => ({
         campaignId: `${pairId}:${arm}`,
+        blockId,
         pairId,
         pairIndex,
         phase,
@@ -378,6 +380,71 @@ export function analyzeAdaptiveCampaigns(campaigns, {
     safetyPass,
     breadthPass,
     decision,
+  };
+}
+
+export function analyzePrimeFactorCampaigns(campaigns, {
+  practicalMde = PRACTICAL_MDE,
+} = {}) {
+  const byBlock = new Map();
+  for (const campaign of campaigns) {
+    const blockId = campaign.blockId;
+    if (typeof blockId !== "string" || blockId.length === 0) {
+      throw new Error("prime-factor campaigns require blockId");
+    }
+    const key = `${campaign.arm}:${campaign.procedureMode}`;
+    const cells = byBlock.get(blockId) ?? new Map();
+    if (cells.has(key)) throw new Error(`duplicate ${key} in ${blockId}`);
+    cells.set(key, campaign);
+    byBlock.set(blockId, cells);
+  }
+  const expected = KNOWLEDGE_ARMS.flatMap((arm) => PROCEDURE_MODES.map((mode) => `${arm}:${mode}`));
+  const blocks = [...byBlock.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([blockId, cells]) => {
+    for (const key of expected) {
+      if (!cells.has(key)) throw new Error(`prime-factor block ${blockId} is missing ${key}`);
+    }
+    const y = (arm, mode) => cells.get(`${arm}:${mode}`).normalizedGain;
+    const knowledgeEffect = (
+      (y("state_adaptive", "fixed") - y("state_static", "fixed"))
+      + (y("state_adaptive", "adaptive_procedures") - y("state_static", "adaptive_procedures"))
+    ) / 2;
+    const procedureEffect = (
+      (y("state_static", "adaptive_procedures") - y("state_static", "fixed"))
+      + (y("state_adaptive", "adaptive_procedures") - y("state_adaptive", "fixed"))
+    ) / 2;
+    const interaction = (
+      y("state_adaptive", "adaptive_procedures") - y("state_static", "adaptive_procedures")
+    ) - (
+      y("state_adaptive", "fixed") - y("state_static", "fixed")
+    );
+    return { blockId, knowledgeEffect, procedureEffect, interaction, cells: Object.fromEntries(cells) };
+  });
+  if (blocks.length < 20) throw new Error("prime-factor analysis requires at least 20 complete blocks");
+  const criticalZ = 1.959963984540054;
+  const knowledge = interval(blocks.map((block) => block.knowledgeEffect), criticalZ);
+  const procedure = interval(blocks.map((block) => block.procedureEffect), criticalZ);
+  const interaction = interval(blocks.map((block) => block.interaction), criticalZ);
+  const provenanceViolations = campaigns.reduce(
+    (total, campaign) => total + (campaign.provenanceViolations?.length ?? 0),
+    0,
+  );
+  return {
+    schema: DUNGENESS_ADAPTIVE_SCHEMA,
+    protocolVersion: DUNGENESS_ADAPTIVE_PROTOCOL_VERSION,
+    analysis: "paired 2x2 factorial normal approximation",
+    blocks: blocks.length,
+    practicalMde,
+    knowledge,
+    procedure,
+    interaction,
+    provenanceViolations,
+    decision: provenanceViolations > 0
+      ? "REJECT_ADAPTIVE_PROCEDURES"
+      : procedure.lower > practicalMde
+        ? "ADOPT_ADAPTIVE_PROCEDURES"
+        : procedure.upper < practicalMde
+          ? "RETAIN_FIXED_PROCEDURES"
+          : "INCONCLUSIVE_RETAIN_FIXED_PROCEDURES",
   };
 }
 

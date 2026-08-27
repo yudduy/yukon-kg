@@ -689,6 +689,7 @@ export async function runDungenessCampaign({
       protocolVersion: protocol.protocolVersion,
       protocolSha256: protocol.protocolSha256,
       campaignId: assignment.campaignId,
+      blockId: assignment.blockId,
       pairId: assignment.pairId,
       checkpointId: assignment.checkpointId,
       arm: assignment.arm,

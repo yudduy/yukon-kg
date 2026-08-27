@@ -16,6 +16,7 @@ import {
   KNOWLEDGE_ARMS,
   PROCEDURE_MODES,
   analyzeAdaptiveCampaigns,
+  analyzePrimeFactorCampaigns,
   assertWithinSpendCap,
   buildPairedAssignments,
   estimateConfirmatoryPairs,
@@ -369,14 +370,16 @@ export async function runConfirmatory() {
 }
 
 export async function freezePrimeFactorProtocol() {
-  const report = await readJson(REPORT_PATH);
-  if (report.decision !== "ADOPT_ADAPTIVE_STATE") {
+  const report = await readJsonIfPresent(REPORT_PATH);
+  if (report?.decision !== "ADOPT_ADAPTIVE_STATE") {
     const notWarranted = {
       schema: "yukon-kg.dungeness-prime-factor-decision.v1",
       createdAt: nowIso(),
       status: "NOT_WARRANTED",
-      reason: `adaptive evidence decision is ${report.decision}`,
-      parentReportSha256: sha256(report),
+      reason: report === null
+        ? "no confirmatory adaptive-evidence result exists"
+        : `adaptive evidence decision is ${report.decision}`,
+      parentReportSha256: report === null ? null : sha256(report),
     };
     await writeJson(PRIME_REPORT_PATH, notWarranted);
     return notWarranted;
@@ -402,6 +405,25 @@ export async function freezePrimeFactorProtocol() {
   return withHash;
 }
 
+export async function runPrimeFactor() {
+  const frozen = await freezePrimeFactorProtocol();
+  if (frozen.status === "NOT_WARRANTED") return frozen;
+  const { protocol, adapter } = await loadFrozenContext();
+  const spendCapUsd = Number.parseFloat(process.env.DUNGENESS_PRIME_SPEND_CAP_USD ?? "100");
+  const results = await runAssignments(protocol, adapter, frozen.assignments, { spendCapUsd });
+  const analysis = analyzePrimeFactorCampaigns(results);
+  const report = {
+    ...analysis,
+    createdAt: nowIso(),
+    parentProtocolSha256: protocol.protocolSha256,
+    primeProtocolSha256: frozen.protocolSha256,
+    spentUsd: results.reduce((total, result) => total + result.costUsd, 0),
+    results,
+  };
+  await writeJson(PRIME_REPORT_PATH, report);
+  return report;
+}
+
 if (import.meta.main) {
   const command = process.argv[2] ?? "preflight";
   const operation = command === "preflight"
@@ -420,7 +442,7 @@ if (import.meta.main) {
             : command === "analyze"
               ? analyzeConfirmatory()
               : command === "prime-factor"
-                ? freezePrimeFactorProtocol()
+                ? runPrimeFactor()
                 : command === "report"
                   ? readJson(REPORT_PATH)
                   : Promise.reject(new Error(`unknown command ${command}`));
