@@ -34,9 +34,9 @@ bun run knowledge:ecdsa -- --experiment
 
 `--write` refreshes `docs/ecdsa/index.html` and `docs/ecdsa/working-knowledge.json`. `--experiment` writes `evidence/ecdsa-user-representation/report.json`, comparing the working-knowledge packet against ranking ideas by promotion count on eight frozen user questions. The sealed archive remains at `docs/ecdsa/index.json` and under `docs/ecdsa/releases/`.
 
-## Dungeness knowledge court
+## Knowledge QA smoke test
 
-The OpenRouter court asks the same eight frozen questions of five equal-budget packets (`cold`, `raw`, `flat`, `state_brief`, `winner_only`). None of the packets include a ranked next move. Pin `openai/gpt-5.4`. The Dungeness checkout is a runtime substrate only; it is gitignored and recorded by `third_party/dungeness.pin.json`.
+The OpenRouter smoke test asks the same eight frozen questions of five packets under the same 24,576-byte cap (`cold`, `raw`, `flat`, `state_brief`, `winner_only`). Answers must cite a directly supporting record. The test catches presentation and grading bugs; it does not measure research progress or statistical significance.
 
 ```bash
 bun run dungeness:clone
@@ -45,7 +45,32 @@ bun run kb:dungeness -- bind
 bun run kb:dungeness -- pilot
 ```
 
-`preflight` verifies Atlas hashes, packet budgets, OpenRouter smoke, and that `state_brief` contains every gold needle. `pilot` spends 40 model calls (8 cases × 5 arms) and writes `evidence/dungeness-kb/report.json`. Clone `https://github.com/Layr-Labs/dungeness.git` as yudduy with `GITHUB_TOKEN`; the cloud `cursor` GitHub user cannot see that repo. Do not mutate a Dungeness frozen harness.
+`preflight` verifies Atlas hashes, valid packet JSON, byte caps, OpenRouter smoke, and reachability. The checked-in v1 report is the earlier one-shot pilot, not confirmatory evidence.
+
+## Provenance-gated adaptive experiment
+
+The decisive experiment uses verified circuit progress, not QA. It compares only the two surviving representations:
+
+- `state_static`: the initial brief plus the append-only raw evaluator receipts.
+- `state_adaptive`: the same inputs plus a deterministic compact projection rebuilt after each receipt.
+
+The model may propose changes. Only the pinned Dungeness evaluator can sign receipts and move trusted state. Model-authored notes cannot label an idea tried, untried, successful, or failed.
+
+```bash
+bun run dungeness:clone
+# Inspect Dungeness, then create third_party/dungeness.adapter.json
+# from third_party/dungeness.adapter.example.json with eight frozen checkpoints.
+bun run experiment:dungeness-adaptive -- preflight
+bun run experiment:dungeness-adaptive -- freeze
+bun run experiment:dungeness-adaptive -- calibrate
+bun run experiment:dungeness-adaptive -- freeze-power
+bun run experiment:dungeness-adaptive -- confirmatory
+bun run experiment:dungeness-adaptive -- prime-factor
+```
+
+Calibration uses 16 matched pairs to freeze variance, sample size, and a hard projected spend cap. Confirmatory analysis occurs only at 20/40/60/80 matched-pair boundaries. Adaptive state is adopted only if its confidence bound clears a five-point practical gain, validity is non-inferior, at least six of eight checkpoints improve, no one checkpoint explains the result, and provenance violations are zero.
+
+The live commands hard-stop unless the private `Layr-Labs/dungeness` checkout, exact SHA, external adapter, eight checkpoint refs, OpenRouter model, and provider route are pinned. Clone as yudduy with `GITHUB_TOKEN`; the cloud `cursor` identity cannot read that repository. Do not mutate the Dungeness harness.
 
 The working retrieval default remains the smallest useful workflow until a later equal-budget court says otherwise:
 

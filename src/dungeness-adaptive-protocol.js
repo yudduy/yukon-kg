@@ -157,7 +157,7 @@ export function buildPairedAssignments({
         procedureMode,
         seed: cellSeed(seed, phase, checkpoint.id, pairIndex, arm, procedureMode),
       }));
-      const reverse = sha256(`${seed}\0${pairId}\0order`).charCodeAt(0) % 2 === 1;
+      const reverse = Number.parseInt(sha256(`${seed}\0${pairId}\0order`)[0], 16) % 2 === 1;
       for (const [waveOrder, cell] of (reverse ? cells.reverse() : cells).entries()) {
         assignments.push({ ...cell, waveOrder });
       }

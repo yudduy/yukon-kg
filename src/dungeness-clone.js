@@ -101,7 +101,7 @@ export async function cloneDungeness({ token = githubToken(), force = false } = 
       repo: REPO_URL,
     };
   }
-  await run("git", ["clone", "--depth", "1", REPO_URL, VENDOR_DIR], {
+  await run("git", ["clone", REPO_URL, VENDOR_DIR], {
     env: gitAuthenticationEnvironment(token),
   });
   const inspection = await inspectDungenessCheckout(VENDOR_DIR);
