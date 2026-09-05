@@ -1,0 +1,53 @@
+{
+  "schema": "dungeness.v24-qualification-freeze.v1",
+  "frozen_at": "2026-08-28T06:31:24.339Z",
+  "supersedes": "v23-freeze-7.json",
+  "reason": "The first v23 seed session was excluded as an apparatus failure because a no-anchor external verifier did not retain the exact final candidate. Version 24 unconditionally binds every clean external score to retained candidate bytes, excludes the failed v23 campaign, and restarts with new experiment-derived campaign identities before any eligible history or treatment exists.",
+  "files": {
+    "kg/studies/dungeness-representation-v1/preregistration-v24.md": "a92268fff962ba6b8839df490dacade186d15e1bbb45f3b637778f12e5abb90f",
+    "kg/studies/dungeness-representation-v1/v24-qualification.yaml": "ae57097bea35f7ef63d17cf59dbeab0929748e25be69551c06247e3e22e36fb3",
+    "eval/experiments/users/bx/dungeness-representation-v24-pilot/experiment.yaml": "ca3d4e5c10a8a5a1e4bc979fddb82a0c3bc11a7d0902cde9052e82cfcbfd5529",
+    "eval/run-specs/dungeness-representation-v23/krv24-smoke-final-candidate-splay.yaml": "b22f0a3e95976b8a786685dc98f3ab5aafd9bd15b9cdb408e79b35e7e2cb989d",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-splay-gpt.yaml": "24860f054b7568de153d53f67f8ee3c8ebdd09410b89602e0066a946350cb2b8",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-toy-gpt.yaml": "18b77853be5b48b75ee703ab132d688b2b789007ef586c0377fe35b66aeb511b",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-vliw-gpt.yaml": "c16b905db7b2af6821a5c0a2e4325b3b7f5e3929cf97f97730a37ea13b3fa183",
+    "eval/adapters/harbor_bundles/runtime.py": "74159265a52671d707b333072b85351b5239118b10634a36fe6b0440ed93e8a9",
+    "eval/tests/test_autolab_bundle_import.py": "b63d12d797e45e204f0df7952af0e146be949fa1fc19d5a49a0767ff78887ba0",
+    "eval/dungeness": "d9915c8025352fd08c257358698a4ee4481d531f6bd31a402cd9941f2fe1fb39",
+    "eval/services/gateway/pricing.yaml": "f7ed12842df37ef270d8395e1a2ffda873989bd552f7ef4124f1761f00ad7c9c",
+    "eval/services/gateway/gateway.py": "23a812f012fe3dfce836c9218abf4aaa585ddee118fde5e97cf2d6418c65ae5a",
+    "eval/services/gateway/validate_openrouter_policy.py": "27178fd85dffed444e1685a8877a8e8848898671fd17292fec610b49c5edb326",
+    "eval/representation_study.py": "b9f552f0d9f8decc3bf32811d5c791be383fd439fd5a418230f7920b0a6db9ad",
+    "eval/study_budget.py": "6c780ffaf154e746d047c5a3eb7de3f692cbbbb79d0070b33c4666312bda0e5f",
+    "eval/policies/budget/study-ceilings.json": "002c300131306b991800038a1ff8e4c69fdcaf4296d7bb4a19725dd0fbb7d87b",
+    "eval/seed-campaigns/users/bx/dungeness-representation-v23-pilot/seed-c4a87521017141590/record.json": "e3d0cce75adcb8a3e0d390d36e68c31df75eb259e3673e83a6bce61e318ec91a",
+    "eval/runs/users/bx/seed-c4a87521017141590-s01/record.json": "feb0d32408d926319728bd8fe155e48dc41f4662af512fb12d97b9f9d244cb3b",
+    "eval/runs/users/bx/krv24-smoke-final-candidate-splay/record.json": "f66e3dfa00168da67b9b79fa88d02e4bca5305e307c4195b4e3c7d77ebf3719d",
+    "kg/src/research-view.js": "2a5d24ad02577eca072f47ff67abf4f34c7cdc102b8b20f09244ecc035316b60",
+    "kg/src/research-view-cli.js": "c4d4de396a74e579299f0ac6d4406cc6c68c78466145561707237052716b01d5",
+    "kg/src/seed-convergence.js": "9372913da7471fb3127a02a1380b065c1d4618ea81ba4d3ba0c617d9bbe56834",
+    "kg/src/seed-convergence-cli.js": "0f4885037d8d739d94177d2bd18edcf4605bd0fe8ba5672856f06e22e911c29d"
+  },
+  "validation": {
+    "dungeness_core_tests": 161,
+    "gateway_tests": 77,
+    "yukon_tests_passed": 113,
+    "yukon_tests_skipped": 2,
+    "yukon_test_timeout_seconds": 30,
+    "public_data": "PASS",
+    "live_requested_model_policy": "PASS",
+    "seed_references": 6,
+    "final_candidate_smoke": {
+      "status": "PASS",
+      "score": 48656,
+      "bytes": 16151,
+      "sha256": "abdee5a83d47af1ac23b51f3e71b50635da6ab49ad85a484e5b012b95250a2a0"
+    }
+  },
+  "committed_study_usd": 15.314264,
+  "eligible_histories": 0,
+  "treatment_observations": 0,
+  "paid_seed_allowed": true,
+  "paid_treatment_allowed": false,
+  "next_gate": "v24 adversarial-splay-gpt-history-a campaign and frozen convergence decision"
+}

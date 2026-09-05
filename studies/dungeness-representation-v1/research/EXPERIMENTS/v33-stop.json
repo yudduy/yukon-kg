@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "type": "pre-treatment-apparatus-exclusion",
+  "study_version": "v33",
+  "recorded_at": "2026-08-28T18:05:00.000Z",
+  "planned": "Repair the ECDSA metric identity and require a real trusted-event append plus same-arm re-render before any v33 model call.",
+  "observed": {
+    "corrected_history_bank": "history-bank:users/bx/2ae8ac7f1cd04a66d0abe78fd09529553c4e7c382b72826e48415d773ecc0a0c",
+    "clean_verified_candidates": 11,
+    "sealed_scores_reproduced": 11,
+    "metric_contract": "ecdsafail_score",
+    "metric_append_gate_passed": true,
+    "failed_initial_view": "research-view:users/bx/dc32bd9e23513db542d2842468841d372ce7b76424f46e5321773869d80ca617",
+    "initial_total_tokens": 27090,
+    "real_appended_events": 2,
+    "attempted_appended_total_tokens": 37486,
+    "total_token_limit": 32000,
+    "error": "R0 mounted payload uses 37486 deterministic tokens; limit is 32000",
+    "root_cause": "Each event repeated full candidate file manifests, per-file evidence hashes, seed, environment, and harness transport objects inside the agent-visible atom even though the complete trusted export was already retained by path and SHA-256.",
+    "scientific_treatment_chains_started": 0,
+    "model_spend_usd": 0,
+    "study_committed_usd": 25.787305,
+    "active_budget_reservations": 0
+  },
+  "interpretation": "The corrected metric contract is valid, but the v33 atom transport projection could not execute the frozen three-round protocol under its context cap. No representation was exposed to a model, so this is apparatus evidence only.",
+  "decision": "Exclude v33 before treatment. Retain exact diffs and semantic event facts, but replace redundant transport objects with validated content-addressed summaries and rotate to renderer v4 plus fresh v34 identities.",
+  "next_test": "Compile all six histories twice under renderer v4, then append real or clean-verified task-matched events to every initial view and prove all same-arm outputs remain within the frozen limits."
+}

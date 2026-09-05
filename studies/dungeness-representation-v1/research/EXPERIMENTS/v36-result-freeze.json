@@ -1,0 +1,460 @@
+{
+  "block_outcomes": [
+    {
+      "final_gain": 10.309607405043089,
+      "history": "toy-dual-prefix",
+      "progress_auc": 9.020906479412702,
+      "representation": "R0",
+      "task": "task:external/autolab/toy_isa_opt"
+    },
+    {
+      "final_gain": 10.306415576125119,
+      "history": "toy-dual-prefix",
+      "progress_auc": 9.018113629109479,
+      "representation": "R1",
+      "task": "task:external/autolab/toy_isa_opt"
+    },
+    {
+      "final_gain": 9.09032875837855,
+      "history": "toy-dual-prefix",
+      "progress_auc": 7.954037663581231,
+      "representation": "R2",
+      "task": "task:external/autolab/toy_isa_opt"
+    },
+    {
+      "final_gain": 9.24353654644111,
+      "history": "toy-mac-prefix",
+      "progress_auc": 8.088094478135972,
+      "representation": "R0",
+      "task": "task:external/autolab/toy_isa_opt"
+    },
+    {
+      "final_gain": 9.24353654644111,
+      "history": "toy-mac-prefix",
+      "progress_auc": 8.088094478135972,
+      "representation": "R1",
+      "task": "task:external/autolab/toy_isa_opt"
+    },
+    {
+      "final_gain": 9.23715288860517,
+      "history": "toy-mac-prefix",
+      "progress_auc": 8.082508777529522,
+      "representation": "R2",
+      "task": "task:external/autolab/toy_isa_opt"
+    },
+    {
+      "final_gain": -2.5899280575539567,
+      "history": "vliw-chain-interleave",
+      "progress_auc": -1.618705035971223,
+      "representation": "R0",
+      "task": "task:external/autolab/vliw_scheduler"
+    },
+    {
+      "final_gain": -2.5899280575539567,
+      "history": "vliw-chain-interleave",
+      "progress_auc": -1.618705035971223,
+      "representation": "R1",
+      "task": "task:external/autolab/vliw_scheduler"
+    },
+    {
+      "final_gain": 7.76978417266187,
+      "history": "vliw-chain-interleave",
+      "progress_auc": 6.798561151079136,
+      "representation": "R2",
+      "task": "task:external/autolab/vliw_scheduler"
+    },
+    {
+      "final_gain": -3.237410071942446,
+      "history": "vliw-slot-pairing",
+      "progress_auc": -2.023381294964029,
+      "representation": "R0",
+      "task": "task:external/autolab/vliw_scheduler"
+    },
+    {
+      "final_gain": 7.122302158273381,
+      "history": "vliw-slot-pairing",
+      "progress_auc": 4.451438848920864,
+      "representation": "R1",
+      "task": "task:external/autolab/vliw_scheduler"
+    },
+    {
+      "final_gain": 0,
+      "history": "vliw-slot-pairing",
+      "progress_auc": 1.7805755395683454,
+      "representation": "R2",
+      "task": "task:external/autolab/vliw_scheduler"
+    },
+    {
+      "final_gain": 0,
+      "history": "ecdsa-archive-a",
+      "progress_auc": 0,
+      "representation": "R0",
+      "task": "task:users/bx/ecdsa-fail-v2"
+    },
+    {
+      "final_gain": 0,
+      "history": "ecdsa-archive-a",
+      "progress_auc": 0,
+      "representation": "R1",
+      "task": "task:users/bx/ecdsa-fail-v2"
+    },
+    {
+      "final_gain": 0,
+      "history": "ecdsa-archive-a",
+      "progress_auc": 0,
+      "representation": "R2",
+      "task": "task:users/bx/ecdsa-fail-v2"
+    },
+    {
+      "final_gain": 0,
+      "history": "ecdsa-archive-b",
+      "progress_auc": 0,
+      "representation": "R0",
+      "task": "task:users/bx/ecdsa-fail-v2"
+    },
+    {
+      "final_gain": 0,
+      "history": "ecdsa-archive-b",
+      "progress_auc": 0,
+      "representation": "R1",
+      "task": "task:users/bx/ecdsa-fail-v2"
+    },
+    {
+      "final_gain": 0,
+      "history": "ecdsa-archive-b",
+      "progress_auc": 0,
+      "representation": "R2",
+      "task": "task:users/bx/ecdsa-fail-v2"
+    }
+  ],
+  "claim_scope": "deterministic organization of byte-identical verified ResearchEvent atoms",
+  "contrasts": {
+    "R1-R0": {
+      "final_score": {
+        "estimate": 1.7260867335496428,
+        "interval_95": [
+          -0.0015959144589849927,
+          6.905942848657556
+        ],
+        "noninferior_within_0_25": true
+      },
+      "progress_auc": {
+        "estimate": 1.078671215596945,
+        "interval_95": [
+          -0.0013964251516114246,
+          4.315615812488854
+        ],
+        "probability_of_improvement": 0.5
+      }
+    },
+    "R2-R0": {
+      "final_score": {
+        "estimate": 2.0619099996096324,
+        "interval_95": [
+          -0.612831152250239,
+          6.798561151079137
+        ],
+        "noninferior_within_0_25": false
+      },
+      "progress_auc": {
+        "estimate": 1.8581280841908026,
+        "interval_95": [
+          -0.5362272582189598,
+          5.611510791366906
+        ],
+        "probability_of_improvement": 0.5
+      }
+    },
+    "R2-R1": {
+      "final_score": {
+        "estimate": 0.3358232660599896,
+        "interval_95": [
+          -2.983208071270401,
+          4.532374100719424
+        ],
+        "noninferior_within_0_25": false
+      },
+      "progress_auc": {
+        "estimate": 0.7794568685938573,
+        "interval_95": [
+          -1.2468416584957385,
+          4.721223021582733
+        ],
+        "probability_of_improvement": 0.3333333333333333
+      }
+    }
+  },
+  "decision": {
+    "conditional_signal": "R1/R2 gains were confined to different VLIW histories and did not generalize to Toy ISA or ECDSA",
+    "confirmation_started": false,
+    "default_basis": "simplest member of the indistinguishable set; not evidence that R0 is superior",
+    "kimi_replication_gate": {
+      "R1-R0": {
+        "apparatusGatesPassed": true,
+        "blocks": 6,
+        "decision": "PILOT_INCONCLUSIVE",
+        "estimate": 1.078671215596945,
+        "finalNoninferior": true,
+        "meaningfulEffect": 0.25,
+        "minimumWins": 4,
+        "upperBound": 4.315615812488854,
+        "wins": 1
+      },
+      "R2-R0": {
+        "apparatusGatesPassed": true,
+        "blocks": 6,
+        "decision": "PILOT_INCONCLUSIVE",
+        "estimate": 1.8581280841908026,
+        "finalNoninferior": false,
+        "meaningfulEffect": 0.25,
+        "minimumWins": 4,
+        "upperBound": 5.611510791366906,
+        "wins": 2
+      }
+    },
+    "kimi_replication_started": false,
+    "operational_default": "R0",
+    "pilot": "PILOT_INCONCLUSIVE",
+    "statistically_indistinguishable_best_set_at_pilot_resolution": [
+      "R0",
+      "R1",
+      "R2"
+    ],
+    "universal_winner_established": false
+  },
+  "frozen_at": "2026-08-28",
+  "inputs": [
+    {
+      "path": "eval/controlled-history-plans/v37-toy-reserve.json",
+      "sha256": "8baa7f340c40c8f4e2b1fa7875252f9666af88ac8ccc42d73eba79ee44aec4ff"
+    },
+    {
+      "path": "eval/controlled-history-plans/v37-vliw-reserve.json",
+      "sha256": "548790e348233352a4652878e280927360241def400c8e1bd12a8c85ea494155"
+    },
+    {
+      "path": "eval/experiment-results/users/bx/dungeness-representation-v36-terminal-milestone-restart/blinded-results.json",
+      "sha256": "69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a"
+    },
+    {
+      "path": "eval/history-bank-plans/v37-ecdsa-reserve-v2.json",
+      "sha256": "b97acac88ccd34897624525457c1a2b2ccb4d6ca2b4078245fc04c4698bc655e"
+    },
+    {
+      "path": "eval/research-event-exports/v37-ecdsa-archive-c.json",
+      "sha256": "c6f4fb3590ddb4ef1f822604f27fe8eaa3ee0fcab2051c8d455a28dbdc332f95"
+    },
+    {
+      "path": "eval/runs/.study-spend-ledgers/knowledge-representation-autoresearch-v1/ledger.json",
+      "sha256": "18b4a6e385079c6d6d8a830d5cbacb1e9dc5079eeb84c21f784eee17d04604fd"
+    },
+    {
+      "path": "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v37-toy-reserve-calibration.json",
+      "sha256": "cc8a7ed340abc31209a0d5799da46f873ec7a1ad3220a478b519b2c6d5af162a"
+    },
+    {
+      "path": "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v37-vliw-reserve-calibration.json",
+      "sha256": "7a1676cbc878d8062c64529dee1b7993cf035c8e6d20d87ebc56857a01e4b221"
+    },
+    {
+      "path": "kg/studies/dungeness-representation-v1/results/v36-failure-classifications.json",
+      "sha256": "ebb82c9cc20ecc80cb22bc959eb3c96c2d088e86108bb9b02047a0d6b593038d"
+    },
+    {
+      "path": "kg/studies/dungeness-representation-v1/results/v36-host-assignment.json",
+      "sha256": "3387add7d2e85601856093d6247b506b8906a9f91896368be8ebf651ac2bc8c1"
+    },
+    {
+      "path": "kg/studies/dungeness-representation-v1/results/v36-pilot-analysis.json",
+      "sha256": "364df0c9cf815b0a12fc47713d982e8367dbf7c4350358539e79c5348495f182"
+    },
+    {
+      "path": "kg/studies/dungeness-representation-v1/results/v36-task-references.json",
+      "sha256": "e9587ac2841fd7cbecc279f4d2b5fb5496f0937ebe6edded1053ea7113ee138b"
+    },
+    {
+      "path": "kg/studies/dungeness-representation-v1/v37-ecdsa-reserve-selection.json",
+      "sha256": "f25e5e150d94aab7f48998071f3f14cc03a556d3b6791a8a28f7de831cba3a2c"
+    }
+  ],
+  "known_risk": "AutoLab tasks: no declared license as of commit 7aff5fe71dfbe152fb0b8e8ac8087210b4bc27d5; used for internal evaluation only, not redistributed",
+  "reserve_extension": {
+    "decision": "STOP_BEFORE_MODEL_CALLS",
+    "ecdsa_natural_archive": {
+      "R0_tokens": 46825,
+      "history_bank": "history-bank:users/bx/6d61535d6102cc4a156aa6ee777542bdfd76d7b22c73d224d86d5aea36682681",
+      "limit": 32000,
+      "status": "failed-context-gate"
+    },
+    "ecdsa_synthetic_small_diff": {
+      "classical_mismatches": 5,
+      "commit": "292329a5dc24d5d6aace5dd700a99a9f638c4bc2",
+      "phase_garbage_batches": 4,
+      "status": "failed-clean-validity-gate"
+    },
+    "paid_model_calls": 0,
+    "reason": "the frozen one-history-per-task extension could not qualify a balanced ECDSA reserve history",
+    "toy_isa": {
+      "history_bank": "history-bank:users/bx/cee69a15c62e538a503a53419a933784a4893c11b5298f65148d39aaf6808012",
+      "status": "qualified-model-free",
+      "view_tokens": {
+        "R0": 5396,
+        "R1": 5890,
+        "R2": 6237
+      }
+    },
+    "vliw": {
+      "history_bank": "history-bank:users/bx/41278520d94c4ea16a5431693b46e847a672af749b6ec62fc53685feb8a4cc27",
+      "status": "qualified-model-free",
+      "view_tokens": {
+        "R0": 6705,
+        "R1": 7200,
+        "R2": 7546
+      }
+    }
+  },
+  "schema": "dungeness.representation-v36-result-freeze.v1",
+  "secondary": {
+    "by_arm": {
+      "R0": {
+        "chains": 6,
+        "development_evaluations": {
+          "distinct_candidate_hashes": 4,
+          "repeat_evaluations_within_chain": 10,
+          "total": 14,
+          "valid_numeric": 14,
+          "valid_rate": 1.0
+        },
+        "first_meaningful_gain": {
+          "chains_reaching_one_gain": 2,
+          "first_observed_milestone_percent": [
+            25,
+            25
+          ]
+        },
+        "outer_candidate_diversity": {
+          "chains_with_candidate_change": 4,
+          "distinct_changed_candidate_hashes": 5
+        },
+        "research_view_token_proxy": {
+          "index_total": 4654,
+          "mean_per_session": 10742.666666666666,
+          "policy": "utf8-bytes-ceil-div2.v1",
+          "sessions": 18,
+          "total": 193368
+        },
+        "task_equal_final_gain": 2.2876343036646327,
+        "task_equal_progress_auc": 2.244485771102237,
+        "usage": {
+          "agent_seconds": 2593,
+          "model_tokens": 773310,
+          "usd": 12.536215
+        }
+      },
+      "R1": {
+        "chains": 6,
+        "development_evaluations": {
+          "distinct_candidate_hashes": 4,
+          "repeat_evaluations_within_chain": 11,
+          "total": 15,
+          "valid_numeric": 15,
+          "valid_rate": 1.0
+        },
+        "first_meaningful_gain": {
+          "chains_reaching_one_gain": 3,
+          "first_observed_milestone_percent": [
+            25,
+            25,
+            50
+          ]
+        },
+        "outer_candidate_diversity": {
+          "chains_with_candidate_change": 4,
+          "distinct_changed_candidate_hashes": 4
+        },
+        "research_view_token_proxy": {
+          "index_total": 13906,
+          "mean_per_session": 10102.277777777777,
+          "policy": "utf8-bytes-ceil-div2.v1",
+          "sessions": 18,
+          "total": 181841
+        },
+        "task_equal_final_gain": 4.0137210372142755,
+        "task_equal_progress_auc": 3.323156986699182,
+        "usage": {
+          "agent_seconds": 2717,
+          "model_tokens": 719864,
+          "usd": 12.065757
+        }
+      },
+      "R2": {
+        "chains": 6,
+        "development_evaluations": {
+          "distinct_candidate_hashes": 4,
+          "repeat_evaluations_within_chain": 10,
+          "total": 14,
+          "valid_numeric": 14,
+          "valid_rate": 1.0
+        },
+        "first_meaningful_gain": {
+          "chains_reaching_one_gain": 4,
+          "first_observed_milestone_percent": [
+            25,
+            25,
+            25,
+            25
+          ]
+        },
+        "outer_candidate_diversity": {
+          "chains_with_candidate_change": 4,
+          "distinct_changed_candidate_hashes": 5
+        },
+        "research_view_token_proxy": {
+          "index_total": 20265,
+          "mean_per_session": 11458.055555555555,
+          "policy": "utf8-bytes-ceil-div2.v1",
+          "sessions": 18,
+          "total": 206245
+        },
+        "task_equal_final_gain": 4.349544303274265,
+        "task_equal_progress_auc": 4.102613855293039,
+        "usage": {
+          "agent_seconds": 2687,
+          "model_tokens": 769140,
+          "usd": 12.810062
+        }
+      }
+    },
+    "development_evaluations": {
+      "total": 43,
+      "valid_numeric": 43,
+      "valid_rate": 1
+    },
+    "outer_milestones": {
+      "invalid_treatment_failure": 1,
+      "total": 90,
+      "valid": 89,
+      "valid_rate": 0.9888888888888889
+    }
+  },
+  "spend": {
+    "active_reservations": 10,
+    "ceiling_usd": 500,
+    "ledger_active_fail_closed_reservations_usd": 30.0,
+    "ledger_committed_usd": 103.189752,
+    "ledger_settled_actual_usd": 73.189752,
+    "settled_reservations": 117,
+    "v36_completed_chains_actual_usd": 37.412034
+  },
+  "validation": {
+    "activeBlocks": 6,
+    "activeCells": 18,
+    "administrativeFailures": 18,
+    "apparatusGatesPassed": true,
+    "blindedLeakageCheck": "passed-before-assignment-join",
+    "completeActiveBlocks": true,
+    "failureClassificationsFrozenToBlindedResults": true,
+    "protocolViolations": 0,
+    "treatmentFailures": 1
+  }
+}

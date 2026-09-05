@@ -1,0 +1,35 @@
+{
+  "schema": "dungeness.history-qualification-result.v1",
+  "version": 29,
+  "recorded_at": "2026-08-28T17:13:16.000Z",
+  "status": "excluded-apparatus-failure",
+  "freeze_sha256": "a1adbdf69a7588cfa61139c5b225c460d6e700a9084977131d21e4f22330ee7f",
+  "treatment_chains": 0,
+  "model_spend_usd": 0,
+  "independent_replay": {
+    "expected_candidates": 20,
+    "exact_score_matches": 20,
+    "toy_isa_opt": {
+      "bank": "history-bank:users/bx/b6a53d1a1dcb00bb8893409a0a2aaa7a6d928ef32d4b1e959c6ef70ad47d932d",
+      "record_sha256": "8a094a45d9348dc22dab6c9afbbaf0667a60430e88abfef0ffd9acae37619170"
+    },
+    "vliw_scheduler": {
+      "bank": "history-bank:users/bx/39387c71fb67f39b99bf7406ead15966a129cf06167e44bdcb6e2d21c8fd29f6",
+      "record_sha256": "f71d26f81ac10e29223fa8997d7ee2697fd73b15e520cd12ae72750f6abbde31"
+    }
+  },
+  "materialized_starts": [
+    "candidate-artifact:users/bx/v29/61846407af98c141e5b47fee17fce0f8862feeb785c02601d4c44b12d610834d",
+    "candidate-artifact:users/bx/v29/ade21a212f9cb834e432c873664acc3ce536ebe818543fdfc4f20853f0b6aa2a",
+    "candidate-artifact:users/bx/v29/ee7e946e758f2af991eba73d8bdeab422e5940ffd42247e6c69d51fbea58a4bf",
+    "candidate-artifact:users/bx/v29/fcf5aa08b93f539b2b22d371d9ab59afbbda99b186ec146a55859c78d9f8098d"
+  ],
+  "failed_gate": {
+    "name": "trusted-export-renderer-compatibility",
+    "attempted_compilations": 8,
+    "successful_compilations": 0,
+    "error": "Dungeness trusted export.events[0].created_at must be a canonical ISO-8601 UTC timestamp",
+    "cause": "The frozen plan emitted UTC timestamps without the millisecond field required by Yukon's canonical timestamp contract."
+  },
+  "decision": "Exclude v29 before treatment. Version 30 adds producer-side canonical timestamp validation and repeats the complete qualification under a fresh freeze."
+}

@@ -1,0 +1,62 @@
+{
+  "schema": "dungeness.v28-history-qualification-result.v1",
+  "completed_at": "2026-08-28T17:00:00.000Z",
+  "freeze_sha256": "75c54e60b9bfec85887090392cfb6b245f7728481ab27712ad299b0ade07a65a",
+  "status": "PASS",
+  "treatment_chains": 0,
+  "model_spend_usd": 0,
+  "history_bank": {
+    "ref": "history-bank:users/bx/abb4b1bdc602d3e9d7c8a0ace97f644084361881ee7ba09794070459df2bce32",
+    "record_sha256": "6200c3445babeb84b432c87a9392783bace2ad291ff2ca8628d745a37ea43279",
+    "source_bundle_sha256": "6e7c07a5c02e737c6f885caac341c68e0dc70e83313ea15078bde43c457c6841",
+    "verified_candidates": 11,
+    "score_matches": 11
+  },
+  "windows": {
+    "ecdsa-archive-a": {
+      "candidate_artifact": "candidate-artifact:users/bx/v28/b1f93ef435e82f7e505e40e7b5a67bb9b2ffff060d68ad09820d47d6f8639b8f",
+      "candidate_manifest_sha256": "f0ddd9a54d9677e2d8aeafee4b9a3a74e21e952a25f501f9828dd6349291b549",
+      "export_sha256": "dcbb70e5acbb96831e872e0f5f43d594c152c836d8673ccfe3f9865797753311",
+      "event_count": 4,
+      "recorded_interventions": 8,
+      "atom_set_sha256": "687321193f1a870807da873de9b20e3c4bab0ddcd9ecf5527b1ff1f515fe20e5",
+      "atoms_sha256": "94ab4302030ce9881cc4e399fa79946b89a5e7d044909b764776ad82fdd29204",
+      "views": {
+        "R0": {"payload_sha256": "2a26565f919652d11cecaf05579c4b148b29a6807b8fee90d4af3aa261a46006", "index_tokens": 264, "total_tokens": 27103},
+        "R1": {"payload_sha256": "b780ee951668e7dc08d3ffee29f3c4fd754191185daedc00ac434666565bcf75", "index_tokens": 758, "total_tokens": 27597},
+        "R2": {"payload_sha256": "84233933531cb06fd84d67683f59f606d0f8d6c6debfc9a38e49b669818f9c85", "index_tokens": 1105, "total_tokens": 27944}
+      }
+    },
+    "ecdsa-archive-b": {
+      "candidate_artifact": "candidate-artifact:users/bx/v28/0da111600368681c26746be8137b5db205ad140f9992c6b76a5a4288ee229a7d",
+      "candidate_manifest_sha256": "b34807369e256c26d94ea7fa4c14d5a38bba6642f23c8e9308e9682b1a0ee84a",
+      "export_sha256": "4b8f68db6871d50c904b2587959485ed97d2aa2a479b00a8e853b6f41c54bfb5",
+      "event_count": 4,
+      "recorded_interventions": 10,
+      "atom_set_sha256": "4b08f71459b3b762a3aa7120161d0429609fccf971cf6d8238d0f90ceae16ebc",
+      "atoms_sha256": "12b38a607d4c7e448aebc9f011eba82d54959afe53c918d990a5b3f0c18887ef",
+      "views": {
+        "R0": {"payload_sha256": "e54563545319e276b05aa04798872b076ef721d6948efdd510c2583432130b77", "index_tokens": 264, "total_tokens": 22573},
+        "R1": {"payload_sha256": "b6b9a592dde51742ab6f999677330e48bfacac57a1021f084a5d725901f5941a", "index_tokens": 758, "total_tokens": 23068},
+        "R2": {"payload_sha256": "140863b53b2455c25090321c0c433a6a24400bf5a77a093d46fa29f4a4eb4b2c", "index_tokens": 1110, "total_tokens": 23420}
+      }
+    }
+  },
+  "gates": {
+    "exact_score_replay": true,
+    "candidate_reconstruction": true,
+    "trusted_export_v2": true,
+    "recorded_interventions_preserved": true,
+    "equal_atoms_within_window": true,
+    "byte_identical_double_compile": true,
+    "cutoff_sealed": true,
+    "total_context_limit": true,
+    "index_context_limit": true
+  },
+  "budget": {
+    "hard_ceiling_usd": 500,
+    "committed_usd": 25.227542,
+    "remaining_usd": 474.772458
+  },
+  "next_gate": "qualify two histories each for two additional task families before freezing any paid R0/R1/R2 treatment"
+}

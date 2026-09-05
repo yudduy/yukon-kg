@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import { promises as fs } from "node:fs";
+import { existsSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {
@@ -8,7 +9,9 @@ import {
   writeAtlasDuplicatePilotDiagnostic,
 } from "../src/atlas-duplicate-diagnostics.js";
 
-const RUN_DIRECTORY = "/Users/c-dnguyen/Documents/project/yukon-kg/.runs/atlas-duplicate/2026-08-25T05-08-53-575Z-671ebb8d";
+const RUN_DIRECTORY = process.env.ATLAS_DUPLICATE_DIAGNOSTIC_RUN
+  ?? path.resolve(import.meta.dir, "..", ".runs", "atlas-duplicate", "2026-08-25T05-08-53-575Z-671ebb8d");
+const diagnosticTest = existsSync(path.join(RUN_DIRECTORY, "manifest.json")) ? test : test.skip;
 
 let temporaryDirectory;
 
@@ -21,7 +24,7 @@ afterAll(async () => {
 });
 
 describe("atlas duplicate pilot diagnostics", () => {
-  test("derives stable first-failure diagnostics for the v3 pilot run", async () => {
+  diagnosticTest("derives stable first-failure diagnostics for the v3 pilot run", async () => {
     const diagnostic = await analyzeAtlasDuplicatePilotRun(RUN_DIRECTORY);
     expect(diagnostic.schema).toBe("yukon.atlas-duplicate-diagnostic");
     expect(diagnostic.protocolVersion).toBe("yukon-kg.atlas-duplicate.v3");
@@ -114,7 +117,7 @@ describe("atlas duplicate pilot diagnostics", () => {
     });
   });
 
-  test("writes a byte-stable diagnostic artifact and compact table", async () => {
+  diagnosticTest("writes a byte-stable diagnostic artifact and compact table", async () => {
     const output = path.join(temporaryDirectory, "diagnostic.json");
     const first = await writeAtlasDuplicatePilotDiagnostic(RUN_DIRECTORY, output);
     const firstBytes = await fs.readFile(output, "utf8");

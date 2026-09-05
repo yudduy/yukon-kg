@@ -1,0 +1,23 @@
+{
+  "schema": "dungeness.v23-qualification-freeze-delta.v1",
+  "frozen_at": "2026-08-28T05:50:31Z",
+  "supersedes": "v23-freeze-4.json",
+  "base_freeze_sha256": "5534550868882366a37571c4009d7fbf0760dfe713e26a5eaea3937e6b6e8a2c",
+  "reason": "The official-Moonshot Kimi route completed three upstream requests and real shell execution with no provider error, but a 100,000-token envelope could not reserve the fourth request before the first evaluation. Actual use was 21,543 tokens. This pre-history amendment raises only the per-session reservation to 200,000 tokens under the unchanged 400,000-token campaign cap and freezes a same-route replacement canary.",
+  "changed_files": {
+    "kg/studies/dungeness-representation-v1/preregistration-v23.md": "7d0ac828e0846e994c2aef3c679b42726581e2a1272c8a10a6b9c59de75e59b0",
+    "kg/studies/dungeness-representation-v1/v23-qualification.yaml": "6782bb5784041e5ce9187238b54e498b454f7c5f5bb7cb794afde6c5edbc3585",
+    "eval/run-specs/dungeness-representation-v23/krv23-route-canary-kimi-v2.yaml": "a15f552d22f165a8c2439a5c713c4f6161beef0b2bdb0611e984faadfb53f1cf",
+    "eval/representation_study.py": "b9f552f0d9f8decc3bf32811d5c791be383fd439fd5a418230f7920b0a6db9ad",
+    "eval/dungeness": "22a732834e4756b21a26fa4083cb42d4cfe302a486943e24b586d105d00e295a",
+    "eval/services/gateway/pricing.yaml": "56438069a9f49c17f35329797b38853039e2f6222a272a7dd04e65a933222f7c"
+  },
+  "validation": {
+    "focused_python_tests": 26,
+    "openrouter_policy_tests": 3,
+    "live_openrouter_policy": "PASS"
+  },
+  "committed_study_usd": 13.757547,
+  "paid_treatment_allowed": false,
+  "next_gate": "200,000-token Kimi official-Moonshot route canary"
+}

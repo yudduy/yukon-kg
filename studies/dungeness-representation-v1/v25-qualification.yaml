@@ -1,0 +1,53 @@
+schema_version: 1
+study: dungeness-representation-v1
+phase: v25-seed-qualification
+budget_scope: knowledge-representation-autoresearch-v1
+study_ceiling_usd: 500
+supersedes: v24-qualification.yaml
+apparatus_exclusion:
+  experiment: dungeness-representation-v24-pilot
+  campaign: seed-c5bb320651c07c8b8
+  runs:
+    - seed-c5bb320651c07c8b8-s01
+    - seed-c5bb320651c07c8b8-s02
+    - seed-c5bb320651c07c8b8-s03
+    - seed-c5bb320651c07c8b8-s04
+    - seed-c5bb320651c07c8b8-s05
+  reason: frozen renderer v2 produced a 32022-token R2 payload against the 32000-token limit
+  scientific_evidence_admitted: false
+renderer:
+  version: yukon.research-view-renderer.v3
+  change: compact static index instructions; atoms and R0/R1/R2 index data are unchanged
+campaign:
+  max_usd: 6
+  max_model_tokens: 400000
+  max_agent_seconds: 3600
+  max_evaluations: 8
+  max_sessions: 6
+  session_max_usd: 3
+  session_max_model_tokens: 200000
+  session_max_agent_seconds: 600
+  session_max_evaluations: 2
+eligibility:
+  valid_evaluations: 4
+  distinct_candidates: 2
+  distinct_scores: 2
+  positive_progress: true
+  remaining_meaningful_gains: 1
+ordered_campaigns:
+  - block: ecdsa-gpt-history-a
+    template: run-spec:users/bx/krv25-seed-ecdsa-gpt
+  - block: ecdsa-gpt-history-b
+    template: run-spec:users/bx/krv25-seed-ecdsa-gpt
+  - block: toy-isa-gpt-history-a
+    template: run-spec:users/bx/krv23-seed-toy-gpt
+  - block: toy-isa-gpt-history-b
+    template: run-spec:users/bx/krv23-seed-toy-gpt
+  - block: vliw-scheduler-gpt-history-a
+    template: run-spec:users/bx/krv23-seed-vliw-gpt
+completion_campaign:
+  block: vliw-scheduler-gpt-history-b
+  template: run-spec:users/bx/krv23-seed-vliw-gpt
+decision:
+  pass_if_eligible_first_five_at_least: 4
+  administrative_replacements_per_campaign: 1

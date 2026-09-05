@@ -1,0 +1,1279 @@
+schema_version: 37
+study_id: dungeness-representation-v1
+status: v36-first-model-pilot-complete-no-universal-winner
+preregistration:
+  version: 36
+  status: frozen-before-v36-first-model-treatment
+  frozen_at: 2026-08-28
+  sha256: 89d3267dc31accc05672a4d1ec705d935e46c558cf6460fd503582fb50279465
+  superseded_versions:
+    version_21_sha256: 1e862d93e4fd37b13c957a5426379932613f1416986bee23572ef6a0c5e87ed1
+    version_20_sha256: 8dac70d4f77279b4a183f9f8eba91381167d26bee58999378b246f2a84a99c47
+    version_19_sha256: adf4f6c28ca4067c442b96fda6bb49f0810ca461ac478f3cbd0b2f124ad6cdb0
+    version_18_sha256: 80f3c986f1b711a2d898cad9d57bb4f3ae5e0142b59e4a04d2576bd7a49868d3
+    version_17_sha256: 8403d11be9c923d1412df2db9a119662398266eabbfb5524e828793020e33bc3
+    version_16_sha256: cd949abb833048af96c1da1e0b22bbe97b087ae82f174c4c7ae5d927a44cd74e
+    version_15_sha256: 8045a643929c2053226360c36e10e15f709218e93565503450a96b0e403d2691
+    version_14_sha256: 7266748454e53d8dc0532180c8a263b988f128ae1d4a0191089790f0ba6cde54
+    version_13_sha256: be67f999157a8aade2e568f67b8adc6df60a7a64f77fcf3fec2f01a7fda4adc2
+    version_12_sha256: c9f10c1910720694b6a34a39fe06792cfd968054305887cd349d1903b071f168
+    version_11_sha256: 3c3b55e074003a0f4491fd04231adc100af3d152db2aaf0d9c751b72318a55b1
+    version_10_sha256: 7d90a09b12634254af0fafe5d7f17c9eacef20a2177354e9b6f0321f694ec686
+    version_9_sha256: bae3b1a6aeb1d071419e1963812db32c7fac692565a33ac451efbd1b125b6966
+    version_8_sha256: 0575a990c172c4d60d4e6d0c44192d71ad390b052c134e51557e218308315ba2
+    version_7_sha256: 6571b733ebbc9edc2cc6ca2e87af215aa2b7d9db82689949f652f3bc8aa2f3d9
+    version_6_sha256: 19e849696f0a8e82c8f1b71df11adc4e2d097d5ec8841663de275ce00a1bb0b3
+    version_5_sha256: e65f96bf25322afec2a662ca028447263eeca83c8aece45f88fec5ea8547b5ea
+    version_4_sha256: 4c9761aeaab11dfe6b2789fb427a840e803e4c732af74367b47524914a46deac
+  apparatus_amendments_before_eligible_evidence:
+    - existing-authenticated-root-env-key-plus-hard-local-ledgers-replaces-finite-keychain-key
+    - disable-broken-generic-openrouter-parameter-filter-while-retaining-local-capability-endpoint-and-price-pins
+    - replace-byte-based-tier-rejection-with-frozen-full-tier-envelope-and-meter-workspace-benchmark-wrapper
+    - remove-exact-scorer-from-agent-workspace-block-source-reacquisition-and-fix-tier-aware-billed-fallback
+    - classify-only-trusted-local-model-cap-as-normal-stop-restore-best-and-run-clean-verifier
+    - apply-frozen-task-replacement-after-insufficient-events-and-reject-unlocked-bundle-files
+    - accept-native-or-external-trusted-budget-cap-shape-and-require-agreement-if-both-exist
+    - totalize-sealed-zero-event-export-and-valid-rate-before-frozen-task-replacement
+    - instruct-every-agent-to-use-the-installed-recording-evaluator-and-state-seed-event-eligibility
+    - make-only-the-isolated-clean-replay-candidate-slot-writable-before-copy
+    - apply-final-prefrozen-task-replacement-after-stack-machine-saturation
+    - replace-unavailable-provider-endpoints-with-exact-available-same-model-routes
+    - replace-nonportable-openrouter-unified-exec-custom-grammar-with-schema-function-tools
+    - size-tool-canary-cap-from-model-free-request-envelope-and-mark-apparatus-records-nonscientific
+    - reserve-inflight-token-maximum-and-replace-broken-azure-tool-route-with-recovered-exact-openai-endpoint
+    - persist-reservation-based-local-model-stop-for-clean-verifier-handoff
+    - index-condition-fingerprints-to-event-sets-without-duplicating-canonical-condition-payloads
+    - replace-unavailable-exact-openai-endpoint-with-exact-bedrock-endpoint-behind-a-nonscientific-tool-canary
+    - qualify-the-already-planned-kimi-history-producer-before-gpt-route-recovery
+    - normalize-kimi-nonfunction-tools-before-validating-the-exact-openrouter-outbound-payload
+    - bind-external-evaluate-to-one-canonical-file-retain-trusted-diagnostic-hashes-and-hash-the-outer-scored-candidate
+claim:
+  population: CPU-bounded software autoresearch tasks under the frozen Dungeness harness
+  estimand: total effect of deterministic research-state representation on verified progress per budget
+  excludes:
+    - narrative summarization
+    - recommendations or proposed next steps
+    - learned retrieval
+    - graph databases
+    - executable world models
+arms:
+  R0:
+    renderer: chronological-ledger
+  R1:
+    renderer: frontier-condition-map
+  R2:
+    renderer: frontier-condition-map-with-unresolved-comparisons
+evidence_parity:
+  canonical_type: ResearchEvent
+  atoms_identical_across_arms: true
+  atom_occurrences_per_view: 1
+  total_token_limit: 32000
+  index_token_limit: 4000
+  enforcement_token_policy: utf8-bytes-ceil-div2.v1
+  independent_audit_tokenizer: o200k_base
+  advisory_language_allowed: false
+  renderer_provenance:
+    version: yukon.research-view-renderer.v3
+    git_commit: 3ef4e71aac4c26c67cd50f004961b1afcf2eb683
+    source_sha256: 0729d1d81e9d127b5875e2c16fc7e8f378cc0a1dbeacbee299af7d18d9383a1e
+    source_hash_checked_when_loaded: true
+chain:
+  rounds: 3
+  fresh_session_each_round: true
+  handoffs: 2
+  caps:
+    usd: 9
+    model_tokens: 600000
+    agent_seconds: 5400
+    development_evaluations: 12
+  per_round_caps:
+    usd: 3
+    model_tokens: 200000
+    agent_seconds: 1800
+    development_evaluations: 4
+  budget_scope: knowledge-representation-autoresearch-v1
+  request_accounting: conservative-usd-reservation-before-prompt-capture-and-upstream
+  milestones: [0, 25, 50, 75, 100]
+  milestone_selection: latest-observed-candidate-at-or-before-budget-fraction-with-final-observed-at-100
+  terminal_candidate_capture: content-addressed-read-only-after-every-round
+  terminal_candidate_use: outer-milestones-only-unless-separately-metered-and-clean-reverified
+  treatment_failure_carry: last-valid-artifact
+  carry_forward: clean-verified-best-candidate-only
+pilot:
+  provider: openrouter
+  explicit_user_paid_authorization_recorded: true
+  tasks:
+    - dungeness-ecdsa-fail-v2
+    - autolab-toy-isa-opt           # local internal evaluation only
+    - autolab-vliw-scheduler        # local internal evaluation only
+  histories_per_task: 2
+  history_producers:
+    - executable-treatment-blind-verified-history-bank
+  eligible_histories: 6
+  experiment: experiment:users/bx/dungeness-representation-v36-terminal-milestone-restart
+  first_consumer_model: openai/gpt-5.6-sol
+  gated_replication_model: kimi-k3
+  seed_history_budget_usd: 36
+  first_model_budget_usd: 162
+  replication_budget_usd: 162
+  reserve_budget_usd: 140
+  absolute_budget_usd: 500
+  confirmation_automatic: false
+task_use_policy:
+  autolab_source_commit: 7aff5fe71dfbe152fb0b8e8ac8087210b4bc27d5
+  known_risk_statement: "AutoLab tasks: no declared license as of commit 7aff5fe71dfbe152fb0b8e8ac8087210b4bc27d5; used for internal evaluation only, not redistributed"
+  autolab_scope: local-internal-only
+  explicit_internal_execution_authorization_recorded: true
+  absent_license_blocks_internal_execution: false
+  source_redistribution: prohibited-pending-license-clarification
+  task_or_solution_publication: prohibited
+  autolab_bytes_allowed_in_kg: false
+  container_digest_pin_still_required: false
+  publication_claim_pending_license_clarification: ineligible
+seed_histories:
+  producer_view: none
+  minimum_valid_numeric_captures: 4
+  identities_must_match_frozen_task_checkpoint_model_and_budget_scope: true
+  best_candidate_tiebreak: deterministic
+  best_candidate_must_clean_reverify: true
+  views_compiled_only_after_trusted_event_export: true
+  immutable_after_randomized_assignments: true
+convergence_gate:
+  status: passed-six-executable-verified-histories
+  enforcement:
+    seed_finalizer_currently_checks:
+      - minimum-four-valid-numeric-captures
+      - deterministic-best-selection
+      - clean-reverification
+    model-free-separate-checker-additionally-checks:
+      - valid-event-rate
+      - distinct-candidate-count
+      - distinct-score-count
+      - positive-clean-outer-progress
+      - remaining-headroom
+      - trusted-export-clean-candidate-and-verifier-hashes
+      - frozen-failure-classification-and-protocol-violations
+    checker_command: bun-run-representation-convergence
+    evidence_schema: yukon.seed-convergence-evidence.v2
+    decision_schema: yukon.seed-convergence-decision.v2
+    checker_status: implemented-and-model-free
+    runner_integration: external-host-gate-not-an-automatic-launcher
+    preregistration_freeze_requires_reviewed_checker_contract: satisfied
+  purpose: reject unusable or saturated tasks before treatment assignment
+  terminal_seed_outcome:
+    run_id: krv1-seed-h2-v2
+    run_spec_sha256: c65d1ed0ddd6459b4d465fd897f09202118d7a7021d3a8a9f242fb9db6730151
+    task: autolab-z-order-range-scan
+    producer: kimi-k3
+    research_view: none
+    purpose: seed-history-producer
+    administrative_replacement_for: krv1-seed-h2
+    max_usd: 6
+    max_model_tokens: 400000
+    max_agent_seconds: 3600
+    max_development_evaluations: 8
+    run_status: completed
+    development_evaluations: 0
+    model_requests: 2
+    model_tokens: 11204
+    normalized_model_spend_usd: 0.034643
+    openrouter_billed_usd: 0.034643
+    clean_outer_metric_seconds: 1.924973
+    outer_candidate_sha256: 44a7f8bcdf83bda7349288c7ae5872fa045761dd8d5c5cd07fb119adeca4a8c2
+    trusted_export_sha256: aa6f1e49e1357510cbaac9586a9179aaf61a07ce2d72290e06dea78e134020e4
+    convergence_evidence_sha256: 7383cdb8b747b990cdf5fadecfab3a187bd97c7c3f66707747622f5894d31c02
+    convergence_decision: STUDY_STOP
+    convergence_decision_sha256: f0cde5359e73a9eb1b0d00ee2e4a525a3d4859d0da3a8295b21bcdf2353803e0
+    convergence_reason: task_failure:no-evaluation
+    eligible_replacement_available: false
+    further_v22_paid_runs_authorized: false
+  pre_paid_model_free_gate:
+    run_id: krv1-smoke-h4
+    run_spec_sha256: a3dc01681236cca587cd58b9db52e5fcfc3d1b4f56e5690aa4a7a4bcd10205f7
+    status: passed
+    criteria:
+      - exact-outer-candidate-bytes-and-sha256-retained
+      - canonical-baseline-development-score-valid-and-numeric
+      - tar-content-rejected-without-submission-capture
+    model_spend_usd: 0
+    outer_metric_seconds: 1.935261
+    outer_candidate_sha256: 44a7f8bcdf83bda7349288c7ae5872fa045761dd8d5c5cd07fb119adeca4a8c2
+    outer_reward_sha256: e4b34efc077371e128fb529969d8a3b3909e1b8fbe415514afa4e668073f9fcf
+    run_record_sha256: 8197b879910e5b41f7588c3b19050014b62844c8b4be75e11c4a6ff90dbdb7b1
+    development_metric_seconds: 1.92631
+    development_candidate_sha256: 44a7f8bcdf83bda7349288c7ae5872fa045761dd8d5c5cd07fb119adeca4a8c2
+    tar_http_status: 415
+    tar_submission_captured: false
+  passed_apparatus_canary:
+    run_id: krv1-canary-h5
+    run_spec_sha256: f9546c7b06f76901aeac966c5ecb1d511ede0390cb266c9124587cf98e54eca6
+    criterion: executed-nonempty-schema-valid-shell-call
+    scientific_observation: false
+  passed_kimi_apparatus_canary:
+    run_id: krv1-canary-h8
+    run_spec_sha256: 2afb537aa254b5eabd57c1085994db220e8eae6355e8bb539098ccbaa60c9101
+    criterion: executed-nonempty-schema-valid-shell-call
+    completed_shell_calls: 1
+    model_requests: 2
+    model_tokens: 17775
+    normalized_model_spend_usd: 0.054405
+    openrouter_billed_usd: 0.054405
+    development_evaluations: 0
+    run_status: completed
+    scientific_observation: false
+    conditional_seed_unlocked: krv1-seed-h2
+  prerequisite_before_any_charge:
+    - autolab-internal-execution-authorization-and-known-risk-record
+    - three-task-container-base-image-digests
+    - frozen-official-baseline-starting-candidate-reference-and-verifier-records
+    - clean-dry-run-and-shared-ledger-preflight
+    - qualified-rootful-docker-host
+    - materialized-bundle-exact-file-set-validation
+    - preregistration-frozen
+    - explicit-user-paid-go
+    - authenticated-openrouter-runtime-credential
+    - per-run-gateway-reservation-and-atomic-500-usd-host-ledger
+  per_task_pass:
+    minimum_valid_numeric_captures: 4
+    minimum_valid_event_rate: 0.5
+    minimum_distinct_valid_candidate_hashes: 2
+    minimum_distinct_valid_scores: 2
+    selected_best_clean_reverification: required
+    directional_outer_progress_over_starting_candidate: strictly-positive
+    remaining_headroom: at-least-one-meaningful-gain
+    formula:
+      direction_sign: maximize=1,minimize=-1
+      official_reference_gap: sign*(reference_score-official_baseline_score)
+      meaningful_gain: 0.10*official_reference_gap
+      seed_progress: sign*(clean_seed_score-starting_candidate_score)
+      remaining_headroom: sign*(reference_score-clean_seed_score)
+      pass: official_reference_gap>0 and seed_progress>0 and remaining_headroom>=meaningful_gain
+    provenance_or_protocol_violations: 0
+  order:
+    - one-first-producer-seed-per-task-up-to-18-usd-total
+    - complete-second-producer-seeds-only-after-all-three-tasks-pass
+  decisions:
+    pass: continue-to-next-unviewed-seed-only
+    administrative_failure: one-linked-same-cap-replacement
+    task_failure: replace-task-from-prefrozen-pool-and-rerun-that-task-gate
+    apparatus_failure: stop-all-paid-work-version-fix-and-use-unused-histories
+    no_eligible_replacement: stop-study-before-treatment
+  treatment_or_replication_launch: false
+randomization:
+  algorithm: sha256-sort-v1
+  seed: dungeness-representation-v1-pilot-2026-08-27
+  treatment_labels_hidden_until_exclusions_frozen: true
+  balance_all_six_orders: true
+primary_outcome:
+  name: normalized_outer_verified_progress_auc
+  checkpoints: [0, 25, 50, 75, 100]
+  meaningful_gain: 0.10 * direction_corrected_official_baseline_to_reference_gap
+  progress_origin: clean_outer_verified_starting_candidate_score
+  clipping: none
+pilot_gate:
+  practical_effect: 0.25
+  minimum_block_wins: 4
+  blocks: 6
+  final_noninferiority_margin: 0.25
+  futility: both_structured_upper_intervals_below_0.25
+pilot_analysis_inputs:
+  task_references:
+    format: json
+    schema: yukon.representation-task-references.v2
+  experiment:
+    format: yaml
+    type: randomized-block
+    topology: three-tasks-by-two-histories-by-three-arms
+  blinded_results:
+    format: json
+    type: blinded-randomized-block-results
+  host_assignment:
+    format: json
+    accepted:
+      - native-dungeness-randomization-manifest-with-no-failures
+      - yukon.representation-host-assignment.v1-with-frozen-failure-classifications
+  analyzer:
+    command: bun run representation:analyze -- analyze
+    phase: pilot
+    bootstrap_draws: 10000
+    apparatus_gates_passed: must-be-true
+    protocol_violations: 0
+failures:
+  treatment_outcomes:
+    - agent-crash
+    - invalid-patch
+    - treatment-timeout
+    - no-evaluation
+    - verification-failure
+  administrative:
+    - provider-outage
+    - lost-host
+    - verifier-service-failure
+  administrative_action: repeat-entire-block-and-preserve-failed-attempt
+  apparatus_action: increment-renderer-version-and-restart-with-unused-histories
+confirmatory:
+  requires_user_authorization: true
+  tasks: 12
+  models: 2
+  histories_per_task: 3
+  arms: 3
+  chains: 216
+  familywise_alpha: 0.05
+  target_power: 0.90
+  minimum_effect: 0.25
+  automatic_launch: false
+  reserve_pool:
+    search_learning:
+      - adaptive_compression
+      - agent_tool_routing
+      - bm25_search_go
+      - safety_router
+      - smallest_game_player
+      - resnet_bit_flip
+    systems_optimization:
+      - regex_engine
+      - concurrent_kv_wal
+      - sstable_compaction_rs
+      - vliw_scheduler
+      - hash_join
+      - bvh_raytracer
+    symbolic_combinatorial:
+      - adversarial_splay
+      - discover_sorting
+      - fredkin_sort_network
+      - stack_machine_golf
+      - toy_isa_opt
+      - z_order_range_scan
+gates:
+  - clean-verifier-is-canonical
+  - candidate-and-verifier-hashes-retained
+  - renderer-byte-determinism
+  - equal-canonical-atom-hashes
+  - cutoff-sealing
+  - no-inferred-facts
+  - research-view-read-only-and-main-only
+  - treatment-label-blinding
+  - balanced-reproducible-randomization
+  - chain-lineage-isolation
+  - all-unit-tests-green
+  - docker-smoke-green
+  - hard-shared-spend-ledger
+  - request-cost-reserved-before-disclosure
+  - seed-history-clean-reverification
+  - exact-analysis-topology
+  - exact-local-scorer-absent-from-agent-workspace
+  - pinned-source-repository-filtered-from-mediated-web
+  - local-model-budget-stop-restores-best-and-reaches-clean-verifier
+  - materialized-bundle-rejects-unlisted-nested-files
+observed_gate_failures:
+  z_order_h2_v2_final_task_no_evaluation:
+    status: task-failure-study-stop
+    run_id: krv1-seed-h2-v2
+    administrative_replacement_for: krv1-seed-h2
+    run_status: completed
+    model_requests: 2
+    model_tokens: 11204
+    normalized_model_spend_usd: 0.034643
+    openrouter_billed_usd: 0.034643
+    development_evaluations: 0
+    valid_development_evaluations: 0
+    clean_outer_metric_seconds: 1.924973
+    outer_candidate_sha256: 44a7f8bcdf83bda7349288c7ae5872fa045761dd8d5c5cd07fb119adeca4a8c2
+    trusted_export_sha256: aa6f1e49e1357510cbaac9586a9179aaf61a07ce2d72290e06dea78e134020e4
+    evidence_sha256: 7383cdb8b747b990cdf5fadecfab3a187bd97c7c3f66707747622f5894d31c02
+    decision: STUDY_STOP
+    decision_sha256: f0cde5359e73a9eb1b0d00ee2e4a525a3d4859d0da3a8295b21bcdf2353803e0
+    reason: task_failure:no-evaluation
+    scientific_representation_observation: false
+    candidate_score_trace_or_event_reused: false
+  z_order_h2_administrative_provider_failure_and_invalid_submissions:
+    status: administrative-failure-retained-excluded
+    run_id: krv1-seed-h2
+    run_status: failed
+    harbor_error_label: ApiRateLimitError
+    trusted_local_budget_remaining: true
+    model_requests: 23
+    model_tokens: 179881
+    normalized_model_spend_usd: 1.053194
+    openrouter_billed_usd: 1.053194
+    development_evaluations: 5
+    valid_development_evaluations: 0
+    submitted_artifact_classes:
+      - source-policy-invalid-super-reference
+      - directory-tar-stream
+      - crate-tar-stream
+      - repeated-source-policy-invalid-super-reference
+      - one-byte-diagnostic-probe
+    outer_candidate_was_development_submitted: false
+    same_candidate_score_disagreement: false
+    scientific_observation: false
+    candidate_score_trace_or_event_reused: false
+    replacement_run_id: krv1-seed-h2-v2
+  kimi_h7_pre_upstream_tool_normalization_order:
+    status: apparatus-failure-retained-nonscientific-zero-cost
+    run_id: krv1-canary-h7
+    endpoint_tag: together
+    host_reservation_usd: 1
+    normalized_model_spend_usd: 0
+    openrouter_billed_usd: 0
+    model_requests: 0
+    model_tokens: 0
+    prompt_disclosed_upstream: false
+    development_evaluations: 0
+    failure: non-function-namespace-tools-rejected-before-kimi-normalization
+    scientific_observation: false
+    candidate_score_trace_or_event_reused: false
+    conditional_seed_locked: krv1-seed-h2
+    replacement_canary_run_id: krv1-canary-h8
+  bedrock_h6_schema_tool_incompatible:
+    status: apparatus-failure-retained-nonscientific
+    run_id: krv1-canary-h6
+    endpoint_tag: amazon-bedrock/us-east-1
+    model_requests: 10
+    model_tokens: 20542
+    normalized_model_spend_usd: 0.280287
+    openrouter_billed_usd: 0.166159
+    executable_tool_calls: 0
+    development_evaluations: 0
+    incompatible_exec_attempts: 10
+    terminal_local_stop_reason: conservative-input-token-reservation-unfunded
+    harbor_error_label: ApiRateLimitError
+    provider_outage: false
+    scientific_observation: false
+    candidate_score_trace_or_event_reused: false
+    conditional_gpt_seed_locked: krv1-seed-h1-v4
+    replacement_canary_run_id: krv1-canary-h7
+  openai_endpoint_unavailable_before_h1_v3:
+    status: pre-charge-provider-availability-failure
+    planned_run_id: krv1-seed-h1-v3
+    endpoint_tag: openai
+    observed_status: -2
+    bounded_checks: 6
+    observation_window_seconds: 151
+    run_record_created: false
+    ledger_reservation_created: false
+    prompt_disclosed: false
+    model_requests: 0
+    normalized_model_spend_usd: 0
+    replacement_canary_run_id: krv1-canary-h6
+    conditional_seed_run_id: krv1-seed-h1-v4
+  z_order_h1_v2_renderer_context_overflow:
+    status: apparatus-failure-retained-nonscientific
+    run_id: krv1-seed-h1-v2
+    run_status: completed
+    development_evaluations: 8
+    valid_development_evaluations: 8
+    distinct_candidate_hashes: 7
+    selected_evaluation_id: "0008"
+    development_best_seconds: 0.024604
+    clean_reverification_seconds: 0.025985
+    clean_verifier_sha256: 081d0f857a32306c7001c96f554b888c9793894602fe2f42e604c4c1b56eed19
+    model_requests: 28
+    model_tokens: 112754
+    normalized_model_spend_usd: 0.641564
+    openrouter_billed_usd: 0.381143
+    trusted_export_sha256: 697b062eae7e21a68317e85042822be616f1e0aea3852d89af088656b277dcb9
+    renderer_v1_failure: R1-index-5870-deterministic-tokens-exceeds-4000
+    seed_history_sealed: false
+    treatment_assignment_frozen: false
+    candidate_score_trace_or_event_reused: false
+    replacement_run_id: krv1-seed-h1-v3
+    replacement_renderer_version: yukon.research-view-renderer.v2
+    action: exclude-complete-history-increment-renderer-and-restart-from-original-checkpoint
+  z_order_h4_azure_function_tool_and_token_cap:
+    status: apparatus-failure-retained-nonscientific
+    run_id: krv1-canary-h4
+    cause: azure-returned-effectively-whitespace-exec-arguments-and-no-tool-executed
+    upstream_requests_successful: 1
+    executable_tool_calls: 0
+    development_evaluations: 0
+    input_tokens: 9060
+    output_tokens: 52710
+    reasoning_tokens: 19
+    model_tokens: 61770
+    authored_model_token_cap: 25000
+    cap_overrun_tokens: 36770
+    normalized_model_spend_usd: 2.462550
+    openrouter_billed_usd: 1.637921
+    terminal_429_source: dungeness-local-model-token-guard-on-next-request
+    harbor_error_label: ApiRateLimitError
+    provider_outage: false
+    scientific_observation: false
+    candidate_score_trace_or_event_reused: false
+    usage_summary_sha256: f42dea2722042323d3a1dcce8522e33bdde68486b4d86a308f234b53e152a938
+    replacement_run_id: krv1-canary-h5
+    replacement_cap_usd: 1
+    replacement_model_tokens: 100000
+    action: atomic-inflight-token-reservation-plus-exact-openai-endpoint-replacement
+  z_order_h3_tool_canary_underfunded_reservation:
+    status: apparatus-failure-retained
+    run_id: krv1-smoke-h3
+    cause: diagnostic-usd-cap-could-not-fund-conservative-schema-envelope-input-reservation
+    failed_before_prompt_capture: true
+    upstream_requests: 0
+    model_tokens: 0
+    normalized_model_spend_usd: 0
+    scientific_observation: false
+    candidate_score_trace_or_event_reused: false
+    usage_summary_sha256: f36fd6655b21c6a266013f125e0df52268780670a64339b29f08c3868f3bcf8d
+    replacement_run_id: krv1-canary-h4
+    replacement_cap_usd: 3
+    replacement_model_tokens: 25000
+    action: frozen-v15-model-free-envelope-sized-apparatus-canary
+  z_order_h1_openrouter_tool_protocol:
+    status: apparatus-failure-retained
+    run_id: krv1-seed-h1
+    cause: openrouter-azure-returned-empty-function-arguments-for-unified-exec-custom-grammar
+    upstream_requests_successful: 17
+    executable_tool_calls: 0
+    development_evaluations: 0
+    model_tokens: 27576
+    normalized_model_spend_usd: 0.311207
+    openrouter_billed_usd: 0.176459
+    terminal_429_source: dungeness-local-conservative-usd-guard
+    provider_outage: false
+    scientific_observation: false
+    candidate_score_trace_or_event_reused: false
+    trusted_export_sha256: c768c28455671c248375efdebf3ddc342ddc915afa7a21491bf6dc2292879cbe
+    convergence_decision: APPARATUS_STOP
+    convergence_decision_sha256: 3fe3933c3b6fa2ff3cf852645941d109a8b500d27271a002cbe84c8662e60e44
+    failure_code: openrouter-unified-exec-incompatible
+    apparatus_canary_run_id: krv1-canary-h4
+    conditional_replacement_run_id: krv1-seed-h1-v2
+    action: frozen-v14-schema-function-tools-for-both-openrouter-profiles
+  stack_machine_g1_missing_smoke_switch:
+    status: operator-apparatus-failure-retained
+    run_id: krv1-smoke-g1
+    cause: cli-smoke-switch-omitted
+    model_requests: 0
+    normalized_model_spend_usd: 0
+    scientific_observation: false
+    candidate_or_event_reused: false
+    replacement_run_id: krv1-smoke-g3
+    action: rerun-model-free-with-explicit-smoke-switch
+  d1_external_budget_record_shape:
+    status: apparatus-failure-retained
+    run_id: krv1-seed-d1
+    cause: shared-ledger-recognized-native-flat-cap-but-not-external-effective-model-cap
+    failed_before_study_reservation: true
+    failed_before_harbor: true
+    model_requests: 0
+    model_tokens: 0
+    development_evaluations: 0
+    normalized_model_spend_usd: 0
+    scientific_observation: false
+    candidate_or_event_reused: false
+    replacement_run_id: krv1-seed-d1-v2
+    action: frozen-v8-two-trusted-cap-shapes-with-exact-agreement-if-both-exist
+  v5_local_model_cap_handoff:
+    status: apparatus-failure-retained
+    run_id: krv1-seed-c1-v5
+    cause: local-model-token-cap-was-misclassified-as-provider-rate-limit-and-skipped-harbor-verifier
+    model_requests: 37
+    model_tokens: 401504
+    normalized_model_spend_usd: 2.24941
+    openrouter_billed_usd: 0.938252
+    development_evaluations: 6
+    valid_development_evaluations: 4
+    best_development_score: 10632523023
+    diagnostic_clean_reverification_score: 10632523023
+    diagnostic_clean_reverification_record_sha256: a5351010aa4486ae2923d7f427a3b023eb4b8b22080307fb19fe835b3858d4be
+    canonical_in_band_verification: false
+    eligible_seed_history: false
+    candidate_score_trace_or_event_reused: false
+    replacement_run_id: krv1-seed-c1-v6
+    action: frozen-v6-trusted-local-cap-probe-best-restore-and-clean-verifier-handoff
+  v4_precharge_scorer_isolation_audit:
+    status: superseded-before-charge
+    run_id: krv1-seed-c1-v4
+    launched: false
+    model_requests: 0
+    normalized_model_spend_usd: 0
+    cause: exact-eval-circuit-cargo-target-remained-in-agent-checkout
+    replacement_run_id: krv1-seed-c1-v5
+    action: frozen-v5-agent-workspace-sanitization-source-guard-and-memory-bound
+  second_paid_seed_conservative_tier_rejection:
+    status: apparatus-failure-retained
+    run_id: krv1-seed-c1-v3
+    cause: json-byte-upper-bound-was-incorrectly-used-as-provider-input-token-tier
+    last_observed_input_tokens: 50943
+    rejected_base_tier_threshold_tokens: 272000
+    model_requests: 16
+    model_tokens: 97330
+    normalized_model_spend_usd: 0.547233
+    openrouter_billed_usd: 0.23952
+    development_evaluations: 1
+    eligible_seed_history: false
+    candidate_or_score_reused: false
+    additional_integrity_finding: checkout-benchmark-script-could-bypass-metered-evaluate
+    replacement_run_id: krv1-seed-c1-v4
+    action: frozen-v4-full-tier-price-envelope-and-metered-benchmark-wrapper
+  first_paid_seed_route_selection:
+    status: apparatus-failure-retained
+    run_id: krv1-seed-c1
+    cause: openrouter-generic-require-parameters-filter-rejected-valid-codex-text-verbosity-field
+    model_requests: 6
+    model_tokens: 0
+    normalized_model_spend_usd: 0
+    development_evaluations: 0
+    scientific_observation: false
+    diagnostic_run_id: krv1-route-canary-c1
+    diagnostic_model_tokens: 180
+    diagnostic_normalized_model_spend_usd: 0.00084
+    diagnostic_openrouter_billed_usd: 0.00084
+    diagnostic_route_canary_sha256: 86951bc12d10961a6c9ad606594afd19cdd6c225e743b121d48e37751fdb8127
+    replacement_run_id: krv1-seed-c1-v3
+    action: frozen-v3-gateway-fix-and-fresh-same-cap-run-id
+  ecdsa_colima_first_smoke_finalization:
+    status: apparatus-failure-retained
+    run_id: krv1-smoke-c1
+    cause: harbor-0.18-generic-mean-was-not-mapped-through-named-reward-stats
+    verification_accepted: false
+    scientific_observation: false
+    model_requests: 0
+    model_spend_usd: 0
+    linked_replacement: krv1-smoke-c2
+    action: fixed-score-extractor-added-regression-test-and-reran-full-gates
+  adaptive_compression_verifier_stability:
+    status: task-rejected
+    sample_size: 10
+    mean_bits_per_byte: 5.1059
+    sample_sd_bits_per_byte: 0.33423
+    sd_in_meaningful_gain_units: 2.785
+    action: replaced-by-adversarial-splay-before-treatment-assignment
+  regex_engine_verifier_stability:
+    status: task-rejected
+    sample_size: 10
+    mean_seconds: 1.801492
+    sample_sd_seconds: 0.017490
+    sd_in_meaningful_gain_units: 0.1548
+    conservative_repeats_per_candidate: 21
+    action: replaced-by-toy-isa-opt-before-treatment-assignment
+  farmshare_native_container_isolation:
+    status: failed-closed-host-gate
+    cause: no-subordinate-uid-or-gid-range-for-rootless-podman
+    slurm_oci_enabled: false
+    apptainer_fakeroot_preserves_uid_isolation: false
+    unsafe_workaround_rejected: flatten-verifier-and-candidate-users
+    model_spend_usd: 0
+    paid_dispatch: disabled-before-keychain-until-cross-host-ledger-exists
+    action: use-another-qualified-rootful-docker-host-or-add-both-real-multi-uid-isolation-and-one-cross-host-ledger
+  openrouter_credential:
+    status: historical-v1-finite-limit-gate-superseded-before-paid-data
+    required_storage_v1: macos-keychain-service-dungeness-openrouter
+    required_format: sk-or-v1-prefix-and-at-least-20-safe-suffix-characters
+    observed_format_valid: true
+    observed_authentication_valid: true
+    observed_disabled: false
+    observed_limit_is_finite: false
+    observed_limit_remaining_is_numeric: false
+    root_env_mode: "0600"
+    root_env_variable: TESTBED_OPENROUTER_API_KEY
+    root_env_eligible_for_paid_run: true
+    dedicated_limited_key_prepared_in_ui: false
+    dedicated_limited_key_creation_canceled: true
+    finite_server_side_limit_required_v2: false
+    first_seed_local_reservation_usd: 6
+    study_local_ceiling_usd: 500
+    launcher_exit_code: 5
+    failed_before_model_call: true
+    credential_tempfiles_remaining: false
+    masked_curl_failure_bug_repaired: true
+    action: proceed-with-existing-authenticated-key-under-frozen-local-ledgers
+  deepswe_fallback:
+    status: rejected
+    reasons:
+      - binary-primary-reward
+      - public-tests-and-solutions
+    action: exploratory-apparatus-use-only
+observed_seed_outcomes:
+  ecdsa_v6:
+    status: completed-clean-verification-task-rejected
+    run_id: krv1-seed-c1-v6
+    clean_score: 10704574395
+    score_artifact_sha256: 01caf311661e0ae2ef4625e7a0dc1153b90b6022e288e91be1bd0e3d460366ab
+    verifier_tree_sha256: c058ae1cf5335748c73e422ae99bee175dc9aba7f142f2f5fe8f1736faef09a6
+    model_requests: 35
+    model_tokens: 411534
+    normalized_model_spend_usd: 2.307423
+    openrouter_billed_usd: 0.964649
+    captured_evaluations: 2
+    valid_numeric_evaluations: 2
+    trusted_export_sha256: 0c2e39cf9d0818fe1e5bddab4757a17b50ef47b41b9b845a67f5ce7f69f08f5c
+    convergence_decision: TASK_REPLACE
+    convergence_decision_sha256: b229c2799c5dd49a687f76cd77bd67244f8460fb2f064c74dcd64d683fbe5907
+    convergence_reasons:
+      - insufficient_valid_numeric_events
+    candidate_or_event_reused: false
+    replacement_task: autolab-discover-sorting
+    replacement_run_id: krv1-seed-d1
+  discover_sorting_d1_v2:
+    status: completed-clean-verification-task-rejected
+    run_id: krv1-seed-d1-v2
+    clean_outer_score: 60
+    raw_reward_sha256: d676f9adeddf06604132d3ef7cabbb1f31f5052ac27eab1970c859f83898ac8c
+    executed_verifier_tree_sha256: 04d40a5ae9eae5db1bd9112b13c6ed1c419153a5215f832c3ebd759577cc68ed
+    model_requests: 9
+    model_tokens: 27740
+    normalized_model_spend_usd: 0.233905
+    openrouter_billed_usd: 0.093225
+    captured_evaluations: 0
+    valid_numeric_evaluations: 0
+    trusted_export_sha256: fcdeafbf6ac6a194494352d8ec465f7aac46f9b05c8010d612180514e3abe884
+    convergence_decision: TASK_REPLACE
+    convergence_decision_sha256: 048d9adedc130761b9b672adb8fe503098f85eef1f00ff107c155bfbe1b3b7a2
+    candidate_or_event_reused: false
+    replacement_task: autolab-fredkin-sort-network
+    replacement_run_id: krv1-seed-f1
+  fredkin_f1:
+    status: completed-clean-verification-apparatus-rejected
+    run_id: krv1-seed-f1
+    clean_outer_score: 48
+    raw_reward_sha256: 2b0dc93d02594075e42f41965f1618e53608c1cf5a79ab8cfbca86be81cee049
+    verifier_tree_sha256: 339d0e832e4beaebba9d9c684b7087125ed699622ae5664e9d3dc73b5f99d0eb
+    model_requests: 30
+    model_tokens: 153970
+    normalized_model_spend_usd: 1.506576
+    openrouter_billed_usd: 0.566568
+    captured_evaluations: 0
+    valid_numeric_evaluations: 0
+    trusted_export_sha256: c728d679cdc0976352f2c86d3b0efda98307c7634691bbf5a70235d93818d71f
+    protocol_violation: development-evaluator-instruction-omitted
+    protocol_violation_evidence_sha256: 66c37f7dab668a71ea62d4e65909f700aedd13db2d7f6a7b2691c0822e8b353d
+    convergence_decision: APPARATUS_STOP
+    convergence_decision_sha256: 24676e1efa316adfa0e999c883e9ab7f7373d2cfcaf629d298b27377f25d0eea
+    candidate_or_event_reused: false
+    replacement_run_id: krv1-seed-f1-v2
+  fredkin_f1_v2:
+    status: completed-clean-verification-task-rejected
+    run_id: krv1-seed-f1-v2
+    clean_outer_score: 63
+    selected_evaluation_id: "0005"
+    candidate_content_sha256: 1ea8c30d58fddcdd2f7f52c801fea0c69c8e5e1fb7298da12c2cbfb485428a96
+    candidate_artifact_manifest_sha256: 93f32cf3933d7a8c4db1c11debce45d96074442f2a62d8144802ac39e7c4e505
+    clean_score_artifact_sha256: 092cf42b91121dde6c0fb7dca349db93ba4813a0a223f7ac5c5960fad68ef45a
+    clean_verifier_tree_sha256: 1841c12067f446b8d53e54fa45a6ec5f24eed3c5eaac3cb6f59a8b06c920636c
+    outer_verifier_tree_sha256: 339d0e832e4beaebba9d9c684b7087125ed699622ae5664e9d3dc73b5f99d0eb
+    model_requests: 25
+    model_tokens: 119688
+    normalized_model_spend_usd: 1.203387
+    openrouter_billed_usd: 0.452868
+    captured_evaluations: 5
+    valid_numeric_evaluations: 5
+    distinct_candidate_hashes: 5
+    distinct_scores: 5
+    trusted_export_sha256: 29dcbd54d2b0fee107c4437e6e18eb49dab1d8c0c80439552a2818ffb3ec8cfc
+    convergence_decision: TASK_REPLACE
+    convergence_decision_sha256: 33eb6506a49bb0a4a1aa048f16b3259ebc4e0219eb24d962a59d0f9bc0a96989
+    convergence_reasons:
+      - insufficient_remaining_headroom
+    remaining_headroom: -25
+    required_remaining_headroom: 4
+    candidate_or_event_reused: false
+    replacement_task: autolab-stack-machine-golf
+    replacement_run_id: krv1-seed-g1
+  stack_machine_g1:
+    status: completed-clean-verification-task-rejected
+    run_id: krv1-seed-g1
+    clean_outer_score: 1024
+    selected_evaluation_id: "0004"
+    candidate_content_sha256: e119084d417815d402bd99ca4a97ab48f4c9d55484be8e038af3a19135faf69e
+    candidate_artifact_manifest_sha256: 3d78bdc703b1f54d671789ae6135cb2d074b7e3bbe7e9cf25f3fd0245fb1213c
+    clean_score_artifact_sha256: d21d29b7aa346f3fed4e6bd753c4fad9cc1293074f3af2c67375448d8c1c1788
+    clean_verifier_tree_sha256: eb584ff5d23bb84efc359e6ef1937cd94f9a4cf640c917aa1f0506841dbdfac3
+    model_requests: 12
+    model_tokens: 36478
+    normalized_model_spend_usd: 0.290943
+    openrouter_billed_usd: 0.115923
+    captured_evaluations: 4
+    valid_numeric_evaluations: 4
+    distinct_candidate_hashes: 4
+    distinct_scores: 4
+    trusted_export_sha256: eb6c2c12fb83534933f97414f2c4980d825e70ffd041f56ee3fc2bf1fb5a9fa4
+    convergence_decision: TASK_REPLACE
+    convergence_decision_sha256: 91fc615e97aa8029157c1a591d00e385f17d03a536dd18952f4c2d2e576612b5
+    convergence_reasons:
+      - insufficient_remaining_headroom
+    remaining_headroom: -2506
+    required_remaining_headroom: 160.2
+    candidate_or_event_reused: false
+    replacement_task: autolab-z-order-range-scan
+    replacement_run_id: krv1-seed-h1
+observed_gate_passes:
+  renderer_v2_condition_index_context:
+    status: passed-model-free-on-rejected-h1-v2-export
+    renderer_version: yukon.research-view-renderer.v2
+    full_conditions_retained_in_canonical_atoms: true
+    condition_index_contains_fingerprint-event-set-groups_only: true
+    atom_bytes_equal_across_arms: true
+    index_tokens: {R0: 301, R1: 976, R2: 1429}
+    total_tokens: {R0: 24586, R1: 25260, R2: 25714}
+    source_sha256: 4874f575042c140fb654348324f947316fba633c013d8ff00eb88c8c9668483d
+    rejected_history_used_as_scientific_evidence: false
+  z_order_h5_exact_openai_tool_canary:
+    status: tool-path-pass-with-local-stop-handoff-repaired-in-v17
+    run_id: krv1-canary-h5
+    endpoint_tag: openai
+    model_requests: 3
+    model_tokens: 16880
+    normalized_model_spend_usd: 0.085484
+    openrouter_billed_usd: 0.053377
+    executable_nonempty_shell_calls: 3
+    development_evaluations: 1
+    fourth_request_upstream_disclosed: false
+    fourth_request_local_stop_reason: conservative-input-token-reservation-unfunded
+    harbor_terminal_label_before_v17_repair: ApiRateLimitError
+    scientific_observation: false
+    candidate_score_trace_or_event_reused: false
+    usage_summary_sha256: 85d69b5b8e7258276e7f0d4b9e5ca56a307162eff83631b0a808aa97d6df76c4
+    evaluation_event_sha256: dce1fda87a6058607b8f28376c0002194c557b842117bac83b13629e5f543621
+    conditional_seed_unlocked: krv1-seed-h1-v2
+  dungeness_core_tests: 154
+  dungeness_gateway_tests: 76
+  yukon_tests: 112
+  yukon_tests_skipped_historical_fixture_only: 2
+  public_release_hash_verification: passed
+  calibration_events: 54
+  calibration_excluded_undated: 895
+  seed_convergence_checker:
+    status: implemented-model-free
+    evidence_schema: yukon.seed-convergence-evidence.v2
+    decision_schema: yukon.seed-convergence-decision.v2
+    decisions:
+      - PASS
+      - ADMIN_RETRY
+      - TASK_REPLACE
+      - APPARATUS_STOP
+      - STUDY_STOP
+    eligible_seed_histories: 0
+    treatment_chains_started: 0
+    seed_run_attempts: 11
+    paid_seed_runs: 10
+    paid_seed_apparatus_attempts: 6
+    zero_cost_pre_reservation_apparatus_attempts: 1
+    rejected_task_convergence_seed_attempts: 4
+    bounded_route_diagnostics: 1
+    zero_cost_tool_protocol_canaries: 2
+    zero_cost_post_reservation_tool_protocol_canaries: 1
+    paid_tool_protocol_canaries: 4
+    latest_decision: APPARATUS_STOP
+    latest_decision_sha256: null
+    latest_reasons:
+      - apparatus_failure:renderer-index-context-overflow
+  autolab_internal_execution_boundary:
+    status: authorized-local-only
+    source_commit: 7aff5fe71dfbe152fb0b8e8ac8087210b4bc27d5
+    declared_license: none
+    redistribution_allowed: false
+    publication_eligible: false
+    autolab_bytes_in_kg: false
+  adversarial_splay:
+    status: accepted-model-free
+    lock_sha256: 2bc0b35789eb6467c493316d37cb337875c5f0d6ef52774137bb41b9688abcbf
+    source_tree_sha256: 617b0e25ec3109dd45288cf6033774ce0d3ac21f2894390ad5e91600bb30346d
+    task_tree_sha256: c8eb2ccbfe7e1cb132331f9683f5d97d1dc8e88d608595a9b4f86829f02f4791
+    verifier_tree_sha256: 44efd2d6a947e0968f42eb0da3ee81263d474a36dd97f5bcb5d8fddca063e142
+    public_tree_sha256: 102da32ea5b29f0aed9ddf746602080a47adc9a4f09e3ec561ddbec6ae5317c9
+    no_op_metric_rotations: 48656
+    passing_full_harbor_smokes: 2
+    deterministic_reward_bytes: true
+    model_usage: 0
+  toy_isa_opt:
+    status: accepted-model-free
+    lock_sha256: 70494a0c1ad1fb91f571056c7c6348c565b23e75c0d305d8d336c75a2e4dcd65
+    source_tree_sha256: c434a7749a0c287fd8b67c58e5ef0612f227623d119184249c77881403b789b3
+    task_tree_sha256: cfe4d06581c890b1055d5ce1f419c7f61ea44d164b3cf158d30a1390401f59e4
+    verifier_tree_sha256: 401a2e26b7c9c296dc06098b786b0417a5aedb6197b561f642645ca36fd2f102
+    public_tree_sha256: 66d3c49d97dd12267faccc56be03d58c56951021304097162b196a1ec6455db9
+    no_op_metric_cycles: 9220
+    declared_reference_cycles: 2954
+    upstream_reward_saturation_cycles: 1545
+    passing_full_harbor_smokes: 2
+    raw_reward_sha256: c5a0150605685058e0744cffed34dfd849bae1535177da81d5ee9be864d07958
+    harbor_reward_sha256: 23de7d7049369f936918e48617fcf842b8d2e9a6c269b239d890f6547059e1dc
+    model_usage: 0
+  discover_sorting:
+    status: model-free-qualified-then-task-rejected-after-zero-event-seed
+    replaces: dungeness-ecdsa-fail
+    lock_sha256: b0f0eca43820548b406b66ba293a7aa36b0412a15eae79f1a94d9abcc2e57700
+    source_tree_sha256: 00a61281ba77f3c62fa3695ebbd7eb1c46bde001a30ca9d59c0607e751b5cd7a
+    task_tree_sha256: d6e33501a5f34ea7dfd69bb7762a4e73002c1e0fe9ac1dd8b1d4bccfdb641883
+    verifier_tree_sha256: 3bd1f8ae9f992df10bf26ef5166958a8af72cd98de1d5ea1f9386843df2974c6
+    public_tree_sha256: db6d8c3f9ecb12bb5a807330a7d8795f1292c66e1f78ef6915f8e98f829ad422
+    no_op_metric_comparators: 80
+    declared_reference_comparators: 60
+    passing_full_harbor_smokes: 2
+    raw_reward_sha256: af66f2a491b22e3ca7f5aca8d63a5019489b781d6ac81a7aa23c767bb264c65e
+    trusted_snapshot_sha256: 8061c743199da366d277491a07c183351b3f7b123a6b5779a42b2c12a73b8000
+    verifier_snapshot_sha256: ab09d39ece2e8ed6a4130c2d5104bcf3e6e7531f124197279d3a297224b2bde2
+    private_solution_bytes_included: false
+    undeclared_nested_files_rejected: true
+    model_usage: 0
+    rejected_seed_run_id: krv1-seed-d1-v2
+    rejected_seed_outer_score: 60
+    rejected_seed_development_events: 0
+    rejected_seed_decision_sha256: 048d9adedc130761b9b672adb8fe503098f85eef1f00ff107c155bfbe1b3b7a2
+  fredkin_sort_network:
+    status: task-rejected-after-clean-saturated-replacement-seed
+    replaces: autolab-discover-sorting
+    lock_sha256: afe00c317ca07f0086c341e65ebeac8628b71fa6a924aec0dc7a1da7c603e81b
+    source_tree_sha256: 47a80815316fcde05beb737d6ea62a8020f33d01df3f3bef46e2ca1db341c14f
+    task_tree_sha256: a5e1415172f193dd6420f57cefc30f0f13440d9b6ba5e7e2a2f2f034db162e81
+    verifier_tree_sha256: 3a829968919e24cc57db4e6da8e6576dfb10a94bf837a6e016167c02d1ad0121
+    public_tree_sha256: 8dba3af1f4953f8b4c7e913d90187cf10f7f9781daf0dee173f3598f3abb5013
+    no_op_metric_gates: 128
+    declared_reference_gates: 88
+    upstream_reward_saturation_gates: 53
+    passing_full_harbor_smokes: 2
+    raw_reward_sha256: de4c40cb77929b4935fe0c6938888dbd2f7bc49d93d209ea78302e36f2a8ead7
+    trusted_snapshot_sha256: 119de72d2001685cc0720a44066bc4e8458e1948221879fd38edd810ba74dc48
+    verifier_snapshot_sha256: 339d0e832e4beaebba9d9c684b7087125ed699622ae5664e9d3dc73b5f99d0eb
+    private_solution_bytes_included: false
+    model_usage: 0
+    first_seed_run_id: krv1-seed-f1
+    first_seed_outer_score: 48
+    first_seed_development_events: 0
+    first_seed_decision: APPARATUS_STOP
+    first_seed_candidate_or_event_reused: false
+    evaluator_instruction_smoke_run_id: krv1-smoke-f3
+    evaluator_instruction_sha256: 044d5d82956f5c8f8ac71cdcea60a70b0f715887a721158288f21b1cfc84c922
+    replacement_seed_run_id: krv1-seed-f1-v2
+    replacement_seed_outer_score: 63
+    replacement_seed_development_scores: [128, 88, 78, 68, 63]
+    replacement_seed_decision: TASK_REPLACE
+    replacement_seed_decision_sha256: 33eb6506a49bb0a4a1aa048f16b3259ebc4e0219eb24d962a59d0f9bc0a96989
+    replacement_seed_candidate_or_event_reused: false
+  stack_machine_golf:
+    status: model-free-qualified-then-task-rejected-after-clean-saturated-seed
+    replaces: autolab-fredkin-sort-network
+    lock_sha256: 8a4bcd67841a3da0228151b45783c93f9b12d263c5e3ba3528f6e1f34e9c25ab
+    source_tree_sha256: ba2798d2b715f65c0f4ce2e51a28fa269651b40ebcca22f59f97937e89c44315
+    task_tree_sha256: a5a9c98dc9d95f5f475f1ab293d2458d9109ebf1e6816f6829016bb0f8f61e7c
+    verifier_tree_sha256: 1bd1fb5c4e7d84bf1dbe84803c30340e398d0a728a31a281c823227aeec7e363
+    public_tree_sha256: 4efe7bd7b8ebbdf7921829f034358fda5cee3c0879dea93dca27bb0197b9e4fa
+    no_op_metric_instructions: 5132
+    declared_reference_instructions: 3530
+    upstream_reward_saturation_instructions: 1026
+    passing_full_harbor_smokes: 2
+    smoke_run_ids: [krv1-smoke-g2, krv1-smoke-g3]
+    raw_reward_sha256: dc0d810c5b42dcc0ab648e8913ab2b3a911da3b5e802c8c0afa2b84f464b4bfc
+    trusted_snapshot_sha256: c2c50d60c5a44ef8e2569da3d93e64fe1a06e54a2d1dedbc348fae909eafb547
+    executed_verifier_snapshot_sha256: 39be84850d4aa382a2d737b0d8da48e9aeeb049370386620851cd55b3da515e4
+    upstream_verifier_snapshot_sha256: eb584ff5d23bb84efc359e6ef1937cd94f9a4cf640c917aa1f0506841dbdfac3
+    private_solution_bytes_included: false
+    model_usage: 0
+    first_seed_run_id: krv1-seed-g1
+    first_seed_outer_score: 1024
+    first_seed_development_scores: [5132, 1026, 1025, 1024]
+    first_seed_decision: TASK_REPLACE
+    first_seed_decision_sha256: 91fc615e97aa8029157c1a591d00e385f17d03a536dd18952f4c2d2e576612b5
+    first_seed_candidate_or_event_reused: false
+  z_order_range_scan:
+    status: accepted-model-free-final-task-replacement-v22-evaluator-gate-passed
+    replaces: autolab-stack-machine-golf
+    lock_sha256: d67eee63802a5cf9af6e1648e5f9714a13ea35e2e700460da99070e599710d0c
+    source_tree_sha256: 6777019ad1a3cd9d3edb0e25d3e8074e855b9cc6bfba7b7048b84ba93d971267
+    task_tree_sha256: 941f7582c9b6c1fbeef9787aebd95c5e814672172b7eaeafe60572f6ceb06483
+    verifier_tree_sha256: 2435f4c32f7dfe0ad06daf9bcf43f8a1bf974aacca06ec4ee970bcc5fd6cce8c
+    public_tree_sha256: 58fd7a1ed84d0dc6ca899989894bf1211e3f9129e62663a1f42f72fa45f17a33
+    declared_baseline_seconds: 2.0
+    declared_reference_seconds: 0.02
+    upstream_reward_saturation_seconds: 0.0002
+    passing_full_harbor_smokes: 3
+    smoke_run_ids: [krv1-smoke-h1, krv1-smoke-h2, krv1-smoke-h4]
+    no_op_metrics_seconds: [1.949724, 1.979092, 1.935261]
+    no_op_range_seconds: 0.043831
+    no_op_range_meaningful_gain_units: 0.2213686869
+    smoke_reward_sha256:
+      - 294fff4b6654cf5bc11dfc9555cde63da2042176e86e4580f859c57072d76841
+      - 187cf295600e2be2e9a0c306599567f1150b917570123fce99f9eeb15900e858
+      - e4b34efc077371e128fb529969d8a3b3909e1b8fbe415514afa4e668073f9fcf
+    arm64_platform_manifest_digest: sha256:587f5c8de927f3360b160126b7cd42b2215e2f055dfbe2eb1890a9b056fb5c38
+    private_solution_bytes_included: false
+    model_usage: 0
+    first_seed_run_id: krv1-seed-h1
+  canonical_atom_set_sha256: 9094bf5566500110eb573c79a3c73f2bc6a69fe5199cbcd1f55eb7a97ffd30d8
+  shared_atoms_file_sha256: 158dc2fc05c251d1499f4f92a39b7dad61eb0e622a3acc1e48bb9686530ec0d7
+  repeated_compilation: byte-identical
+  payload_tree_sha256:
+    R0: 544cda9f9a47bc11358067321bd743b7b25decda51a9f08f35fd4e40b3e8b68c
+    R1: 8601f6e149109a7a7ef231dba81c683d9b502baf18336a6965bc0847f4a33572
+    R2: b6da2ec6c477c1a50fa29a534b52710908e8ed49051f356dcafdf29390ca0f2c
+  conservative_context_limits:
+    R0: {total_tokens: 24538, index_tokens: 372}
+    R1: {total_tokens: 26666, index_tokens: 2501}
+    R2: {total_tokens: 27418, index_tokens: 3252}
+  independent_o200k_base_counts:
+    R0: {total_tokens: 24242, index_tokens: 311}
+    R1: {total_tokens: 25917, index_tokens: 1986}
+    R2: {total_tokens: 26544, index_tokens: 2613}
+  live_container_smoke:
+    docker_server: 29.0.1
+    agent_view_readable: true
+    agent_view_writable: false
+    sibling_container_view_present: false
+  ecdsa_colima_host:
+    status: accepted-model-free
+    profile: dungeness-eval
+    runtime: rootful-docker-on-colima-vz
+    cpus: 10
+    memory_bytes: 18816724992
+    candidate_uid: 10001
+    root_owned_mode_0600_readable_by_candidate: false
+    root_owned_mode_0600_writable_by_candidate: false
+    failed_apparatus_run: krv1-smoke-c1
+    accepted_replacement_run: krv1-smoke-c2
+    accepted_metric_ecdsafail_score: 10758874395.0
+    correctness_shots: 9024
+    correctness_mismatches: 0
+    score_artifact_sha256: d55a04911e751d4ed72ba54a5b6f823b7fe936f5a124ab901edf6811914aca60
+    reward_sha256: 7e00f7148076691481d66001dff9b8ac1ca7d4078c06b4d13155b9eeeb50ae5a
+    verifier_tree_sha256: c058ae1cf5335748c73e422ae99bee175dc9aba7f142f2f5fe8f1736faef09a6
+    model_requests: 0
+    model_spend_usd: 0
+  openrouter_live_policy_validation:
+    status: frozen-routes-live-kimi-normalization-passed-v22-study-stopped
+    provider_require_parameters: false
+    exact_provider_pin: true
+    fallbacks_allowed: false
+    price_ceiling_enforced: true
+    gpt_endpoint_tag: amazon-bedrock/us-east-1
+    gpt_endpoint_status: 0
+    gpt_frozen_max_input_per_mtok_usd: 11.0
+    gpt_frozen_max_cached_read_per_mtok_usd: 1.1
+    gpt_frozen_max_output_per_mtok_usd: 49.5
+    kimi_endpoint_tag: together
+    kimi_endpoint_status: 0
+    kimi_frozen_max_input_per_mtok_usd: 3.0
+    kimi_frozen_max_cached_read_per_mtok_usd: 0.3
+    kimi_frozen_max_output_per_mtok_usd: 15.0
+    pricing_policy_sha256: 854df779aa8ab027212ffd4f11782f5563e89ee85cd903f96c1153ca45046b70
+    tool_protocol: schema-function
+    tool_protocol_canary_status: gpt-bedrock-failed-kimi-together-passed-h8
+    gateway_source_sha256: 383e0da52d5cf4794de93c5fce4c089560228755ec164e3354d6e8ea80fa59d6
+    codex_gateway_adapter_sha256: 27a4cf48d12de711632a3bc9cc821626caeaf58f1d6fe5c80429e96715404846
+    gpt_agent_profile_sha256: 2531d8771e8bcadd4621e3c209611d439708c20bf7addf335286123dcbf94c8f
+    kimi_agent_profile_sha256: a5a8b62503649cc616f21272c5fd52ae3dfd05fa9d72e36ac4e01bb293d6df97
+    superseded_openai_endpoint_status: -2
+    superseded_kimi_endpoint_status: -2
+    gpt_5_6_sol_max_completion_tokens: 128000
+    kimi_k3_max_completion_tokens: 943718
+    tier_aware_billed_cost_fallback: passed
+  metered_workspace_benchmark:
+    status: full-source-isolation-render-and-container-tested
+    disposable_agent_workspace_only: true
+    trusted_verifier_script_unchanged: true
+    exact_scorer_source_present_in_agent_workspace: false
+    exact_scorer_cargo_target_present_in_agent_workspace: false
+    prior_score_artifacts_present_in_agent_workspace: false
+    benchmark_wrapper_forwards_to_evaluate: true
+    agent_memory_mb: 8192
+    trusted_simulator_measured_memory_gb: approximately-15
+    pinned_source_repository_web_results_blocked: true
+    offline_candidate_compile: passed
+    direct_eval_circuit_invocation: rejected-no-target
+    cargo_manifest_before_sha256: 41e51536607e9a25f171f6d7cc108508f5761afa5f35b03d6a817d2e8ba096bd
+    cargo_manifest_after_sha256: dd238c9e821f69197bb7a41bebdb74488bff96db59d58ab2dfb443a20be41c03
+    models:
+      - openai/gpt-5.6-sol
+      - moonshotai/kimi-k3
+  openrouter_authenticated_runtime:
+    status: accepted-under-preregistration-v2
+    source: user-managed-root-env
+    file_mode: "0600"
+    variable: TESTBED_OPENROUTER_API_KEY
+    key_format_valid: true
+    authentication_valid: true
+    key_disabled_field: absent
+    authenticated_response_implies_enabled: true
+    provider_limit_finite: false
+    provider_limit_required: false
+    first_seed_cap_usd: 6
+    study_ceiling_usd: 500
+  farmshare_launcher_fail_closed: true
+  hard_study_spend_ledger:
+    status: passed-model-free-and-independent-reaudit
+    budget_scope: knowledge-representation-autoresearch-v1
+    ceiling_usd: 500
+    full_cap_reserved_before_harbor: true
+    concurrent_overshoot_rejected: true
+    missing_or_inflight_usage_retains_full_reservation: true
+    persisted_usd_rounding: upward-to-0.000001
+    unknown_labeled_scope: rejected
+    paid_farmshare_cross_host_bypass: disabled-before-keychain
+  external_verifier_provenance:
+    status: passed-with-exact-outer-candidate-artifact-v22
+    hash_is_exact_executed_trusted_tree: true
+    outer_score_names_exact_candidate_sha256: true
+    model_free_smoke_run_id: krv1-smoke-h4
+  external_development_evaluator:
+    status: passed-model-free-v22
+    canonical_file_only_client: true
+    non_raw_content_rejected_before_capture: true
+    trusted_verifier_diagnostic_hashes_retained: true
+    baseline_metric_seconds: 1.92631
+    baseline_candidate_sha256: 44a7f8bcdf83bda7349288c7ae5872fa045761dd8d5c5cd07fb119adeca4a8c2
+  milestone_candidate_validity:
+    status: passed
+    invalid_late_capture_can_advance: false
+  local_model_budget_stop:
+    status: passed-unit-exact-container-smoke-v16-token-reservation-and-v17-handoff-marker
+    trusted_gateway_exhaustion_required: true
+    best_snapshot_restored_before_verifier: true
+    positive_budget_provider_failure_remains_error: true
+    token_reservation:
+      conservative_input: request-bytes-plus-16384-tokens
+      output_limit_clamped_before-upstream: true
+      concurrent_inflight_reservations_counted: true
+      unused_reservation_released_on-settlement: true
+      impossible_provider-overrun-recorded-then-fails: true
+      reservation-rejection-resource-persisted: true
+      adapter-accepts-only-enumerated-trusted-stop: true
+  apparatus_evidence_boundary:
+    status: passed-v22-final-seed-task-failed-study-stopped-before-treatment
+    authored_purposes_non_scientific:
+      - apparatus-smoke
+      - apparatus-canary
+    study_cost_retained: true
+  farmshare_model_free_attempts: 9
+  normalized_model_spend_usd: 13.263051
+  openrouter_billed_usd: 6.929146
+  normalized_model_spend_breakdown:
+    failed_seed_route_selection_usd: 0
+    bounded_route_diagnostic_usd: 0.00084
+    failed_seed_price_tier_usd: 0.547233
+    failed_seed_local_cap_handoff_usd: 2.24941
+    failed_seed_evaluator_instruction_usd: 1.506576
+    failed_seed_openrouter_tool_protocol_usd: 0.311207
+    failed_paid_tool_protocol_canary_usd: 2.742837
+    passed_paid_tool_protocol_canary_usd: 0.139889
+    failed_seed_renderer_context_usd: 0.641564
+    rejected_task_convergence_seed_usd: 4.070301
+    administrative_seed_failure_usd: 1.053194
+    eligible_seed_history_usd: 0
+    treatment_usd: 0
+
+v34_first_model_release:
+  status: pre-treatment-freeze-passed
+  renderer: yukon.research-view-renderer.v4
+  frozen_histories: 6
+  opaque_chains: 18
+  maximum_rounds: 54
+  all_six_treatment_orders_once: true
+  incremental_ceiling_usd: 162
+  committed_before_treatment_usd: 25.787305
+  hard_study_ceiling_usd: 500
+  active_reservations: 0
+  metric_identity_enforced: true
+  real_event_append_views_passed: 18
+  maximum_first_handoff_tokens: 13906
+  maximum_twelve_event_projection_tokens: 16880
+  native_smoke_score: 1243629702
+  toy_isa_smoke_score: 7337
+  vliw_smoke_score: 3360
+  prior_versions:
+    v32: excluded-after-paid-apparatus-failure
+    v33: excluded-before-model-contact-context-failure
+  freeze_manifest: research/EXPERIMENTS/v34-freeze.json
+  independent_validation: research/EXPERIMENTS/v34-freeze-validation.json
+  known_external_task_risk: "AutoLab tasks: no declared license as of commit 7aff5fe71dfbe152fb0b8e8ac8087210b4bc27d5; used for internal evaluation only, not redistributed"
+
+v36_terminal_milestone_restart:
+  status: pre-treatment-freeze-passed
+  renderer: yukon.research-view-renderer.v4
+  source_histories: 6
+  opaque_replacement_chains: 18
+  maximum_rounds: 54
+  treatment_balance: {R0: 6, R1: 6, R2: 6}
+  excluded_versions:
+    v34: terminal-candidate-milestone-omission
+    v35: terminal-candidate-milestone-omission-discovered-after-outcomes
+  terminal_candidate_policy:
+    seal_after_each_round: true
+    content_addressed: true
+    read_only: true
+    outer_verify_after_chain: true
+    visible_to_later_sessions: false
+  diagnostic_recovered_score: 1543
+  diagnostic_prior_recorded_score: 7337
+  core_tests_passed: 182
+  gateway_tests_passed: 77
+  yukon_tests_passed: 117
+  yukon_intentional_skips: 2
+  native_smoke_score: 1243629702
+  toy_isa_smoke_score: 8007
+  vliw_smoke_score: 3360
+  live_openrouter_route_passed: true
+  ledger_committed_before_launch_usd: 65.777718
+  fail_closed_active_reservations_usd: 30
+  nominal_v36_ceiling_usd: 162
+  hard_study_ceiling_usd: 500
+  freeze_manifest: research/EXPERIMENTS/v36-freeze.json
+  freeze_sha256: b30a511e70dc7f8a163e190426b4b54bbd6de3522440a1aa25ac1dc5eb639c28
+  independent_validation: research/EXPERIMENTS/v36-freeze-validation.json
+  confirmation_automatic: false
+  known_external_task_risk: "AutoLab tasks: no declared license as of commit 7aff5fe71dfbe152fb0b8e8ac8087210b4bc27d5; used for internal evaluation only, not redistributed"
+
+v36_pilot_result:
+  status: PILOT_INCONCLUSIVE
+  completed_active_chains: 18
+  completed_model_sessions: 54
+  active_blocks: 6
+  treatment_balance: {R0: 6, R1: 6, R2: 6}
+  apparatus_gates_passed: true
+  protocol_violations: 0
+  administrative_failures_retained: 18
+  treatment_failures: 1
+  primary_contrasts:
+    R1_minus_R0:
+      progress_auc_estimate: 1.078671215596945
+      interval_95: [-0.0013964251516114246, 4.315615812488854]
+      wins: 1
+      blocks: 6
+      final_noninferior_within_0_25: true
+    R2_minus_R0:
+      progress_auc_estimate: 1.8581280841908026
+      interval_95: [-0.5362272582189598, 5.611510791366906]
+      wins: 2
+      blocks: 6
+      final_noninferior_within_0_25: false
+  universal_winner_established: false
+  statistically_indistinguishable_best_set_at_pilot_resolution: [R0, R1, R2]
+  operational_default: R0
+  operational_default_basis: simplest-member-not-proven-superior
+  kimi_replication_gate_passed: false
+  kimi_replication_started: false
+  confirmation_started: false
+  completed_chain_spend_usd: 37.412034
+  ledger_settled_actual_usd: 73.189752
+  ledger_active_fail_closed_reservations_usd: 30
+  ledger_committed_usd: 103.189752
+  hard_study_ceiling_usd: 500
+  blinded_results:
+    path: eval/experiment-results/users/bx/dungeness-representation-v36-terminal-milestone-restart/blinded-results.json
+    sha256: 69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a
+  frozen_failure_classifications:
+    path: results/v36-failure-classifications.json
+    sha256: ebb82c9cc20ecc80cb22bc959eb3c96c2d088e86108bb9b02047a0d6b593038d
+  analysis:
+    path: results/v36-pilot-analysis.json
+    sha256: 364df0c9cf815b0a12fc47713d982e8367dbf7c4350358539e79c5348495f182
+    bootstrap_draws: 100000
+  result_freeze:
+    path: research/EXPERIMENTS/v36-result-freeze.json
+    sha256: e9f4b0e7ef279ab62aff24d58b20359d0964d9e34f8a54e1c86648c91b673633
+    generator_path: research/EXPERIMENTS/finalize-v36-results.py
+    generator_sha256: 5f16e344ae64f8688dcc307b4806949f5a4f0c362f0cea200ea9eb9d72986d7d
+  reserve_extension:
+    status: stopped-before-model-calls
+    paid_model_calls: 0
+    reason: balanced-ecdsa-reserve-history-failed-context-and-validity-gates
+  post_result_validation:
+    core_tests_passed: 184
+    gateway_tests_passed: 77
+    yukon_tests_passed: 119
+    yukon_intentional_skips: 2
+    failures: 0
+    public_data_verification: passed
+    result_freeze_rederivation: byte-identical
+  known_external_task_risk: "AutoLab tasks: no declared license as of commit 7aff5fe71dfbe152fb0b8e8ac8087210b4bc27d5; used for internal evaluation only, not redistributed"

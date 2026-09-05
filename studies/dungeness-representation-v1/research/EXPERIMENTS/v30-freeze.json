@@ -1,0 +1,52 @@
+{
+  "schema": "dungeness.v30-history-qualification-freeze.v1",
+  "frozen_at": "2026-08-28T17:14:12.000Z",
+  "treatment_authorized": false,
+  "model_spend_authorized_usd": 0,
+  "files": {
+    "eval/controlled_history_bank.py": "32a3d53e0815648dcfaf6d53cf1ecf2de4f01918afa32d9f71f681d28fb7c4aa",
+    "eval/tests/test_controlled_history_bank.py": "9500ce80db4de9e347dcd4d2255f260647de22cb4b2caf3656cc02497d492390",
+    "eval/controlled-history-plans/v30-toy.json": "1800e130764b656b6ebf0ab57f0db710dc5060ef2617e0310f4009debbdb7c93",
+    "eval/controlled-history-plans/v30-vliw.json": "e0289cc7bfffd64efbc65be193ebfede4589c846493ffa02d74988072a4c7b43",
+    "eval/runs/.external-bundles/materialized/toy_isa_opt-internal-v1/bundle.lock.json": "70494a0c1ad1fb91f571056c7c6348c565b23e75c0d305d8d336c75a2e4dcd65",
+    "eval/runs/.external-bundles/materialized/vliw_scheduler-internal-v1/bundle.lock.json": "6060c38548801bf873bfcc3fa44a006ba3f3d9546cc65868ad9152bae6d573dd",
+    "eval/dungeness": "1d68e389935d557d3f122e02066a860d973436d05ac0ad1fa2ee20a5eccbfce6",
+    "eval/adapters/harbor/build.py": "d038836f44c32257c72cbb9bfd390a3564841b93fdd5af80c91c17cbf2406dd1",
+    "eval/history_bank.py": "6f1e41cfdb742c3783a7968825ee3518d2dfc4a8482c0d1b9a609008098d8736",
+    "kg/src/research-view.js": "fb01ad1318bb451422b95660796cd9910da58404d11574b106a0bf2dffa6d9e2",
+    "kg/src/research-view-cli.js": "e7b0c73660ceed002836f454cfa541fba65ce096def1fa8234e736d1243c8eaf",
+    "kg/test/research-view.test.js": "29ffc53a3f0c1cc268eee4368334058fbd8e78edb1cb5222da9ddc30b0a87f3b",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v29-toy-calibration.json": "f74c232d8ac86db75ae0078cbe5ec457a741b55906e4e184ac80c7fc97ab6da2",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v29-vliw-calibration.json": "4d338856ef8e1862ba3117edb66b37a086918a69f62ee43caef16f182cc09fd0",
+    "kg/studies/dungeness-representation-v1/preregistration-v30.md": "942b3dce1fc118c5b9ae35c9a1c6e094ab6b7b9d2eb30b8b180b355dee62c245",
+    "kg/studies/dungeness-representation-v1/v30-history-qualification.yaml": "deca7bd1905690117da4c5a74a468231d0545acc1ec72dfec783b0e9e3bd2b17",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v29-qualification-result.json": "486359f35253daf1b8ab2651be7b36baedbd9bd1b75f383b56d2185c43c86a80",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v29-freeze.json": "a1adbdf69a7588cfa61139c5b225c460d6e700a9084977131d21e4f22330ee7f",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v28-qualification-result.json": "bd277d1b6ae50a3e61c6a7ec394daf2f5bfff3fb7cb11413d03c73c6b8e5013a",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v28-freeze.json": "75c54e60b9bfec85887090392cfb6b245f7728481ab27712ad299b0ade07a65a"
+  },
+  "design": {
+    "tasks": 2,
+    "histories_per_task": 2,
+    "events_per_history": 4,
+    "required_clean_verifications": 20,
+    "timestamp_contract": "YYYY-MM-DDTHH:mm:ss.sssZ",
+    "trusted_export_schema": "dungeness.trusted-research-events.v2",
+    "materialization_namespace": "users/bx/v30"
+  },
+  "known_risk": "AutoLab tasks: no declared license as of commit 7aff5fe71dfbe152fb0b8e8ac8087210b4bc27d5; used for internal evaluation only, not redistributed",
+  "model_free_gates": {
+    "dungeness_core": {"passed": 174, "failed": 0},
+    "gateway": {"passed": 77, "failed": 0},
+    "yukon": {"passed": 115, "skipped": 2, "failed": 0},
+    "public_data": "PASS"
+  },
+  "budget": {
+    "scope": "knowledge-representation-autoresearch-v1",
+    "hard_ceiling_usd": 500,
+    "committed_usd": 25.227542,
+    "active_reservations": 0,
+    "remaining_usd": 474.772458
+  },
+  "next_gate": "independently replay 20 candidates, materialize four starts, and compile four windows twice; no treatment"
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "dungeness.v23-qualification-freeze.v1",
+  "frozen_at": "2026-08-28T05:18:00Z",
+  "repositories": {
+    "eval_base_commit": "adb208c5219c84b227af924678bd5bd8073b60f4",
+    "kg_base_commit": "3ef4e71aac4c26c67cd50f004961b1afcf2eb683",
+    "branch": "autoresearch/dungeness-representation-v23-20260827"
+  },
+  "files": {
+    "kg/studies/dungeness-representation-v1/preregistration-v23.md": "1d0bb94f13204424dfaf071eab32697004c96913329ec6666b599adc39235cb6",
+    "kg/studies/dungeness-representation-v1/v23-qualification.yaml": "5b98660429a31236ca5a7da9140732ffcd33c36baf8a8e56e37268441ce013b5",
+    "eval/experiments/users/bx/dungeness-representation-v23-pilot/experiment.yaml": "bbb3c5ba4363fcf5b73a1ace4671122b217c539aa00ef9fabbeba3902b44cc33",
+    "eval/run-specs/dungeness-representation-v23/krv23-route-canary-gpt.yaml": "306276a342cbd955a895a8349a781bb3dafafb2e1ce39231b62ab5cceeb15bb7",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-tool-gpt.yaml": "ea1a9de436b68e19f5f0e0112e51e0f2e0466d265b10bc711de2e346e1401425",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-tool-kimi.yaml": "adf49995f337be4a6d329bbba341b0e96b2486851e4285fee2f4b319cf408301",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-toy-gpt.yaml": "18b77853be5b48b75ee703ab132d688b2b789007ef586c0377fe35b66aeb511b",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-toy-kimi.yaml": "77f844456e0f282075019e7f11170cac4599798177fc9974fd424242f7c459bd",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-vliw-gpt.yaml": "c16b905db7b2af6821a5c0a2e4325b3b7f5e3929cf97f97730a37ea13b3fa183",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-vliw-kimi.yaml": "b707fcaa3dfa9b1bfbd51ba3373011347896dce5adfe17924db2094e8f8b5739",
+    "eval/agents/projects/dungeness/codex-openrouter/agent.yaml": "2531d8771e8bcadd4621e3c209611d439708c20bf7addf335286123dcbf94c8f",
+    "eval/agents/projects/dungeness/codex-kimi-openrouter/agent.yaml": "a5a8b62503649cc616f21272c5fd52ae3dfd05fa9d72e36ac4e01bb293d6df97",
+    "eval/services/gateway/pricing.yaml": "ebb22dcaf63e15d59a44db1fdd08e7c8df409e6dead8af7ff1756f78398d61bb",
+    "eval/external-bundles/autolab/cpu-reserve.json": "9f2e7bc9435ebc7cf9da128ba2ef491ad01fa0c1b8c6a43ec680b48c22646e5e",
+    "eval/adapters/harbor_bundles/runtime.py": "581ab09ccf166f7e036dfc41ca63461e1190754d786a6cfe884ce4c1b6768394",
+    "eval/representation_study.py": "bfc05a3679525c9a5fae18511b33cffff8a5937288f0972be6c8e1f45881949e",
+    "eval/dungeness": "d75abba3f1818e57f019f13d5ce2f2f9358cb89017753edd6f74f6285dde3ecd",
+    "kg/src/research-view.js": "2a5d24ad02577eca072f47ff67abf4f34c7cdc102b8b20f09244ecc035316b60",
+    "kg/src/research-view-cli.js": "c4d4de396a74e579299f0ac6d4406cc6c68c78466145561707237052716b01d5"
+  },
+  "paid_treatment_allowed": false,
+  "next_gate": "exact GPT OpenRouter route canary"
+}

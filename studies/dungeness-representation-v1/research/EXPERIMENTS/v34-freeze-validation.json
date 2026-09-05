@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "candidate_artifacts_resolved_and_tree_hashed": 6,
+    "cells": 18,
+    "dry_run": "PASS",
+    "experiment_hash": "7a153aa222001cd099b16295fb70581c687f9a72a952d6878a9b7ba28764ad24",
+    "manifest_files_rehashed": 420,
+    "opaque_run_spec_label_leaks": 0,
+    "research_views_resolved_and_tree_hashed": 18,
+    "shared_controls_equal": true,
+    "treatment_counts": {
+      "R0": 6,
+      "R1": 6,
+      "R2": 6
+    },
+    "unique_treatment_orders": 6,
+    "within_block_atom_byte_parity": true
+  },
+  "decision": "Release only the frozen first opaque chain.",
+  "errors": [],
+  "freeze_path": "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v34-freeze.json",
+  "freeze_sha256": "80e4a5d32ad699cca6ca83419899c373fed51ed33a393dd48d2b57a61b044040",
+  "schema_version": 1,
+  "status": "PASS",
+  "study_version": 34,
+  "type": "dungeness-representation-freeze-validation",
+  "validated_at": "2026-08-28T18:16:00Z"
+}

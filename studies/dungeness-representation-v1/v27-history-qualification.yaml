@@ -1,0 +1,20 @@
+schema: dungeness.representation-study-qualification.v1
+version: 27
+supersedes: 26
+treatment_authorized: false
+model_spend_authorized_usd: 0
+selection_sha256: 3958f0800e9f6900424c40daf2feb07581cd171292240066c0c3dc7c09ec3492
+verification_plan_sha256: c0547d90897b514f34b425e97871cc1122a6037b2e3e948392babd95ace147ad
+verifier_tree_sha256: c058ae1cf5335748c73e422ae99bee175dc9aba7f142f2f5fe8f1736faef09a6
+required_candidates: 14
+windows:
+  - ecdsa-archive-a
+  - ecdsa-archive-b
+materialization_namespace: users/bx/v27
+deltas:
+  - explicit-custom-ref-fetch
+  - fetched-commit-assertion
+  - custom-ref-regression-test
+  - builder-source-hash-in-bank-identity
+restart_from_clean_verification: true
+stop_on_any_failure: true

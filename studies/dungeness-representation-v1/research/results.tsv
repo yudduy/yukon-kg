@@ -1,0 +1,32 @@
+iteration	commit	metric	status	description
+0	BASELINE	0	keep	v22 ended with zero eligible seed histories
+1	WORKTREE	0	keep	model-free seed campaign apparatus passes focused Python and Yukon tests
+2	WORKTREE	0	pivot	40k-token canary stopped locally at zero cost; 100k reservation envelope and best-across-session handoff frozen next
+3	WORKTREE	0	refine	GPT route made two calls and one eval for $0.160515 but $1 reservation stopped before an optimization attempt
+4	WORKTREE	0	keep	GPT route completed four calls, one official eval, clean verification, and budget-stop recovery for $0.225382
+5	WORKTREE	0	pivot	agent-tool timing spread exceeded the target effect; deterministic adversarial-splay replacement passed two exact no-model smokes
+6	WORKTREE	0	pivot	three exact Kimi routes failed administratively before any seed history; retain Kimi only as gated replication
+7	WORKTREE	0	keep	external timeout propagation and model-scoped route validation pass 161 core, 77 gateway, and 113 Yukon tests
+8	WORKTREE	0	pivot	v23 Splay/GPT-A failed closed after $1.008114 because the clean verifier retained no exact final candidate
+9	WORKTREE	0	keep	unconditional final-candidate retention passes a full Harbor smoke and complete model-free suite; restart as v24
+10	WORKTREE	0	pivot	v24 Splay/GPT-A produced four valid events for $4.156310 but renderer v2 rejected R2 at 32022 tokens; no evidence admitted
+11	WORKTREE	0	refine	renderer v3 preserves atoms and fits the excluded diagnostic; native ECDSA replaces saturated Splay for fresh v25 campaigns
+12	WORKTREE	0	keep	v25 passes 162 core, 77 gateway, 113 Yukon tests, live GPT validation, and an exact zero-cost native ECDSA smoke; freeze 41fe7ae5 binds the campaign
+13	WORKTREE	0	pivot	ECDSA/GPT-A records seven valid baseline events for $2.864841 but only one candidate and score; history rejected before treatment
+14	WORKTREE	0	pivot	ECDSA/GPT-B also repeats the baseline; two failures make the frozen four-of-five gate impossible, so v25 stops before treatment
+15	WORKTREE	0	keep	all 54 sealed ECDSA commits are recoverable and the final artifact clean-verifies at the exact Yukon score; build a frozen history bank next
+16	WORKTREE	0	pivot	v26 reproduces all 14 scores but custom bundle refs are not imported by ordinary clone; exclude and restart after an explicit ref fetch
+17	WORKTREE	0	pivot	v27 reconstructs both starts but Window B uses 51987 tokens; exclude, shorten both windows to four events, and preserve intervention records
+18	WORKTREE	2	keep	v28 reproduces 11/11 scores, reconstructs both starts, preserves interventions, and compiles both ECDSA histories twice under context limits
+19	WORKTREE	2	pivot	v29 reproduces 20/20 Toy and VLIW scores but all four exports reject noncanonical timestamps before treatment
+20	WORKTREE	6	keep	v30 enforces canonical timestamps, repeats 20/20 scores, reconstructs four starts, and double-compiles four histories
+21	WORKTREE	6	pivot	v31 no-model smoke finds immutable candidate modes in the workspace; repaired smokes pass but v31 is excluded
+22	WORKTREE	6	keep	v32 freezes 18 balanced opaque chains after 176 core, 77 gateway, 115 Yukon tests and exact native/external smokes
+23	WORKTREE	6	pivot	v32 is excluded after its first paid round exposes a historical/live metric mismatch; $0.559763 retained as apparatus spend
+24	WORKTREE	6	pivot	v33 replays 11/11 corrected ECDSA scores but a real-event handoff reaches 37486 tokens; stop before model contact
+25	WORKTREE	6	keep	v34 renderer v4 passes 177 core, 77 gateway, 117 Yukon tests, all 18 append gates, 12-event stress, and three exact Docker smokes
+26	WORKTREE	6	keep	first opaque v34 chain completes 3 rounds, 4 evaluations, 5 outer milestones, and both verified handoffs for $1.524668; release remaining batch
+27	WORKTREE	6	pivot	host PyPI and Docker Hub outage administratively invalidates later v34 scheduling; v35 freezes 15 one-to-one replacements with all recovery checks passing
+28	WORKTREE	6	pivot	real excluded v35 diagnostic recovers a 1543-cycle terminal candidate omitted by old milestones; v36 freezes 18 fresh replacements after 182/77/117 tests and three Docker smokes
+29	WORKTREE	6	report	v36 completes 18/18 chains; R1-R0 AUC 1.079 [-0.001,4.316] with 1/6 wins and R2-R0 1.858 [-0.536,5.612] with 2/6 wins
+30	WORKTREE	6	stop	no structured arm passes the frozen Kimi gate; balanced reserve extension fails ECDSA model-free qualification, so no further paid calls run

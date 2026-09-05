@@ -1,0 +1,69 @@
+{
+  "schema": "dungeness.history-qualification-result.v1",
+  "version": 30,
+  "recorded_at": "2026-08-28T17:15:30.000Z",
+  "status": "passed-apparatus-only",
+  "freeze_sha256": "f03669852df1a499ceb889a908f03bcda21318abd43d0844293a4f7a16481f24",
+  "treatment_chains": 0,
+  "model_spend_usd": 0,
+  "independent_replay": {
+    "expected_candidates": 20,
+    "exact_score_matches": 20,
+    "toy_isa_opt": {
+      "bank": "history-bank:users/bx/7241cb4d314dc19a23662c728d5a9f1191e20eea6a08d607a685c636596c666d",
+      "record_sha256": "dad6b95cbcf4e5343fe156888d513cd1b6591bd7fde0fec650ed000a2af25dcf"
+    },
+    "vliw_scheduler": {
+      "bank": "history-bank:users/bx/0e14aa6071fa9cc672afcf2820fed4eff9886ba212e9f1b70027346f7de53092",
+      "record_sha256": "234ed5cb6ba49113368bfa2b0c032127b709a190b3c20e07d584fc3caac43d84"
+    }
+  },
+  "materialized_starts": [
+    "candidate-artifact:users/bx/v30/61846407af98c141e5b47fee17fce0f8862feeb785c02601d4c44b12d610834d",
+    "candidate-artifact:users/bx/v30/ade21a212f9cb834e432c873664acc3ce536ebe818543fdfc4f20853f0b6aa2a",
+    "candidate-artifact:users/bx/v30/ee7e946e758f2af991eba73d8bdeab422e5940ffd42247e6c69d51fbea58a4bf",
+    "candidate-artifact:users/bx/v30/fcf5aa08b93f539b2b22d371d9ab59afbbda99b186ec146a55859c78d9f8098d"
+  ],
+  "views": {
+    "toy-dual-prefix": {
+      "atom_set_sha256": "a9c9e4625a29e9c560bdc924aebeac8c4a11d0e219ec953c99b742090cc6114b",
+      "atoms_sha256": "d136ac608ce2f25f43d4ce7c14a2831ff59dab63c141760992bd692bc517a245",
+      "tokens": {"R0": 5613, "R1": 6108, "R2": 6454},
+      "index_tokens": {"R0": 256, "R1": 751, "R2": 1097},
+      "view_ids": {"R0": "24e6abc7060de647bc14e39a1465b1d1773cea507c3bf532cb5bb44802bae07b", "R1": "16499b011239375a6e7f09b6c5fc83e7f79b14548c3d45f5a217eb35e03d626b", "R2": "22f39f7cc5fe16d2098dd76f94cc63c51fcb7e8c426aa3f0084e09de599ae1e0"}
+    },
+    "toy-mac-prefix": {
+      "atom_set_sha256": "6bb9d11f32cb96e1bc12de34cd23f03834010b409b705dc8c07d020cdabc3595",
+      "atoms_sha256": "1f3e909fb4f8b230692b24c2e0c6af7524e4dc9925e81f794707f95741e28cd2",
+      "tokens": {"R0": 5642, "R1": 6136, "R2": 6483},
+      "index_tokens": {"R0": 256, "R1": 751, "R2": 1097},
+      "view_ids": {"R0": "8a8b5ea301c02672b04361d112ef72497d92bd7345290d9568fbe3e4594b4351", "R1": "755342590d9127198f424364796684620fb7b35a3a5ffbb81fae67b8195f79b4", "R2": "063244083f5889e62368bc02af067b44a732d3e301e53bd57f38ecfd92f526f3"}
+    },
+    "vliw-slot-pairing": {
+      "atom_set_sha256": "22d98a131c693c098bfe90c5e6a72d5af1a7668183b9bec54fb524937b29ece0",
+      "atoms_sha256": "f8a3cffb01ebe188c267a2bfc8d466c0882ff1be8ef6708019a72ecbc611b370",
+      "tokens": {"R0": 7168, "R1": 7663, "R2": 8009},
+      "index_tokens": {"R0": 256, "R1": 751, "R2": 1097},
+      "view_ids": {"R0": "ec11fa516eecd25d3102000f929b3c1de9fc2e80b3b591beec057ef9f311979b", "R1": "73743800d805c13bb114f8e4a04aefdd35421403339b9b2de9cc4716db1e1ccc", "R2": "004c1b52be13a24162b8f3491c6e21561a0400bbb565242906d0867db44b34d8"}
+    },
+    "vliw-chain-interleave": {
+      "atom_set_sha256": "602068680b8b26b6f0cd7abea7f147d08f8d80ffd69efe1c117a4e151c72d21b",
+      "atoms_sha256": "eddc290f1bab6307deef2a7586e418862f49551e88c44a9c0192c1b7f288a890",
+      "tokens": {"R0": 6941, "R1": 7435, "R2": 7782},
+      "index_tokens": {"R0": 256, "R1": 751, "R2": 1097},
+      "view_ids": {"R0": "3bd81da8cd64fbc776682eda82f1349605489c80485db1f360dc1ad09617a937", "R1": "e8810084f511904fd302b73d3f3bc35010a4478f2b423fa3fcd3bc1baf29100d", "R2": "58dcb699ceb252d3ec03643787b53137354be9e8ce5cfaa29fe18096210efd62"}
+    }
+  },
+  "gates": {
+    "canonical_timestamps": true,
+    "production_candidate_resolution": true,
+    "events_per_export": 4,
+    "interventions_per_export": 4,
+    "double_compile_byte_identical": true,
+    "equal_atoms_within_block": true,
+    "context_limits": true
+  },
+  "eligible_histories_added": 4,
+  "eligible_histories_total": 6,
+  "decision": "Accept the four controlled histories as apparatus inputs. Freeze and dry-run the six-block randomized treatment before any paid model call."
+}

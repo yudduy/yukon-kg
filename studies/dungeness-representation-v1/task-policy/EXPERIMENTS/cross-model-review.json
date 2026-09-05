@@ -1,0 +1,28 @@
+{
+  "schema": "dungeness.task-policy.cross-model-review.v1",
+  "date": "2026-08-28",
+  "purpose": "Bounded adversarial review of the exploratory state-routing interpretation; not a treatment run or outcome.",
+  "provider": "OpenRouter",
+  "model": "moonshotai/kimi-k3",
+  "usage": {
+    "prompt_tokens": 472,
+    "completion_and_reasoning_tokens": 2200,
+    "total_tokens": 2672,
+    "cost_usd": 0.034416
+  },
+  "response_transport": {
+    "content_was_null": true,
+    "review_was_returned_in_reasoning": true
+  },
+  "major_objections": [
+    "The taxonomy is post hoc and cannot be validated on the same six blocks used to invent it.",
+    "The current routing signature collides across histories with contradictory exact winners; actionability features are proposed but unmeasured.",
+    "The treatment was not shown to be behaviorally engaged; VLIW agents could derive the target from the checker and the study lacked a positive sensitivity control."
+  ],
+  "recommended_next_test": "Freeze features blind to outcomes, then run a causal-use decision probe with known answers, evidence citations, and a positive control before funding full chains.",
+  "budget_accounting": {
+    "dungeness_ledger_committed_usd_before_review": 103.189752,
+    "known_total_including_direct_review_usd": 103.224168,
+    "note": "The direct review was not a Dungeness run, so the authoritative Dungeness reservation ledger was not mutated; this record prevents the spend from being omitted from study-wide reporting."
+  }
+}

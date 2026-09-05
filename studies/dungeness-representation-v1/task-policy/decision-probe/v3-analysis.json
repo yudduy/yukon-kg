@@ -1,0 +1,161 @@
+{
+  "schema": "yukon.representation-decision-probe-analysis.v1",
+  "practicalMargin": 0.15,
+  "rowCount": 192,
+  "coreRowCount": 144,
+  "positiveControlRowCount": 48,
+  "byModelArm": {
+    "moonshotai/kimi-k3": {
+      "R0": {
+        "n": 24,
+        "accuracy": 1,
+        "groundedAccuracy": 1,
+        "validResponseRate": 1,
+        "meanPromptTokens": 4420.666666666667,
+        "meanCompletionTokens": 627.0416666666666,
+        "costUsd": 0.3950888599999999
+      },
+      "R1": {
+        "n": 24,
+        "accuracy": 1,
+        "groundedAccuracy": 1,
+        "validResponseRate": 1,
+        "meanPromptTokens": 5274.75,
+        "meanCompletionTokens": 573.1666666666666,
+        "costUsd": 0.41731738
+      },
+      "R2": {
+        "n": 24,
+        "accuracy": 0.9583333333333334,
+        "groundedAccuracy": 0.9583333333333334,
+        "validResponseRate": 1,
+        "meanPromptTokens": 5957.333333333333,
+        "meanCompletionTokens": 698.0416666666666,
+        "costUsd": 0.49413430999999997
+      },
+      "P": {
+        "n": 24,
+        "accuracy": 1,
+        "groundedAccuracy": 1,
+        "validResponseRate": 1,
+        "meanPromptTokens": 4456.625,
+        "meanCompletionTokens": 625.75,
+        "costUsd": 0.36818594
+      }
+    },
+    "openai/gpt-5.6-sol": {
+      "R0": {
+        "n": 24,
+        "accuracy": 1,
+        "groundedAccuracy": 1,
+        "validResponseRate": 1,
+        "meanPromptTokens": 4450.083333333333,
+        "meanCompletionTokens": 94.20833333333333,
+        "costUsd": 0.13561009999999998
+      },
+      "R1": {
+        "n": 24,
+        "accuracy": 1,
+        "groundedAccuracy": 1,
+        "validResponseRate": 1,
+        "meanPromptTokens": 5310,
+        "meanCompletionTokens": 75.33333333333333,
+        "costUsd": 0.1658989
+      },
+      "R2": {
+        "n": 24,
+        "accuracy": 1,
+        "groundedAccuracy": 1,
+        "validResponseRate": 1,
+        "meanPromptTokens": 6001.916666666667,
+        "meanCompletionTokens": 64.375,
+        "costUsd": 0.19500199999999995
+      },
+      "P": {
+        "n": 24,
+        "accuracy": 1,
+        "groundedAccuracy": 1,
+        "validResponseRate": 1,
+        "meanPromptTokens": 4485.916666666667,
+        "meanCompletionTokens": 38.166666666666664,
+        "costUsd": 0.1018345
+      }
+    }
+  },
+  "contrasts": {
+    "r1VsR0OnFrontier": {
+      "leftArm": "R1",
+      "rightArm": "R0",
+      "pairs": 18,
+      "accuracyDifference": 0,
+      "groundedAccuracyDifference": 0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 18,
+      "exactTwoSidedSignPValue": 1
+    },
+    "r2VsR1OnComparison": {
+      "leftArm": "R2",
+      "rightArm": "R1",
+      "pairs": 12,
+      "accuracyDifference": -0.08333333333333333,
+      "groundedAccuracyDifference": -0.08333333333333333,
+      "wins": 0,
+      "losses": 1,
+      "ties": 11,
+      "exactTwoSidedSignPValue": 1
+    },
+    "r2VsR0OnComparison": {
+      "leftArm": "R2",
+      "rightArm": "R0",
+      "pairs": 12,
+      "accuracyDifference": -0.08333333333333333,
+      "groundedAccuracyDifference": -0.08333333333333333,
+      "wins": 0,
+      "losses": 1,
+      "ties": 11,
+      "exactTwoSidedSignPValue": 1
+    },
+    "r1VsR0OnChronology": {
+      "leftArm": "R1",
+      "rightArm": "R0",
+      "pairs": 18,
+      "accuracyDifference": 0,
+      "groundedAccuracyDifference": 0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 18,
+      "exactTwoSidedSignPValue": 1
+    },
+    "r2VsR0OnChronology": {
+      "leftArm": "R2",
+      "rightArm": "R0",
+      "pairs": 18,
+      "accuracyDifference": 0,
+      "groundedAccuracyDifference": 0,
+      "wins": 0,
+      "losses": 0,
+      "ties": 18,
+      "exactTwoSidedSignPValue": 1
+    }
+  },
+  "modelEffects": [
+    {
+      "model": "moonshotai/kimi-k3",
+      "r1": 0,
+      "r2": -0.16666666666666666
+    },
+    {
+      "model": "openai/gpt-5.6-sol",
+      "r1": 0,
+      "r2": 0
+    }
+  ],
+  "gates": {
+    "positiveControlPassed": true,
+    "r1MechanismPassed": false,
+    "r2MechanismPassed": false,
+    "classificationMechanismPassed": false
+  },
+  "totalCostUsd": 2.27307199
+}

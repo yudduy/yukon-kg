@@ -1,0 +1,60 @@
+{
+  "schema": "dungeness.v25-stop-decision.v1",
+  "study_version": 25,
+  "decided_at": "2026-08-28T07:58:01.358Z",
+  "freeze_sha256": "41fe7ae5747e719d3ad5748e60d5276aa1647e308f3f01d470d91f95ec39ada6",
+  "frozen_gate": {
+    "required_qualifications": 4,
+    "ordered_prefix_size": 5,
+    "failures_observed": 2,
+    "maximum_possible_qualifications": 3,
+    "outcome": "STUDY_STOP"
+  },
+  "campaigns": [
+    {
+      "block_id": "ecdsa-gpt-history-a",
+      "record": "eval/seed-campaigns/users/bx/dungeness-representation-v25-pilot/seed-c537a35cfc4476610/record.json",
+      "record_sha256": "83166ff44e3588e2144df7f60955e8fafc5b2a50f3f8206c86fa2c0cbe291eb5",
+      "eligible": false,
+      "valid_evaluations": 7,
+      "distinct_candidates": 1,
+      "distinct_scores": 1,
+      "positive_progress": false,
+      "model_tokens": 243739,
+      "agent_seconds": 1168,
+      "normalized_usd": 2.864841
+    },
+    {
+      "block_id": "ecdsa-gpt-history-b",
+      "record": "eval/seed-campaigns/users/bx/dungeness-representation-v25-pilot/seed-c0d446324faa5bd62/record.json",
+      "record_sha256": "9a38a639bdbecdbadbe3502953ed34edb2b5ffff739213c2975a660d4ffb5ec8",
+      "eligible": false,
+      "valid_evaluations": 6,
+      "distinct_candidates": 1,
+      "distinct_scores": 1,
+      "positive_progress": false,
+      "model_tokens": 245533,
+      "agent_seconds": 848,
+      "normalized_usd": 2.892127
+    }
+  ],
+  "aggregate": {
+    "sessions": 12,
+    "valid_evaluations": 13,
+    "eligible_histories": 0,
+    "treatment_chains": 0,
+    "model_tokens": 489272,
+    "agent_seconds": 2016,
+    "normalized_usd": 5.756968
+  },
+  "classification": "seed-producer failure before treatment",
+  "scientific_conclusion": "No observation about R0, R1, or R2 was produced.",
+  "budget_after_decision": {
+    "scope": "knowledge-representation-autoresearch-v1",
+    "hard_ceiling_usd": 500,
+    "committed_usd": 25.227542,
+    "active_reservations": 0,
+    "remaining_usd": 474.772458
+  },
+  "next_gate": "Freeze a treatment-capable exogenous verified-history design before any paid v26 run."
+}

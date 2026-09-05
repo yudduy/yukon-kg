@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "type": "paid-apparatus-exclusion",
+  "study_version": "v32",
+  "recorded_at": "2026-08-28T17:45:00.000Z",
+  "planned": "Run 18 blinded three-round first-model chains only after the frozen v32 apparatus and provenance gates passed.",
+  "observed": {
+    "completed_first_round": {
+      "opaque_chain_id": "study-c28bfc1224ef7eab6",
+      "round_run_id": "study-c28bfc1224ef7eab6-r1",
+      "chain_record_sha256": "dacca132dda7040767d3631f4493c048f446c2ecb50928bc1544f8840b7d61ac",
+      "run_record_sha256": "5d06dba785212a8295c684ee44ebafc464f7f9d005570e9d9de66a61b164ee04",
+      "trusted_export_sha256": "5e687f59a9b8e6e79ea93306f178caf5334830a10250ff951c27a164a28abef4",
+      "development_evaluations": 2,
+      "clean_score": 1249230840,
+      "model_spend_usd": 0.415055
+    },
+    "interrupted_second_round": {
+      "opaque_chain_id": "study-c1f18f9848b9ce48d",
+      "round_run_id": "study-c1f18f9848b9ce48d-r1",
+      "chain_record_sha256": "daf24ae921cc2600f6e2bf00956c68e7762cae622f3785706f02226da84fc1ad",
+      "run_record_sha256": "8ef8622025006e2ecd2475531060a512cd9968efd1ead39e0cc7377488c6156c",
+      "status": "cancelled",
+      "development_evaluations": 0,
+      "clean_verification": null,
+      "model_spend_usd": 0.144708
+    },
+    "handoff_error": "Dungeness export metric contract differs from the canonical history",
+    "root_cause": "The frozen ECDSA history plan named the metric qubit-Toffoli product, while the live Dungeness task and clean score artifacts use ecdsafail_score. Scores and direction agreed, but Yukon correctly rejected the mixed metric identity.",
+    "batch_exit_status": 130,
+    "completed_three_round_chains": 0,
+    "admitted_treatment_chains": 0,
+    "admitted_treatment_outcomes": 0,
+    "excluded_model_spend_usd": 0.559763,
+    "study_committed_usd_after_stop": 25.787305,
+    "active_budget_reservations": 0
+  },
+  "interpretation": "v32 tested an invalid handoff contract, not a complete representation treatment. The completed first round and interrupted second run are retained as apparatus evidence and excluded in full from effect estimation, renderer selection, task selection, and stopping decisions.",
+  "decision": "Stop v32, preserve every record, repair the canonical ECDSA metric contract upstream, and rotate the experiment identity, opaque IDs, and randomization seed for v33.",
+  "next_test": "Before any v33 model call, require every frozen initial view to accept a task-matched trusted-event append and re-render deterministically in all three representations."
+}

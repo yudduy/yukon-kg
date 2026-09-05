@@ -1,0 +1,47 @@
+{
+  "schema": "yukon.representation-decision-probe-calibration.v3",
+  "model": "moonshotai/kimi-k3",
+  "packet_sha256": "ecf1123550208900f018e493223c04498fd0c3cbd106245caf4ecb9922c0428c",
+  "prompt_sha256": "44909c19acb98590fc4318109c88691ff87f952364a0b376bde89f9f634c0cd5",
+  "response_id": "gen-1787965045-rgFtGRZ7D8VgrwxOeBFe",
+  "routed_model": "moonshotai/kimi-k3",
+  "content_source": "content",
+  "response": "{\"action_id\":\"action-6af9b88adbbd\",\"evidence_event_ids\":[\"event-d65721806bca\"]}",
+  "usage": {
+    "prompt_tokens": 2490,
+    "completion_tokens": 446,
+    "total_tokens": 2936,
+    "cost": 0.0139872,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 64,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.0139872,
+      "upstream_inference_prompt_cost": 0.0072972,
+      "upstream_inference_completions_cost": 0.00669
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 402,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "cost_usd": 0.0139872,
+  "score": {
+    "valid": true,
+    "parseError": null,
+    "actionId": "action-6af9b88adbbd",
+    "correct": true,
+    "regret": 0,
+    "citedEventIds": [
+      "event-d65721806bca"
+    ],
+    "evidenceRecall": 1,
+    "evidencePrecision": 1,
+    "groundedCorrect": true
+  }
+}

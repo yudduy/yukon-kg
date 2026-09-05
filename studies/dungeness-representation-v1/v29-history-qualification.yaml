@@ -1,0 +1,23 @@
+schema: dungeness.representation-study-qualification.v1
+version: 29
+supersedes: 28
+treatment_authorized: false
+model_spend_authorized_usd: 0
+tasks:
+  toy_isa_opt:
+    plan_sha256: fbd43945847ccea1ac7bc3a3dded174cf14995c9a4f368b667c67dc4d3eedf28
+    calibration_sha256: f74c232d8ac86db75ae0078cbe5ec457a741b55906e4e184ac80c7fc97ab6da2
+    histories: 2
+    events_per_history: 4
+    required_verifications: 10
+  vliw_scheduler:
+    plan_sha256: a93797fbf7a65c0e44bba234614960cfa50559f1f6b3762462e4713ceb93bf7e
+    calibration_sha256: 4d338856ef8e1862ba3117edb66b37a086918a69f62ee43caef16f182cc09fd0
+    histories: 2
+    events_per_history: 4
+    required_verifications: 10
+trusted_export_schema: dungeness.trusted-research-events.v2
+materialization_namespace: users/bx/v29
+independent_replay_required: true
+double_compile_required: true
+stop_on_any_failure: true

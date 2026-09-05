@@ -1,0 +1,107 @@
+{
+  "ceilings_usd": {
+    "nominal_v36": 162,
+    "restart_experiment": 327.787305,
+    "study_ledger": 500
+  },
+  "counts": {
+    "administrative_replacement_cells": 18,
+    "administratively_invalidated_cells": 18,
+    "blocks": 6,
+    "cells_per_treatment": 6,
+    "executable_cells": 18,
+    "replacement_run_specs": 18
+  },
+  "created_at": "2026-08-28T20:30:00Z",
+  "diagnostic": {
+    "baseline_score": 7337,
+    "recovered_terminal_score": 1543,
+    "source_chain": "study-cd6f157239b0b65b3"
+  },
+  "excluded_experiments": [
+    "dungeness-representation-v34-pilot",
+    "dungeness-representation-v35-admin-recovery"
+  ],
+  "files": {
+    "eval/dungeness": "a4252b5e703629783f347a582d882879afec46dbdf359ca46077c5ff5f2db9e5",
+    "eval/experiments/users/bx/dungeness-representation-v34-pilot/experiment.yaml": "7a153aa222001cd099b16295fb70581c687f9a72a952d6878a9b7ba28764ad24",
+    "eval/experiments/users/bx/dungeness-representation-v35-admin-recovery/experiment.yaml": "00a308839658b014f9be65d465c76c42f683440db6095d04ca53b83a24b08f27",
+    "eval/experiments/users/bx/dungeness-representation-v36-terminal-milestone-restart/experiment.yaml": "9d622543cf6a26d7e85025f3036646c008ea4bba65cb720fc7b9b189e7268a34",
+    "eval/representation_study.py": "816fe146343757b39bbb7ef8f973cc584b2115d5c4cf05825544fcbb6e233f3c",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c039d173113dc6b1a-r1.yaml": "30f8519c17a947a796288c0db2ef9dfb155dc76aeb97f14fc126be299df48381",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c10c7cb7ce86f8360-r1.yaml": "2ff9570dcd4a714fa21f062b70ff233642345e4db39bda4c604dd3467761d045",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c141471ed053c03ef-r1.yaml": "667ba8fbd8144fdd1a5116f2dc36e38d321c8c8609fba59b71df488591804cf8",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c17122eee94d90a4e-r1.yaml": "e11665bdf82bff51f3ddd7e42f2aa219a0620ae36299de32e484461c3347ff42",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c42893a6d16f67bfc-r1.yaml": "f672ff72a5aa2e0804613958a85d5da2961259363443ab691468e1ba1a58e790",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c502101fb1d334f6b-r1.yaml": "90c03c9556a5b9d5a84c4730b1ab4ec6975d8bbb0a094f832033327a906c6e92",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c57f5b9d30bce1474-r1.yaml": "7cbb810d53d0ded0a50488ab4404cc67aa7264b06e73db5711ef84cd20ae27ff",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c5e9582127a51cae7-r1.yaml": "85322f6b934cded2228b9800bfaeb8eb8dc9d63e4042e82435fec84a02755323",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c62ee39d8247bda25-r1.yaml": "bc824bbd436fc9eb8360de5fc5152adb2cf68305501607e6c88047f805533ad9",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c6951e89fbb3b9efe-r1.yaml": "56b6d069860de3b82701e58e432932a51840ad9ad9a57793231d3794f3e9d861",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c791e1498eb875ff5-r1.yaml": "b64170eaf799a782d566892c6310cc468084fdfeb8b6f4fb3f73fbc94d1baa66",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c8da9974463624662-r1.yaml": "e28ac3a44dec0e692cfd7cdba896821d687fa0928a00af7d1f280ccb606df98b",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-c9269e313024c0146-r1.yaml": "e1f498a37a60aeb8fb47ba6d93368c92fc17a6322c80f9dc7197fc7799574d21",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-cc433d63aeb1b2fd9-r1.yaml": "d707dcbbd247bd1aec512369eb646235eb02756a993ba8025793f165cc7dcdf9",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-cceef56a4f5c05d5b-r1.yaml": "819d7b122185b2186d9312b3962246124314cdd12529b8396e423b7c4415475c",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-ce493997207c7109c-r1.yaml": "d53c756c82f943954f2b38b77473a29a5e7924fff2087af5b7f07a67150da452",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-cea0dd5353a202db3-r1.yaml": "d6cea46b6591bbb131caa9bcac4c2741eae438bd194ef0afb29949180f201d1b",
+    "eval/run-specs/users/bx/dungeness-representation-v36-terminal-milestone-restart/study-cf68e8b32555e235c-r1.yaml": "c6915026a4bff847d94b1f7c1dc1ef5ccae56e8dc7167d234c89d29caf6a36e7",
+    "eval/runs/users/bx/krv36-smoke-native-view/record.json": "a5b7222ff576b7e7b7c0e6d7d30ef653f54353f78ee905384c46a05c4558df1f",
+    "eval/runs/users/bx/krv36-smoke-toy-view/record.json": "35f2986e52a2856b3957f9bc5a463691e7774e3e1281157848e86b1a6727b330",
+    "eval/runs/users/bx/krv36-smoke-vliw-view/record.json": "b203d4afe5f89ba2f6f16975fc2ba553f931f3f236a975a35e9f4e829d00b615",
+    "eval/study-chains/users/bx/dungeness-representation-v35-admin-recovery/study-cd6f157239b0b65b3/diagnostic-terminal-milestones/diagnostic.json": "b9d911a3acaade912579f7e84f33ab248952e7c67ea2e4d706031da4ca00a783",
+    "eval/tests/test_representation_study.py": "2a5fbab1c346f7f29f18c273d13abcb1e6d8794de9453ea3bb465c252cf4208e",
+    "eval/tests/test_representation_study_cli.py": "bd821867c0841ce55fdff4677fa16ce60b11ddf541075f45748f55adbf003768",
+    "kg/studies/dungeness-representation-v1/preregistration-v36.md": "89d3267dc31accc05672a4d1ec705d935e46c558cf6460fd503582fb50279465",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/create-v36-terminal-milestone-restart.py": "57c4dc2b6ccd81430397e78a61b402f210f1fabdbbd772be642b0def71d8cb6d",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/freeze-v36.py": "c011207e69703a1d568c2baf336bb04ca0cebe64a93cf14a6fad08b6d1371e23",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v34-freeze.json": "80e4a5d32ad699cca6ca83419899c373fed51ed33a393dd48d2b57a61b044040",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v35-freeze-validation.json": "7612f79d9a8e3d67f454f8d3dc61667fdd5b90d5136dc313a00e59792a3655b6",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v35-freeze.json": "38a188920b5b2825ecec637ec39ccc49e8941bbe08f3eb1f52ad99f2323d01ef",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/validate-v36-freeze.py": "8da1392aa1d57e4614a3ab3be59bfb9240bf2fa26dc6cd1a4216e66658560da3"
+  },
+  "prelaunch_ledger": {
+    "active_reservation_ids": [
+      "0c9e697ce17ec638d3d0366899371409869b8a3418b741d27e61f2d28146457e",
+      "44b3af1caa5580dc3881b1c12b3e8aa125fce4b4d589e02825bf95b0d10bcc39",
+      "4d1e50f298dec44c7b482d0187701c7d227cc0436ba0c5f2e6429bcc7ed2c793",
+      "5174d126cd990331813cf2cb18b5ac17f132494f2e54d080b51c873bcd006a5f",
+      "94a5fc41142ca72d6f93cee5fe28467145682b8c7f97457e880f1c81adc563ff",
+      "a158bfacb739d7c3e767b1eaa36ab67de5f7201e7ed66cc667e470e5eb498922",
+      "aaeab0be199525fcb88f1ee8b56cf3099daa24178a60f48dc4b69b774a212421",
+      "abac19495b0a48ae33c3cd198eaa70f48c5f9e0f2f2f5f1ec6233043dc040374",
+      "b1105e0c6ea71ce09ed65c547fb58612e9122904d8e25e30bff8657686158e41",
+      "c4e8af01bad851652debd692304d4a121a53d4a03b7e1a0434865bfc04558ce8"
+    ],
+    "active_usd": "30",
+    "committed_usd": "65.777718",
+    "ledger_sha256": "7d30d6c963d4138e73a4062dc5989ab19d647f07db2d848857dd0bd2ddaae930",
+    "projected_after_nominal_v36_usd": "227.777718",
+    "settled_usd": "35.777718"
+  },
+  "restart_experiment": {
+    "path": "eval/experiments/users/bx/dungeness-representation-v36-terminal-milestone-restart/experiment.yaml",
+    "sha256": "9d622543cf6a26d7e85025f3036646c008ea4bba65cb720fc7b9b189e7268a34"
+  },
+  "schema_version": 1,
+  "smokes": {
+    "model_spend_usd": 0,
+    "native": {
+      "run_id": "krv36-smoke-native-view",
+      "score": 1243629702
+    },
+    "toy_isa": {
+      "run_id": "krv36-smoke-toy-view",
+      "score": 8007
+    },
+    "vliw": {
+      "run_id": "krv36-smoke-vliw-view",
+      "score": 3360
+    }
+  },
+  "source_experiment": {
+    "path": "eval/experiments/users/bx/dungeness-representation-v34-pilot/experiment.yaml",
+    "sha256": "7a153aa222001cd099b16295fb70581c687f9a72a952d6878a9b7ba28764ad24"
+  },
+  "type": "dungeness-representation-v36-terminal-milestone-freeze"
+}

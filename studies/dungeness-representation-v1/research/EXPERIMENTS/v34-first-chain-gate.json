@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "type": "dungeness-representation-first-chain-release-gate",
+  "study_version": 34,
+  "chain_id": "study-c11d0d1808374d2f9",
+  "status": "PASS",
+  "treatment_withheld_from_gate_decision": true,
+  "planned": "Execute only the first opaque chain through three fresh sessions, two verified handoffs, and sealed milestone verification before releasing the remaining frozen cells.",
+  "observed": "All three rounds completed. Four development evaluations were retained; each selected candidate clean-reverified. All three trusted exports appended without metric, context, lineage, or provenance error. Five outer milestones resolved to one candidate content hash and one outer score artifact. Total chain usage was 126842 model tokens, 437 agent-seconds, 4 evaluations, and 1.524668 USD. The ledger settled every reservation and has zero active reservations.",
+  "interpretation": "The complete v34 chain path works under paid conditions. This gate evaluates apparatus integrity only; its outcome is not an interim treatment comparison or stopping signal.",
+  "decision": "Continue the remaining 17 canonical frozen chains. Preserve the completed chain and do not rerun it. Keep outcome export blinded until failure classification is frozen.",
+  "next_test": "Run the canonical 18-cell experiment; it must recognize chain one as complete and begin with the second frozen cell.",
+  "usage": {
+    "model_tokens": 126842,
+    "agent_seconds": 437,
+    "development_evaluations": 4,
+    "normalized_usd": 1.524668
+  },
+  "rounds": [
+    {"round": 1, "development_evaluations": 1, "normalized_usd": 0.514581, "record_sha256": "0ebf8a21d0f760ab4259909a5e609079c749cfc24722b75bab496704187d9a65", "export_sha256": "589f88af11502c5d7d8fe07aba490bde964ecedee356077df5ad98a38dd910a3"},
+    {"round": 2, "development_evaluations": 2, "normalized_usd": 0.581607, "record_sha256": "94bd56935a00925d6822c4b59d342da4df74e961f77c01cf758033c06a79f395", "export_sha256": "7380cef9124f6de03e321b91d3d1da8b4e3e9a50c0e996edfc126f2e7a5fcd74"},
+    {"round": 3, "development_evaluations": 1, "normalized_usd": 0.428480, "record_sha256": "49a348958bebac9fa134c8016b38ac22199e37f571b9820b46f58aa8599610e2", "export_sha256": "2665a5f726686e60dc95f02137773561302fda6067791ef99d0fe39d13565d5d"}
+  ],
+  "milestones": {
+    "percents": [0, 25, 50, 75, 100],
+    "candidate_content_sha256": "0da111600368681c26746be8137b5db205ad140f9992c6b76a5a4288ee229a7d",
+    "metric_name": "ecdsafail_score",
+    "scores": [1243629702, 1243629702, 1243629702, 1243629702, 1243629702],
+    "outer_score_artifact_sha256": "dce6c3d359bf85ffd98fafd93e9aeb993744820cbef95aa18077f306a7f2149d"
+  },
+  "chain_record_sha256": "74c0ffdcd6b10c1ed0ed27aa61f317144d5f7ed7a94dfa64d7bc059cbc04ed7c",
+  "ledger": {
+    "committed_usd": 27.311973,
+    "active_reservations": 0,
+    "ledger_sha256": "f37e8e092fb10c906213b28cfcb9c4c7e1c6eee1c61ca32441a5cf83fd6ff29f"
+  },
+  "known_risk": "AutoLab tasks: no declared license as of commit 7aff5fe71dfbe152fb0b8e8ac8087210b4bc27d5; used for internal evaluation only, not redistributed"
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "yukon.atlas-access-probe-spend.v1",
+  "committed_before_access_probe_usd": 109.69438526,
+  "direct_model_spend": [
+    {
+      "item": "access probe v1 excluded apparatus run",
+      "usd": 0.47631572
+    },
+    {
+      "item": "access probe v2 admitted sessions",
+      "usd": 1.99428119
+    },
+    {
+      "item": "access probe v2 retained administrative attempts",
+      "usd": 0.10417475
+    }
+  ],
+  "access_probe_total_usd": 2.57477166,
+  "known_study_wide_committed_or_model_spend_usd": 112.26915692,
+  "ceiling_usd": 500,
+  "note": "Direct OpenRouter probe calls are outside the Dungeness reservation ledger, so this additive record preserves study-wide accounting without mutating historical run records."
+}

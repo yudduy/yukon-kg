@@ -1,0 +1,15 @@
+{
+  "schema": "yukon.representation-decision-probe-spend.v1",
+  "dungeness_ledger_committed_usd": 103.189752,
+  "direct_model_spend": [
+    { "item": "cross-model review", "usd": 0.034416 },
+    { "item": "decision probe v1 partial", "usd": 2.40938624 },
+    { "item": "decision probe v2 calibration", "usd": 0.02675295 },
+    { "item": "decision probe v2 partial", "usd": 1.74701888 },
+    { "item": "decision probe v3 calibration", "usd": 0.0139872 },
+    { "item": "decision probe v3 complete", "usd": 2.27307199 }
+  ],
+  "known_study_wide_committed_or_model_spend_usd": 109.69438526,
+  "ceiling_usd": 500,
+  "note": "Direct probe calls are not Dungeness runs, so the authoritative Dungeness reservation ledger was not mutated. This file adds them for study-wide reporting."
+}

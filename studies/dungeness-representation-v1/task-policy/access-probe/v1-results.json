@@ -1,0 +1,1262 @@
+{
+  "schema": "yukon.atlas-access-probe-results.v1",
+  "freezeSha256": "ee4d10da2e8f0231d2c88b33698233362fedf3d0315d687c3e75e8e2e8d7b9d1",
+  "status": "administrative_failure",
+  "rows": [
+    {
+      "key": "moonshotai/kimi-k3|confirm-positive-16|flat_plus_brief",
+      "model": "moonshotai/kimi-k3",
+      "caseId": "confirm-positive-16",
+      "arm": "flat_plus_brief",
+      "strata": {
+        "lexicalOverlap": "ordinary",
+        "witnessRole": "representative",
+        "evidenceScope": "bundled"
+      },
+      "corpusSha256": "e6efcd7e2b4bebd88d3f532e11a9bc52ec63752722b91ce4160f40d187b4fe7e",
+      "promptSha256": "104a084714e5dce09cc0f5fddb4783352644db4611c329fd23da8d88a01c031f",
+      "schema": "yukon.atlas-access-probe.v1",
+      "responseIds": [
+        "gen-1787967669-cyYe61qnVLlpHIhKMOhz",
+        "gen-1787967675-20jzFdb5oyxdYW6CRXgr",
+        "gen-1787967689-i008ZZH0VeYg4JkezZ6z",
+        "gen-1787967705-326D29T7009wPspdafPH"
+      ],
+      "routedModels": [
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3"
+      ],
+      "response": null,
+      "finalText": "```json\n{\n  \"classification\": \"prior_attempt\",\n  \"decision\": \"duplicate_of_recorded_attempt\",\n  \"ideaIds\": [\"idea:cuccaro:carry-out-elision\"],\n  \"matches\": [\n    {\n      \"submissionId\": \"bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496\",\n      \"changeId\": \"bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6\",\n      \"status\": \"promoted\",\n      \"outcome\": \"artifact_and_measurement\",\n      \"description\": \"Omit the final carry when no later plain-tail operation will consume it.\",\n      \"sourceRefs\": [\n        \"change:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6\",\n        \"detail:submission-details/bb.json#bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496\",\n        \"route:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496\",\n        \"submission:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496\",\n        \"witness:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6\"\n      ]\n    },\n    {\n      \"submissionId\": \"b5fa90f8-5171-49eb-a1e4-3b7bc738270b\",\n      \"changeId\": \"b5fa90f8-5171-49eb-a1e4-3b7bc738270b::m3\",\n      \"status\": \"promoted\",\n      \"outcome\": \"artifact\",\n      \"description\": \"Omit the direct adder's carry-out from its final chunk.\",\n      \"sourceRefs\": [\n        \"change:b5fa90f8-5171-49eb-a1e4-3b7bc738270b:b5fa90f8-5171-49eb-a1e4-3b7bc738270b::m3\",\n        \"detail:submission-details/b5.json#b5fa90f8-5171-49eb-a1e4-3b7bc738270b\",\n        \"route:b5fa90f8-5171-49eb-a1e4-3b7bc738270b\",\n        \"submission:b5fa90f8-5171-49eb-a1e4-3b7bc738270b\",\n        \"witness:b5fa90f8-5171-49eb-a1e4-3b7bc738270b::m3\"\n      ]\n    },\n    {\n      \"submissionId\": \"dca886e1-4268-49fd-867e-7edcc556230e\",\n      \"changeId\": \"dca886e1-4268-49fd-867e-7edcc556230e::m2\",\n      \"status\": \"promoted\",\n      \"outcome\": \"artifact_and_measurement\",\n      \"description\": \"Omit the final graduated chunk's carry-out materialization and cleanup.\",\n      \"sourceRefs\": [\n        \"change:dca886e1-4268-49fd-867e-7edcc556230e:dca886e1-4268-49fd-867e-7edcc556230e::m2\",\n        \"detail:submission-details/dc.json#dca886e1-4268-49fd-867e-7edcc556230e\",\n        \"route:dca886e1-4268-49fd-867e-7edcc556230e\",\n        \"submission:dca886e1-4268-49fd-867e-7edcc556230e\",\n        \"witness:dca886e1-4268-49fd-867e-7edcc556230e::m2\"\n      ]\n    },\n    {\n      \"submissionId\": \"0c7f6650-6cba-4810-aa4a-ff1c5ed985b1\",\n      \"changeId\": \"0c7f6650-6cba-4810-aa4a-ff1c5ed985b1::m5\",\n      \"status\": \"promoted\",\n      \"outcome\": \"artifact_and_measurement\",\n      \"description\": \"Add a guarded path that omits an unused final carry output.\",\n      \"sourceRefs\": [\n        \"change:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1::m5\",\n        \"detail:submission-details/0c.json#0c7f6650-6cba-4810-aa4a-ff1c5ed985b1\",\n        \"route:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1\",\n        \"submission:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1\",\n        \"witness:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1::m5\"\n      ]\n    }\n  ],\n  \"caveats\": [\n    \"All four prior attempts sit in the same idea family idea:cuccaro",
+      "administrativeFailure": null,
+      "usage": [
+        {
+          "prompt_tokens": 349,
+          "completion_tokens": 210,
+          "total_tokens": 559,
+          "cost": 0.00398715,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00398715,
+            "upstream_inference_prompt_cost": 0.00099465,
+            "upstream_inference_completions_cost": 0.0029925
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 86,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 2535,
+          "completion_tokens": 411,
+          "total_tokens": 2946,
+          "cost": 0.0130815,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0130815,
+            "upstream_inference_prompt_cost": 0.00722475,
+            "upstream_inference_completions_cost": 0.00585675
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 180,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 4981,
+          "completion_tokens": 521,
+          "total_tokens": 5502,
+          "cost": 0.0216201,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0216201,
+            "upstream_inference_prompt_cost": 0.01419585,
+            "upstream_inference_completions_cost": 0.00742425
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 444,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 7368,
+          "completion_tokens": 2048,
+          "total_tokens": 9416,
+          "cost": 0.03770664,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 4864,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.03770664,
+            "upstream_inference_prompt_cost": 0.00852264,
+            "upstream_inference_completions_cost": 0.029184
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 844,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      ],
+      "costUsd": 0.07639539,
+      "audit": {
+        "valid": false,
+        "violations": [
+          "invalid final response: JSON Parse error: Expected ']'"
+        ],
+        "commandCount": 5,
+        "returnedBytes": 17685,
+        "retrieval": {
+          "searchResultIds": [
+            "attempt:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1::m5:idea:cuccaro:carry-out-elision",
+            "attempt:24aeeba2-6c13-4764-a7e5-8485ccdd590e:24aeeba2-6c13-4764-a7e5-8485ccdd590e::m6:candidate:seed-grinding:7647dab7dc",
+            "attempt:341d0963-d9a4-42d2-b4df-f350d08c26c8:341d0963-d9a4-42d2-b4df-f350d08c26c8::m3:candidate:seed-grinding:7647dab7dc",
+            "attempt:515e566d-82de-4e03-86bf-0fb2259aaf3b:515e566d-82de-4e03-86bf-0fb2259aaf3b::m3:candidate:seed-grinding:7647dab7dc",
+            "attempt:594ae9d9-e3ae-42d2-9029-18a2f418b73b:594ae9d9-e3ae-42d2-9029-18a2f418b73b::m2:candidate:incrementer:66950ae201",
+            "attempt:63470daa-0795-49a4-bc4a-fd05ef3a62db:63470daa-0795-49a4-bc4a-fd05ef3a62db::m6:candidate:toffoli-gate-network:d8fb823289",
+            "attempt:7b99ac89-daf3-41ad-abb3-32676633999b:7b99ac89-daf3-41ad-abb3-32676633999b::m1:candidate:incrementer:66950ae201",
+            "attempt:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6:idea:cuccaro:carry-out-elision",
+            "attempt:cb400494-bba1-4809-ab7e-41a56d4fdcf2:cb400494-bba1-4809-ab7e-41a56d4fdcf2::m2:candidate:incrementer:66950ae201",
+            "attempt:d847138c-c495-441d-b908-44422937f270:d847138c-c495-441d-b908-44422937f270::m2:candidate:incrementer:66950ae201",
+            "attempt:e9d31703-4b46-4064-8168-62a78ff3a3e6:e9d31703-4b46-4064-8168-62a78ff3a3e6::m4:candidate:toffoli-gate-network:d8fb823289",
+            "idea:candidate:incrementer:66950ae201",
+            "idea:idea:cuccaro:carry-out-elision",
+            "idea:idea:windowed:carry-linked-segmentation",
+            "idea:idea:windowed:exact-prefix-segmentation"
+          ],
+          "receipts": [
+            {
+              "submissionId": "0c7f6650-6cba-4810-aa4a-ff1c5ed985b1",
+              "changeId": "0c7f6650-6cba-4810-aa4a-ff1c5ed985b1::m5",
+              "status": "promoted",
+              "outcome": "artifact_and_measurement",
+              "sourceRefs": [
+                "change:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1::m5",
+                "detail:submission-details/0c.json#0c7f6650-6cba-4810-aa4a-ff1c5ed985b1",
+                "route:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1",
+                "submission:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1",
+                "witness:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1::m5"
+              ]
+            },
+            {
+              "submissionId": "b5fa90f8-5171-49eb-a1e4-3b7bc738270b",
+              "changeId": "b5fa90f8-5171-49eb-a1e4-3b7bc738270b::m3",
+              "status": "promoted",
+              "outcome": "artifact",
+              "sourceRefs": [
+                "change:b5fa90f8-5171-49eb-a1e4-3b7bc738270b:b5fa90f8-5171-49eb-a1e4-3b7bc738270b::m3",
+                "detail:submission-details/b5.json#b5fa90f8-5171-49eb-a1e4-3b7bc738270b",
+                "route:b5fa90f8-5171-49eb-a1e4-3b7bc738270b",
+                "submission:b5fa90f8-5171-49eb-a1e4-3b7bc738270b",
+                "witness:b5fa90f8-5171-49eb-a1e4-3b7bc738270b::m3"
+              ]
+            },
+            {
+              "submissionId": "bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496",
+              "changeId": "bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6",
+              "status": "promoted",
+              "outcome": "artifact_and_measurement",
+              "sourceRefs": [
+                "change:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6",
+                "detail:submission-details/bb.json#bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496",
+                "route:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496",
+                "submission:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496",
+                "witness:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6"
+              ]
+            },
+            {
+              "submissionId": "dca886e1-4268-49fd-867e-7edcc556230e",
+              "changeId": "dca886e1-4268-49fd-867e-7edcc556230e::m2",
+              "status": "promoted",
+              "outcome": "artifact_and_measurement",
+              "sourceRefs": [
+                "change:dca886e1-4268-49fd-867e-7edcc556230e:dca886e1-4268-49fd-867e-7edcc556230e::m2",
+                "detail:submission-details/dc.json#dca886e1-4268-49fd-867e-7edcc556230e",
+                "route:dca886e1-4268-49fd-867e-7edcc556230e",
+                "submission:dca886e1-4268-49fd-867e-7edcc556230e",
+                "witness:dca886e1-4268-49fd-867e-7edcc556230e::m2"
+              ]
+            }
+          ]
+        }
+      },
+      "score": {
+        "pass": false,
+        "wholeAnswer": false,
+        "discovery": true,
+        "evidence": true,
+        "decision": false,
+        "citation": false,
+        "protocol": false,
+        "failures": [
+          "agent response must be an object",
+          "invalid final response: JSON Parse error: Expected ']'"
+        ],
+        "fabricated": false,
+        "negativeFalsePositive": false
+      }
+    },
+    {
+      "key": "moonshotai/kimi-k3|pilot-positive-01|raw",
+      "model": "moonshotai/kimi-k3",
+      "caseId": "pilot-positive-01",
+      "arm": "raw",
+      "strata": {
+        "lexicalOverlap": "ordinary",
+        "witnessRole": "nonrepresentative",
+        "evidenceScope": "focused"
+      },
+      "corpusSha256": "dd04abb4531c9e498211a37acc244f2080d43403bf29af2bae052298b0f778cc",
+      "promptSha256": "ebd5cfe3acfa11906ee2a5c71b20631fc59447a05e3445cdbbd07bece0a2f9c1",
+      "schema": "yukon.atlas-access-probe.v1",
+      "responseIds": [
+        "gen-1787967669-ugi5Q81INx1a9LVrkzjf",
+        "gen-1787967670-UwRc19QLBfrs8pCUdLH6",
+        "gen-1787967679-xqxGT67d2BO7aGqzFPoe",
+        "gen-1787967687-rkJ2Xe7HFWMMCuFEbEKw",
+        "gen-1787967692-pV4TzA0vzL04J3VQP8As",
+        "gen-1787967695-2HrC697s95TVltWmcIoI"
+      ],
+      "routedModels": [
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3"
+      ],
+      "response": null,
+      "finalText": "{\n  \"classification\": \"prior_attempt\",\n  \"decision\": \"treat_as_repeat_prior_attempt\",\n  \"ideaIds\": [\n    \"idea:solinas:direct-shifted-arithmetic\",\n    \"variant:solinas-reduction:fold\"\n  ],\n  \"matches\": [\n    {\n      \"submissionId\": \"a6fe4c2a-853a-4f84-b7bf-cef63a3f576c\",\n      \"changeId\": \"a6fe4c2a-853a-4f84-b7bf-cef63a3f576c::m1\",\n      \"status\": \"promoted\",\n      \"outcome\": {\n        \"directionalGain\": 35102836,\n        \"scoreComparatorId\": \"6ca84587-1a35-4555-a05b-97485ca9572d\",\n        \"scoreComparatorHops\": 1\n      },\n      \"description\": \"Select a direct shifted modular operation for the high half of the square's a lane.\",\n      \"evidence\": \"The excerpt routes `value[128..]` through `apply_f_times_value_direct_shift32` when `direct_shift32_high` is enabled and otherwise uses `apply_f_times_value`.\",\n      \"sourceRefIds\": [\n        \"change:a6fe4c2a-853a-4f84-b7bf-cef63a3f576c:a6fe4c2a-853a-4f84-b7bf-cef63a3f576c::m1\",\n        \"detail:submission-details/a6.json#a6fe4c2a-853a-4f84-b7bf-cef63a3f576c\"\n      ]\n    }\n  ],\n  \"caveats\": [\n    \"Atlas marks the associated dossier verification as `requires_verification`.\"\n  ]\n}",
+      "administrativeFailure": null,
+      "usage": [
+        {
+          "prompt_tokens": 368,
+          "completion_tokens": 99,
+          "total_tokens": 467,
+          "cost": 0.002589,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.002589,
+            "upstream_inference_prompt_cost": 0.001104,
+            "upstream_inference_completions_cost": 0.001485
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 19,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 1504,
+          "completion_tokens": 332,
+          "total_tokens": 1836,
+          "cost": 0.0090174,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0090174,
+            "upstream_inference_prompt_cost": 0.0042864,
+            "upstream_inference_completions_cost": 0.004731
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 14,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 5096,
+          "completion_tokens": 217,
+          "total_tokens": 5313,
+          "cost": 0.01367601,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1536,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.01367601,
+            "upstream_inference_prompt_cost": 0.01058376,
+            "upstream_inference_completions_cost": 0.00309225
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 123,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 5578,
+          "completion_tokens": 176,
+          "total_tokens": 5754,
+          "cost": 0.00560082,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 4992,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00560082,
+            "upstream_inference_prompt_cost": 0.00309282,
+            "upstream_inference_completions_cost": 0.002508
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 96,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 5814,
+          "completion_tokens": 78,
+          "total_tokens": 5892,
+          "cost": 0.00356364,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 5504,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00356364,
+            "upstream_inference_prompt_cost": 0.00245214,
+            "upstream_inference_completions_cost": 0.0011115
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 4,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 6894,
+          "completion_tokens": 892,
+          "total_tokens": 7786,
+          "cost": 0.0175845,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 5760,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0175845,
+            "upstream_inference_prompt_cost": 0.0048735,
+            "upstream_inference_completions_cost": 0.012711
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 481,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      ],
+      "costUsd": 0.05203136999999999,
+      "audit": {
+        "valid": false,
+        "violations": [
+          "invalid final response: agent response.decision must be one of reject_duplicate, investigate_novel, uncertain"
+        ],
+        "commandCount": 8,
+        "returnedBytes": 15883,
+        "retrieval": {
+          "searchResultIds": [
+            "raw:change:87bbecb8-58ba-40e1-af55-9aa7cb73d9f3:87bbecb8-58ba-40e1-af55-9aa7cb73d9f3::m3",
+            "raw:change:a6fe4c2a-853a-4f84-b7bf-cef63a3f576c:a6fe4c2a-853a-4f84-b7bf-cef63a3f576c::m1",
+            "raw:change:a9555a0e-ea82-4675-b83c-cae53b67ce18:a9555a0e-ea82-4675-b83c-cae53b67ce18::m4",
+            "raw:detail:4966254b-fcf1-40db-83e7-f3beb6ab64c3",
+            "raw:detail:717b405f-d37d-4747-a1a5-8c942a5ea15d",
+            "raw:detail:af65258d-e17d-4942-9908-fa55f798b56c",
+            "raw:dossier:candidate:karatsuba-multiplication:5a4315a13f",
+            "raw:dossier:candidate:solinas-reduction:5a45b2514d",
+            "raw:dossier:idea:solinas:direct-shifted-arithmetic",
+            "raw:idea:candidate:solinas-reduction:5a45b2514d",
+            "raw:witness:347e8893-03ad-4283-8d3d-46c72e7fce67::m2",
+            "raw:witness:46507827-e937-4fee-a490-26ae7b8b51d0::m1",
+            "raw:witness:8cd36b2b-f092-4647-92b5-45324c86593e::m2",
+            "raw:witness:903ced66-ed59-43ac-83a8-c557c3bc12cc::m2",
+            "raw:witness:9dcbdb80-de66-48a3-b337-30980f90701d::m3",
+            "raw:witness:ed30a235-8ee6-4121-8ed8-3de4889af5e7::m2"
+          ],
+          "receipts": []
+        }
+      },
+      "score": {
+        "pass": false,
+        "wholeAnswer": false,
+        "discovery": true,
+        "evidence": false,
+        "decision": false,
+        "citation": false,
+        "protocol": false,
+        "failures": [
+          "agent response must be an object",
+          "invalid final response: agent response.decision must be one of reject_duplicate, investigate_novel, uncertain"
+        ],
+        "fabricated": false,
+        "negativeFalsePositive": false
+      }
+    },
+    {
+      "key": "openai/gpt-5.6-sol|pilot-positive-03|raw",
+      "model": "openai/gpt-5.6-sol",
+      "caseId": "pilot-positive-03",
+      "arm": "raw",
+      "strata": {
+        "lexicalOverlap": "ordinary",
+        "witnessRole": "nonrepresentative",
+        "evidenceScope": "bundled"
+      },
+      "corpusSha256": "dd04abb4531c9e498211a37acc244f2080d43403bf29af2bae052298b0f778cc",
+      "promptSha256": "9037aa7a19400aa94897b002e6d8f8296050501ec1f653d6985a8279b4c55810",
+      "schema": "yukon.atlas-access-probe.v1",
+      "responseIds": [
+        "gen-1787967777-CuEpspER9wNZJeYTtRd8",
+        "gen-1787967778-Pry00LbsqO3Yh1p05P5f",
+        "gen-1787967779-yZNtPt5IikAC6i3bgcPT",
+        "gen-1787967781-E99P6W3JK4ck8HNoT63E",
+        "gen-1787967783-kqGsR3zrqIZoxcB3PmM7",
+        "gen-1787967784-IpiPXPlcyaiAiLH3jn2p",
+        "gen-1787967785-pqRKnvRYCUUSDy4UCphp",
+        "gen-1787967786-T6h3CqGNPtq5wye33VkO",
+        "gen-1787967789-yTJsByEGZj3cohhD0RBo",
+        "gen-1787967791-8uw9ZepPQsTn9GkFOeTa"
+      ],
+      "routedModels": [
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-sol"
+      ],
+      "response": null,
+      "finalText": "{\"classification\":\"prior_attempt\",\"decision\":\"exact_match\",\"ideaIds\":[\"candidate:unary-iteration:fc35cf45f0\"],\"matches\":[{\"submissionId\":\"4d38be8c-752c-4356-9964-42c2ae567bd1\",\"changeId\":\"4d38be8c-752c-4356-9964-42c2ae567bd1::m1\",\"status\":\"failed\",\"outcome\":{\"classification\":\"artifact\",\"directionalGain\":null,\"score\":null},\"sourceReferenceIds\":[\"change:4d38be8c-752c-4356-9964-42c2ae567bd1:4d38be8c-752c-4356-9964-42c2ae567bd1::m1\",\"witness:4d38be8c-752c-4356-9964-42c2ae567bd1::m1\",\"submission:4d38be8c-752c-4356-9964-42c2ae567bd1\",\"route:4d38be8c-752c-4356-9964-42c2ae567bd1\"]}],\"caveats\":[\"The submission bundled multiple changes; the synchronized endpoint traversal was change m1.\",\"Atlas records failure but no score, directional gain, or terminal reason, so no failure cause is inferred.\"]}",
+      "administrativeFailure": null,
+      "usage": [
+        {
+          "prompt_tokens": 293,
+          "completion_tokens": 48,
+          "total_tokens": 341,
+          "cost": 0.001066,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.001066,
+            "upstream_inference_prompt_cost": 0.000586,
+            "upstream_inference_completions_cost": 0.00048
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 15,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 1300,
+          "completion_tokens": 95,
+          "total_tokens": 1395,
+          "cost": 0.0041985,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 1297,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0041985,
+            "upstream_inference_prompt_cost": 0.0032485,
+            "upstream_inference_completions_cost": 0.00095
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 17,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 1705,
+          "completion_tokens": 52,
+          "total_tokens": 1757,
+          "cost": 0.0017979,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1297,
+            "cache_write_tokens": 405,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0017979,
+            "upstream_inference_prompt_cost": 0.0012779,
+            "upstream_inference_completions_cost": 0.00052
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 2012,
+          "completion_tokens": 63,
+          "total_tokens": 2075,
+          "cost": 0.0017439,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1702,
+            "cache_write_tokens": 307,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0017439,
+            "upstream_inference_prompt_cost": 0.0011139,
+            "upstream_inference_completions_cost": 0.00063
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 14,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 3140,
+          "completion_tokens": 49,
+          "total_tokens": 3189,
+          "cost": 0.0037178,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 2009,
+            "cache_write_tokens": 1128,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0037178,
+            "upstream_inference_prompt_cost": 0.0032278,
+            "upstream_inference_completions_cost": 0.00049
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 3429,
+          "completion_tokens": 66,
+          "total_tokens": 3495,
+          "cost": 0.0020159,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 3137,
+            "cache_write_tokens": 289,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0020159,
+            "upstream_inference_prompt_cost": 0.0013559,
+            "upstream_inference_completions_cost": 0.00066
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 15,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 3812,
+          "completion_tokens": 35,
+          "total_tokens": 3847,
+          "cost": 0.0019987,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 3426,
+            "cache_write_tokens": 383,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0019987,
+            "upstream_inference_prompt_cost": 0.0016487,
+            "upstream_inference_completions_cost": 0.00035
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 4852,
+          "completion_tokens": 99,
+          "total_tokens": 4951,
+          "cost": 0.0043578,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 3809,
+            "cache_write_tokens": 1040,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0043578,
+            "upstream_inference_prompt_cost": 0.0033678,
+            "upstream_inference_completions_cost": 0.00099
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 58,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 6020,
+          "completion_tokens": 81,
+          "total_tokens": 6101,
+          "cost": 0.0047058,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 4849,
+            "cache_write_tokens": 1168,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0047058,
+            "upstream_inference_prompt_cost": 0.0038958,
+            "upstream_inference_completions_cost": 0.00081
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 49,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 7107,
+          "completion_tokens": 383,
+          "total_tokens": 7490,
+          "cost": 0.0077569,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 6017,
+            "cache_write_tokens": 1087,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0077569,
+            "upstream_inference_prompt_cost": 0.0039269,
+            "upstream_inference_completions_cost": 0.00383
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 84,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      ],
+      "costUsd": 0.0333592,
+      "audit": {
+        "valid": false,
+        "violations": [
+          "invalid final response: agent response.decision must be one of reject_duplicate, investigate_novel, uncertain"
+        ],
+        "commandCount": 9,
+        "returnedBytes": 16789,
+        "retrieval": {
+          "searchResultIds": [
+            "raw:change:14b94a97-12ec-44ff-9559-9439d86c9dd6:14b94a97-12ec-44ff-9559-9439d86c9dd6::m5",
+            "raw:change:4d38be8c-752c-4356-9964-42c2ae567bd1:4d38be8c-752c-4356-9964-42c2ae567bd1::m1",
+            "raw:change:4d38be8c-752c-4356-9964-42c2ae567bd1:4d38be8c-752c-4356-9964-42c2ae567bd1::m3",
+            "raw:change:63470daa-0795-49a4-bc4a-fd05ef3a62db:63470daa-0795-49a4-bc4a-fd05ef3a62db::m3",
+            "raw:change:99deca8e-f915-4a8a-81ce-e9da85805b46:99deca8e-f915-4a8a-81ce-e9da85805b46::m3",
+            "raw:change:a6aec81d-77c0-44ad-8a51-0002484e2b58:a6aec81d-77c0-44ad-8a51-0002484e2b58::m3",
+            "raw:detail:1b17204a-b103-49de-8b2a-0005791a780a",
+            "raw:detail:563cd5b0-c1f4-478f-92c2-e44b161ed5f4",
+            "raw:dossier:candidate:classical-simulation-validation:9a86cf0310",
+            "raw:dossier:candidate:location-controlled-arithmetic:0efa7e6ff7",
+            "raw:dossier:candidate:unary-iteration:fc35cf45f0",
+            "raw:dossier:idea:affine:ping-pong-binary-division",
+            "raw:idea:candidate:unary-iteration:fc35cf45f0",
+            "raw:link:link:control:unary",
+            "raw:route:4d38be8c-752c-4356-9964-42c2ae567bd1",
+            "raw:submission:4d38be8c-752c-4356-9964-42c2ae567bd1",
+            "raw:submission:99deca8e-f915-4a8a-81ce-e9da85805b46",
+            "raw:witness:043310c2-fbc7-4b38-929e-8ffd9c0ff7b1::m4",
+            "raw:witness:4d38be8c-752c-4356-9964-42c2ae567bd1::m1",
+            "raw:witness:4d38be8c-752c-4356-9964-42c2ae567bd1::m2"
+          ],
+          "receipts": [
+            {
+              "submissionId": "4d38be8c-752c-4356-9964-42c2ae567bd1",
+              "changeId": "4d38be8c-752c-4356-9964-42c2ae567bd1::m1",
+              "status": "failed",
+              "outcome": "artifact",
+              "sourceRefs": [
+                "change:4d38be8c-752c-4356-9964-42c2ae567bd1:4d38be8c-752c-4356-9964-42c2ae567bd1::m1",
+                "route:4d38be8c-752c-4356-9964-42c2ae567bd1",
+                "submission:4d38be8c-752c-4356-9964-42c2ae567bd1",
+                "witness:4d38be8c-752c-4356-9964-42c2ae567bd1::m1"
+              ]
+            }
+          ]
+        }
+      },
+      "score": {
+        "pass": false,
+        "wholeAnswer": false,
+        "discovery": true,
+        "evidence": true,
+        "decision": false,
+        "citation": false,
+        "protocol": false,
+        "failures": [
+          "agent response must be an object",
+          "invalid final response: agent response.decision must be one of reject_duplicate, investigate_novel, uncertain"
+        ],
+        "fabricated": false,
+        "negativeFalsePositive": false
+      }
+    },
+    {
+      "key": "moonshotai/kimi-k3|confirm-positive-16|raw",
+      "model": "moonshotai/kimi-k3",
+      "caseId": "confirm-positive-16",
+      "arm": "raw",
+      "strata": {
+        "lexicalOverlap": "ordinary",
+        "witnessRole": "representative",
+        "evidenceScope": "bundled"
+      },
+      "corpusSha256": "dd04abb4531c9e498211a37acc244f2080d43403bf29af2bae052298b0f778cc",
+      "promptSha256": "104a084714e5dce09cc0f5fddb4783352644db4611c329fd23da8d88a01c031f",
+      "schema": "yukon.atlas-access-probe.v1",
+      "responseIds": [
+        "gen-1787967762-3OOki47GszjmwwT6UkI6",
+        "gen-1787967769-ZQ8aGoMvaM7Nnw9JpZ2D",
+        "gen-1787967780-a5mvfabj8Jp3FkUmQWot",
+        "gen-1787967801-lSeIiJaewng1pirNWc6o",
+        "gen-1787967808-TLbxSNH60fTRxrvoiSTp"
+      ],
+      "routedModels": [
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3"
+      ],
+      "response": null,
+      "finalText": "I have sufficient evidence. The proposal is an almost verbatim restatement of a recorded, promoted change in the Atlas history.\n\n{\n  \"classification\": \"prior-attempt\",\n  \"decision\": \"repeat-of-promoted-change\",\n  \"ideaIds\": [\"idea:cuccaro:carry-out-elision\", \"variant:cuccaro-ripple-carry-adder:carry-layout\"],\n  \"matches\": [\n    {\n      \"submissionId\": \"bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496\",\n      \"changeId\": \"bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6\",\n      \"title\": \"Omit the final carry when no later plain-tail operation will consume it.\",\n      \"recordedStatus\": \"promoted\",\n      \"recordedOutcome\": \"promoted; directionalGain 1253244 (rawDelta -1253244), score 1482397242 vs comparator 95bf230b-c65d-459e-9cbe-33cad25d6ae6 score 1483650486; witness reviewDisposition accepted_child\",\n      \"site\": \"src/point_add/trailmix_ludicrous/gidney.rs::emit_adaptive_layout_no_cout\",\n      \"sourceRefIds\": [\n        \"submission:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496\",\n        \"witness:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6\",\n        \"change:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6\",\n        \"detail:submission-details/bb.json#bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496\"\n      ]\n    },\n    {\n      \"submissionId\": \"0c7f6650-6cba-4810-aa4a-ff1c5ed985b1\",\n      \"changeId\": \"0c7f6650-6cba-4810-aa4a-ff1c5ed985b1::m5\",\n      \"title\": \"Add a guarded path that omits an unused final carry output.\",\n      \"recordedStatus\": \"promoted\",\n      \"recordedOutcome\": \"promoted; directionalGain 3675490\",\n      \"sourceRefIds\": []\n    },\n    {\n      \"submissionId\": \"dca886e1-4268-49fd-867e-7edcc556230e\",\n      \"changeId\": \"dca886e1-4268-49fd-867e-7edcc556230e::m2\",\n      \"title\": \"Omit the final graduated chunk's carry-out materialization and cleanup.\",\n      \"recordedStatus\": \"promoted\",\n      \"recordedOutcome\": \"promoted; directionalGain 2175443\",\n      \"sourceRefIds\": []\n    },\n    {\n      \"submissionId\": \"b5fa90f8-5171-49eb-a1e4-3b7bc738270b\",\n      \"changeId\": \"b5fa90f8-5171-49eb-a1e4-3b7bc738270b::m3\",\n      \"title\": \"Omit the direct adder's carry-out from its final chunk.\",\n      \"recordedStatus\": \"promoted\",\n      \"recordedOutcome\": \"promoted; no directional gain recorded (null)\",\n      \"sourceRefIds\": []\n    }\n  ],\n  \"caveats\": [\n    \"Primary match bb54b65a::m6 is verbatim: detail excerpt shows drop_last = (layout.plain_len == 0) gating omission of the final chunk's cout allocation in emit_adaptive_layout_no_cout, matching 'no plain tail that could read it'.\",\n    \"The recorded path was gated behind env var TLM_ADAPTIVE_FINAL_NO_COUT=1 per the detail-shard excerpt.\",\n    \"Dossier verification field reads 'requires_verification'.\",\n    \"Three sibling changes under the same idea (idea:cuccaro:carry-out-elision) also address final-carry omission; all 4 submissions in the dossier are recorded promoted (0 failed, 0 rejected).\",\n    \"Per instructions, no cause of failure is inferred; the recorded attempts succeeded (promoted).\"\n  ]\n}",
+      "administrativeFailure": null,
+      "usage": [
+        {
+          "prompt_tokens": 349,
+          "completion_tokens": 241,
+          "total_tokens": 590,
+          "cost": 0.0044289,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0044289,
+            "upstream_inference_prompt_cost": 0.00099465,
+            "upstream_inference_completions_cost": 0.00343425
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 100,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 2613,
+          "completion_tokens": 366,
+          "total_tokens": 2979,
+          "cost": 0.01266255,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.01266255,
+            "upstream_inference_prompt_cost": 0.00744705,
+            "upstream_inference_completions_cost": 0.0052155
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 171,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 4136,
+          "completion_tokens": 757,
+          "total_tokens": 4893,
+          "cost": 0.01600845,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 2560,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.01600845,
+            "upstream_inference_prompt_cost": 0.0052212,
+            "upstream_inference_completions_cost": 0.01078725
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 596,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 7733,
+          "completion_tokens": 248,
+          "total_tokens": 7981,
+          "cost": 0.01375353,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 4608,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.01375353,
+            "upstream_inference_prompt_cost": 0.01021953,
+            "upstream_inference_completions_cost": 0.003534
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 67,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 8528,
+          "completion_tokens": 1843,
+          "total_tokens": 10371,
+          "cost": 0.03086835,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 7680,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.03086835,
+            "upstream_inference_prompt_cost": 0.0046056,
+            "upstream_inference_completions_cost": 0.02626275
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 865,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      ],
+      "costUsd": 0.07772178,
+      "audit": {
+        "valid": false,
+        "violations": [
+          "invalid final response: agent response.classification must be one of prior_attempt, no_prior_attempt, uncertain"
+        ],
+        "commandCount": 8,
+        "returnedBytes": 16556,
+        "retrieval": {
+          "searchResultIds": [
+            "raw:change:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1::m5",
+            "raw:change:77eaef64-f531-45dc-aa5c-e4456717f829:77eaef64-f531-45dc-aa5c-e4456717f829::m1",
+            "raw:change:a9555a0e-ea82-4675-b83c-cae53b67ce18:a9555a0e-ea82-4675-b83c-cae53b67ce18::m4",
+            "raw:change:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6",
+            "raw:change:bcb39d0c-e000-4c57-a05f-8b2f32323b71:bcb39d0c-e000-4c57-a05f-8b2f32323b71::m6",
+            "raw:change:d8466d83-3524-4c86-a512-d31d2dfe11b9:d8466d83-3524-4c86-a512-d31d2dfe11b9::m1",
+            "raw:detail:8cd36b2b-f092-4647-92b5-45324c86593e",
+            "raw:detail:f4be7e15-5532-4601-8400-00201fa5b1ce",
+            "raw:dossier:idea:affine:ping-pong-binary-division",
+            "raw:dossier:idea:cuccaro:carry-out-elision",
+            "raw:idea:idea:cuccaro:carry-out-elision",
+            "raw:route:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496",
+            "raw:submission:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496",
+            "raw:witness:3bd3aa5a-c36a-432e-92af-c4933a860a80::m1",
+            "raw:witness:3bd3aa5a-c36a-432e-92af-c4933a860a80::m3",
+            "raw:witness:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m1",
+            "raw:witness:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m2",
+            "raw:witness:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m3",
+            "raw:witness:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m4"
+          ],
+          "receipts": [
+            {
+              "submissionId": "bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496",
+              "changeId": "bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6",
+              "status": "promoted",
+              "outcome": "artifact_and_measurement",
+              "sourceRefs": [
+                "change:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6",
+                "detail:submission-details/bb.json#bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496",
+                "submission:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496",
+                "witness:bb54b65a-add5-4fe8-bf7e-ebfe9bdd7496::m6"
+              ]
+            }
+          ]
+        }
+      },
+      "score": {
+        "pass": false,
+        "wholeAnswer": false,
+        "discovery": true,
+        "evidence": true,
+        "decision": false,
+        "citation": false,
+        "protocol": false,
+        "failures": [
+          "agent response must be an object",
+          "invalid final response: agent response.classification must be one of prior_attempt, no_prior_attempt, uncertain"
+        ],
+        "fabricated": false,
+        "negativeFalsePositive": false
+      }
+    },
+    {
+      "key": "moonshotai/kimi-k3|pilot-positive-02|pointer",
+      "model": "moonshotai/kimi-k3",
+      "caseId": "pilot-positive-02",
+      "arm": "pointer",
+      "strata": {
+        "lexicalOverlap": "low",
+        "witnessRole": "representative",
+        "evidenceScope": "bundled"
+      },
+      "corpusSha256": "ced6aa43cf24f1e0ac0ba28773913dff1bef45066b0b0e06c72ff892eaba6133",
+      "promptSha256": "9bd39cdbf1f4b6efc6a2897ce94d21685c78c07928871d5a687bc8ae2e52aef5",
+      "schema": "yukon.atlas-access-probe.v1",
+      "responseIds": [
+        "gen-1787967861-9Wv2bU3VXyDWkNURq7QU",
+        "gen-1787967877-062vOmMluBHDWjOoUZ8A",
+        "gen-1787967887-oBSpaziwqhZVuOMMA3VA",
+        "gen-1787967925-5U8K3W7ifE0me3vP9At4"
+      ],
+      "routedModels": [
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3",
+        "moonshotai/kimi-k3"
+      ],
+      "response": null,
+      "finalText": "{\"classification\":\"prior_attempt\",\"decision\":\"repeat_of_recorded_attempt_do_not_submit_as_new\",\"ideaIds\":[\"candidate:bennett-time-space-tradeoff:66d262c99b\"],\"matches\":[{\"recordId\":\"attempt:06204432-089f-45d1-902c-b7907a252520:06204432-089f-45d1-902c-b7907a252520::m4:candidate:bennett-time-space-tradeoff:66d262c99b\",\"submissionId\":\"06204432-089f-45d1-902c-b7907a252520\",\"changeId\":\"06204432-089f-45d1-902c-b7907a252520::m4\",\"status\":\"promoted\",\"outcome\":\"artifact_and_measurement\",\"relation\":\"instance_of\",\"ideaId\":\"candidate:bennett-time-space-tradeoff:66d262c99b\",\"title\":\"Release the affine square workspace before the multiply and recompute it afterward to cle…\",\"description\":\"Release the affine square workspace before the multiply and recompute it afterward to clear the auxiliary register.\",\"site\":\"src/point_add/mul_affine.rs::square_tx_and_combined_ty_l2minus3qx\",\"reviewDisposition\":\"covered_by_owner\",\"reviewNote\":\"Direct compute-uncompute or reverse-replay application of the parent Bennett mechanism.\",\"sourceRefs\":[\"change:06204432-089f-45d1-902c-b7907a252520:06204432-089f-45d1-902c-b7907a252520::m4\",\"detail:submission-details/06.json#06204432-089f-45d1-902c-b7907a252520\",\"route:06204432-089f-45d1-902c-b7907a252520\",\"submission:06204432-089f-45d1-902c-b7907a252520\",\"witness:06204432-089f-45d1-902c-b7907a252520::m4\"]}],\"caveats\":[\"The proposal's mechanism ('let the affine square register go dead before the product; re-derive the square afterward to zero the auxiliary register') restates the recorded change description ('release the affine square workspace before the multiply and recompute it afterward to clear the auxiliary register') nearly phrase-for-phrase, so it is a repeat-of-recorded-attempt match rather than a fuzzy thematic match.\",\"The record is marked status 'promoted' with outcome 'artifact_and_measurement'; nothing here is characterized as a failure, so no causal inference about failure is needed or made.\",\"The parent idea 'Bennett recomputation' (candidate:bennett-time-space-tradeoff:66d262c99b) is filed under the ECDSA spacetime-product constraint with review status human_reviewed and evidenceRef evidence:decision:pass3-approved; the attempt's own review disposition is 'covered_by_owner' as a direct application of that parent mechanism.\",\"The same locator also carries sibling attempts under this idea with different mechanisms (e.g., defer y-coordinate materialization, reuse y-coordinate as scratch); the match reported is limited to the m4 change whose description aligns with the proposal.\",\"The locator key itself ('attempt:...::m4:candidate:bennett-time-space-tradeoff:66d262c99b') resolves 1:1 to this record; several sourceRefs (change/submission/route/witness) all point to submissionId 06204432-089f-45d1-902c-b7907a252520, consistently identifying one prior submission.\"]}",
+      "administrativeFailure": null,
+      "usage": [
+        {
+          "prompt_tokens": 423,
+          "completion_tokens": 554,
+          "total_tokens": 977,
+          "cost": 0.00910005,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00910005,
+            "upstream_inference_prompt_cost": 0.00120555,
+            "upstream_inference_completions_cost": 0.0078945
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 417,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 3186,
+          "completion_tokens": 321,
+          "total_tokens": 3507,
+          "cost": 0.01365435,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.01365435,
+            "upstream_inference_prompt_cost": 0.0090801,
+            "upstream_inference_completions_cost": 0.00457425
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 197,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 4227,
+          "completion_tokens": 1154,
+          "total_tokens": 5381,
+          "cost": 0.02061177,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 3072,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.02061177,
+            "upstream_inference_prompt_cost": 0.00416727,
+            "upstream_inference_completions_cost": 0.0164445
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 1055,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        {
+          "prompt_tokens": 5830,
+          "completion_tokens": 1361,
+          "total_tokens": 7191,
+          "cost": 0.02419023,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 4608,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.02419023,
+            "upstream_inference_prompt_cost": 0.00479598,
+            "upstream_inference_completions_cost": 0.01939425
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 599,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      ],
+      "costUsd": 0.0675564,
+      "audit": {
+        "valid": false,
+        "violations": [
+          "invalid final response: agent response.decision must be one of reject_duplicate, investigate_novel, uncertain"
+        ],
+        "commandCount": 4,
+        "returnedBytes": 10887,
+        "retrieval": {
+          "searchResultIds": [
+            "attempt:0399ebeb-386c-43e4-a34a-f68f8a3ffd53:0399ebeb-386c-43e4-a34a-f68f8a3ffd53::m4:candidate:seed-grinding:7647dab7dc",
+            "attempt:06204432-089f-45d1-902c-b7907a252520:06204432-089f-45d1-902c-b7907a252520::m1:candidate:conditionally-clean-ancillae:148832b2d8",
+            "attempt:06204432-089f-45d1-902c-b7907a252520:06204432-089f-45d1-902c-b7907a252520::m2:candidate:kaliski-inversion:e79f263674",
+            "attempt:06204432-089f-45d1-902c-b7907a252520:06204432-089f-45d1-902c-b7907a252520::m3:candidate:seed-grinding:7647dab7dc",
+            "attempt:06204432-089f-45d1-902c-b7907a252520:06204432-089f-45d1-902c-b7907a252520::m4:candidate:bennett-time-space-tradeoff:66d262c99b",
+            "attempt:06204432-089f-45d1-902c-b7907a252520:06204432-089f-45d1-902c-b7907a252520::m5:candidate:classical-simulation-validation:9a86cf0310",
+            "attempt:06204432-089f-45d1-902c-b7907a252520:06204432-089f-45d1-902c-b7907a252520::m6:candidate:cuccaro-ripple-carry-adder:370aaee819",
+            "attempt:0ce9b134-a5cf-4194-8247-69f5c3860598:0ce9b134-a5cf-4194-8247-69f5c3860598::m3:candidate:bennett-time-space-tradeoff:66d262c99b",
+            "attempt:155ebc56-b6e3-42c1-8246-0556cd8e8e80:155ebc56-b6e3-42c1-8246-0556cd8e8e80::m1:candidate:bennett-time-space-tradeoff:66d262c99b",
+            "attempt:2ab3dd94-8d9f-4b39-ac1e-3bbc1188f187:2ab3dd94-8d9f-4b39-ac1e-3bbc1188f187::m1:candidate:bennett-time-space-tradeoff:66d262c99b",
+            "attempt:8233cd7e-d4cb-4351-9bd4-e3741d0d6ba3:8233cd7e-d4cb-4351-9bd4-e3741d0d6ba3::m4:candidate:seed-grinding:7647dab7dc",
+            "attempt:e2d639c8-52bb-400b-981c-97b33e5fe979:e2d639c8-52bb-400b-981c-97b33e5fe979::m1:candidate:bennett-time-space-tradeoff:66d262c99b",
+            "attempt:fcbb6146-4b29-495c-a071-7ad552fba188:fcbb6146-4b29-495c-a071-7ad552fba188::m2:candidate:bennett-time-space-tradeoff:66d262c99b",
+            "attempt:fcbb6146-4b29-495c-a071-7ad552fba188:fcbb6146-4b29-495c-a071-7ad552fba188::m3:candidate:bennett-time-space-tradeoff:66d262c99b",
+            "idea:candidate:bennett-time-space-tradeoff:66d262c99b",
+            "idea:idea:toffoli:construction-time-liveness-pruning"
+          ],
+          "receipts": [
+            {
+              "submissionId": "06204432-089f-45d1-902c-b7907a252520",
+              "changeId": "06204432-089f-45d1-902c-b7907a252520::m4",
+              "status": "promoted",
+              "outcome": "artifact_and_measurement",
+              "sourceRefs": [
+                "change:06204432-089f-45d1-902c-b7907a252520:06204432-089f-45d1-902c-b7907a252520::m4",
+                "detail:submission-details/06.json#06204432-089f-45d1-902c-b7907a252520",
+                "route:06204432-089f-45d1-902c-b7907a252520",
+                "submission:06204432-089f-45d1-902c-b7907a252520",
+                "witness:06204432-089f-45d1-902c-b7907a252520::m4"
+              ]
+            }
+          ]
+        }
+      },
+      "score": {
+        "pass": false,
+        "wholeAnswer": false,
+        "discovery": true,
+        "evidence": true,
+        "decision": false,
+        "citation": false,
+        "protocol": false,
+        "failures": [
+          "agent response must be an object",
+          "invalid final response: agent response.decision must be one of reject_duplicate, investigate_novel, uncertain"
+        ],
+        "fabricated": false,
+        "negativeFalsePositive": false
+      }
+    }
+  ],
+  "administrativeAttempts": [
+    {
+      "key": "openai/gpt-5.6-sol|pilot-positive-03|raw",
+      "attempt": 1,
+      "failure": {
+        "name": "TypeError",
+        "message": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "status": null
+      },
+      "costUsd": 0.0188817,
+      "responseIds": [
+        "gen-1787967762-8eOEg9YWZmOU5k4Ltc9m",
+        "gen-1787967763-cR7LSNJhkGt0JjNptKml",
+        "gen-1787967765-AQLTWFpBg6MtRYW0D5uN",
+        "gen-1787967767-WRCBIxPlm7NzgaxBYJ8d",
+        "gen-1787967768-b6XDOpvMroEEKJLVxXXs"
+      ]
+    },
+    {
+      "key": "openai/gpt-5.6-sol|pilot-positive-03|raw",
+      "attempt": 2,
+      "failure": {
+        "name": "TypeError",
+        "message": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "status": null
+      },
+      "costUsd": 0.0148786,
+      "responseIds": [
+        "gen-1787967770-j22OlBOP1m0fzfE3bpu5",
+        "gen-1787967772-3Jcvz06DxeCJtpJOtXZo",
+        "gen-1787967774-prZcOyTMBtPuDUqGiBZ5",
+        "gen-1787967775-dRz5esywWqy9MIvQIuMQ"
+      ]
+    },
+    {
+      "key": "moonshotai/kimi-k3|pilot-positive-01|flat_plus_brief",
+      "attempt": 1,
+      "failure": {
+        "name": "TypeError",
+        "message": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "status": null
+      },
+      "costUsd": 0.03384489,
+      "responseIds": [
+        "gen-1787967861-CgFnRNjWswczlfGuQxJZ",
+        "gen-1787967872-wRnOsUkQ8Y5GZV2zYkCs",
+        "gen-1787967882-N1WXkKb7ixRvx5ALDAml"
+      ]
+    },
+    {
+      "key": "moonshotai/kimi-k3|pilot-positive-01|flat_plus_brief",
+      "attempt": 2,
+      "failure": {
+        "name": "TypeError",
+        "message": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "status": null
+      },
+      "costUsd": 0.05146758,
+      "responseIds": [
+        "gen-1787967898-eazBwfmYFbfwHy1jprpe",
+        "gen-1787967913-XbK1b2nmyjcogoZlluCX",
+        "gen-1787967923-FeFBORfJeih4TMw3cMEB",
+        "gen-1787967940-PN7m5AAfuqKIWR0rRwjs"
+      ]
+    },
+    {
+      "key": "moonshotai/kimi-k3|pilot-positive-01|flat_plus_brief",
+      "attempt": 3,
+      "failure": {
+        "name": "TypeError",
+        "message": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "status": null
+      },
+      "costUsd": 0.05017881,
+      "responseIds": [
+        "gen-1787967951-lztQ65NYb8i7cETxQl33",
+        "gen-1787967967-KDN7lS6pIBwbDRTJKQZf",
+        "gen-1787967987-e9727oK8I8TEtgH0MR1O"
+      ]
+    }
+  ],
+  "administrativeFailures": [
+    {
+      "key": "moonshotai/kimi-k3|pilot-positive-01|flat_plus_brief",
+      "failure": {
+        "name": "TypeError",
+        "message": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "status": null
+      }
+    }
+  ]
+}

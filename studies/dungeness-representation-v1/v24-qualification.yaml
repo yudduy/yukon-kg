@@ -1,0 +1,45 @@
+schema_version: 1
+study: dungeness-representation-v1
+phase: v24-seed-qualification
+budget_scope: knowledge-representation-autoresearch-v1
+study_ceiling_usd: 500
+supersedes: v23-qualification.yaml
+apparatus_exclusion:
+  experiment: dungeness-representation-v23-pilot
+  campaign: seed-c4a87521017141590
+  run: seed-c4a87521017141590-s01
+  reason: clean verifier did not retain the exact final candidate
+  scientific_evidence_admitted: false
+campaign:
+  max_usd: 6
+  max_model_tokens: 400000
+  max_agent_seconds: 3600
+  max_evaluations: 8
+  max_sessions: 6
+  session_max_usd: 3
+  session_max_model_tokens: 200000
+  session_max_agent_seconds: 600
+  session_max_evaluations: 2
+eligibility:
+  valid_evaluations: 4
+  distinct_candidates: 2
+  distinct_scores: 2
+  positive_progress: true
+  remaining_meaningful_gains: 1
+ordered_campaigns:
+  - block: adversarial-splay-gpt-history-a
+    template: run-spec:users/bx/krv23-seed-splay-gpt
+  - block: adversarial-splay-gpt-history-b
+    template: run-spec:users/bx/krv23-seed-splay-gpt
+  - block: toy-isa-gpt-history-a
+    template: run-spec:users/bx/krv23-seed-toy-gpt
+  - block: toy-isa-gpt-history-b
+    template: run-spec:users/bx/krv23-seed-toy-gpt
+  - block: vliw-scheduler-gpt-history-a
+    template: run-spec:users/bx/krv23-seed-vliw-gpt
+completion_campaign:
+  block: vliw-scheduler-gpt-history-b
+  template: run-spec:users/bx/krv23-seed-vliw-gpt
+decision:
+  pass_if_eligible_first_five_at_least: 4
+  administrative_replacements_per_campaign: 1

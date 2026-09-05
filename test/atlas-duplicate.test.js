@@ -535,7 +535,7 @@ describe("admission statistics", () => {
 
 describe("production Atlas boundary", () => {
   let loaded;
-  const fixturePath = path.join("/Users/c-dnguyen/Documents/project/yukon-kg", "fixtures", "atlas-duplicate-cases.json");
+  const fixturePath = path.resolve(import.meta.dir, "..", "fixtures", "atlas-duplicate-cases.json");
 
   beforeAll(async () => {
     loaded = await loadPinnedAtlas();

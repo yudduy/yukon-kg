@@ -1,0 +1,54 @@
+{
+  "schema": "dungeness.v26-history-qualification-freeze.v1",
+  "frozen_at": "2026-08-28T16:32:00.000Z",
+  "treatment_authorized": false,
+  "model_spend_authorized_usd": 0,
+  "files": {
+    "eval/history_bank.py": "5792bb4d46179b947e3ab7e9343e321cb0fa9c587533d75e6de1ed97b9f9c29f",
+    "eval/dungeness": "1d68e389935d557d3f122e02066a860d973436d05ac0ad1fa2ee20a5eccbfce6",
+    "eval/tests/test_history_bank.py": "cd0e5b83db15439ba6b301bce126ffb02637d6a1f71db0aa248978444af774db",
+    "eval/history-bank-plans/v26-ecdsa.json": "c0547d90897b514f34b425e97871cc1122a6037b2e3e948392babd95ace147ad",
+    "eval/runs/users/bx/krv25-smoke-ecdsa-colima/record.json": "c572f5516a956e8a4b2ad9109ffe73d1302e2da6f3b1de73ed2ce5a02161d128",
+    "kg/src/research-view.js": "66d802081b271ae5e80ead48174a6bdc6c3d937d779f18ef1d82794b5610c370",
+    "kg/src/research-view-cli.js": "e7b0c73660ceed002836f454cfa541fba65ce096def1fa8234e736d1243c8eaf",
+    "kg/test/research-view.test.js": "0bb270b763df4a116df2f17d77c56f9cdbf6427726a5fa855ea380ae3b4c2d54",
+    "kg/studies/dungeness-representation-v1/v26-ecdsa-history-selection.json": "3958f0800e9f6900424c40daf2feb07581cd171292240066c0c3dc7c09ec3492",
+    "kg/studies/dungeness-representation-v1/preregistration-v26.md": "92553bf0405a8f46aa202fdb084a06b301d586ffc0e0a3949dc14e8b0977920c",
+    "kg/studies/dungeness-representation-v1/v26-history-qualification.yaml": "863de08205ec7a54b2f0624ab03439887134413367b2fc4df6991ffef58fce4a",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v25-freeze.json": "41fe7ae5747e719d3ad5748e60d5276aa1647e308f3f01d470d91f95ec39ada6"
+  },
+  "source": {
+    "repository_url": "https://github.com/Layr-Labs/ecdsafail-challenge.git",
+    "commits_available": 54,
+    "commits_required": 14,
+    "sealed_release": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+    "selection_sha256": "3958f0800e9f6900424c40daf2feb07581cd171292240066c0c3dc7c09ec3492",
+    "verification_plan_sha256": "c0547d90897b514f34b425e97871cc1122a6037b2e3e948392babd95ace147ad"
+  },
+  "verifier": {
+    "source_run": "krv25-smoke-ecdsa-colima",
+    "tree_sha256": "c058ae1cf5335748c73e422ae99bee175dc9aba7f142f2f5fe8f1736faef09a6",
+    "compatibility_probe": {
+      "commit_sha": "787eaa82f257aaee6c16bc08575ddfcfbbedd666",
+      "status": "ok",
+      "score": 1182644586,
+      "sealed_score": 1182644586,
+      "model_calls": 0,
+      "normalized_usd": 0
+    }
+  },
+  "model_free_gates": {
+    "dungeness_core": {"passed": 166, "failed": 0},
+    "gateway": {"passed": 77, "failed": 0},
+    "yukon": {"passed": 114, "skipped": 2, "failed": 0},
+    "public_data": "PASS"
+  },
+  "budget": {
+    "scope": "knowledge-representation-autoresearch-v1",
+    "hard_ceiling_usd": 500,
+    "committed_usd": 25.227542,
+    "active_reservations": 0,
+    "remaining_usd": 474.772458
+  },
+  "next_gate": "clean-verify all 14 frozen candidates and compile both frozen windows; no treatment"
+}

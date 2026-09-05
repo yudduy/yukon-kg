@@ -1,0 +1,47 @@
+{
+  "schema": "yukon.representation-decision-probe-calibration.v2",
+  "model": "moonshotai/kimi-k3",
+  "packet_sha256": "b033b6dce7f54938a8cfe5e9c5f1eb5b9ff74d6c63f4e455ad6af33fcb7c9faa",
+  "prompt_sha256": "e57c8b5ccf32fa41d6d6db6c239d5a8195d6b99f7950de73e66d749cbb3197e4",
+  "response_id": "gen-1787964067-UuJLJrj9BSHrG32Cs7Wz",
+  "routed_model": "moonshotai/kimi-k3",
+  "content_source": "content",
+  "response": "{\"action_id\":\"action-daa0a284b6fe\",\"evidence_event_ids\":[\"event-903acf996e4e\"]}",
+  "usage": {
+    "prompt_tokens": 6527,
+    "completion_tokens": 572,
+    "total_tokens": 7099,
+    "cost": 0.02675295,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.02675295,
+      "upstream_inference_prompt_cost": 0.01860195,
+      "upstream_inference_completions_cost": 0.008151
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "cost_usd": 0.02675295,
+  "score": {
+    "valid": true,
+    "parseError": null,
+    "actionId": "action-daa0a284b6fe",
+    "correct": true,
+    "regret": 0,
+    "citedEventIds": [
+      "event-903acf996e4e"
+    ],
+    "evidenceRecall": 1,
+    "evidencePrecision": 1,
+    "groundedCorrect": true
+  }
+}

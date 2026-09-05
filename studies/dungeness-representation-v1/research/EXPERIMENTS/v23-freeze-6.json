@@ -1,0 +1,19 @@
+{
+  "schema": "dungeness.v23-qualification-freeze-delta.v1",
+  "frozen_at": "2026-08-28T05:55:21Z",
+  "supersedes": "v23-freeze-5.json",
+  "base_freeze_sha256": "5e321db4bf77baddaa294333e2ab450b4bb3836c208cb4bccc85e176f75a6979",
+  "reason": "The 200,000-token official-Moonshot canary received two successful responses and executed tools, then the endpoint returned a real provider 429 while local budget remained. No evaluation or history existed. This administrative route replacement pins the live exact Parasail Kimi endpoint under the same model ID, price, context, capabilities, and no-fallback policy, and freezes a fresh canary.",
+  "changed_files": {
+    "eval/services/gateway/pricing.yaml": "541db85dfc3cd850543592ff68873d333a1b8e9a885f0f8f5bd866d0dc84ced4",
+    "eval/services/gateway/tests/test_gateway.py": "ba19bfe492f409247a24f4b9a0bb28d3076103c0a8ee3a846decad970f6db5e7",
+    "eval/run-specs/dungeness-representation-v23/krv23-route-canary-kimi-v3.yaml": "adaf6a59c99d750eb89366036c771e732a6899df1a46ae031e4589ed7e3e645a"
+  },
+  "validation": {
+    "openrouter_policy_tests": 3,
+    "live_openrouter_policy": "PASS"
+  },
+  "committed_study_usd": 13.897201,
+  "paid_treatment_allowed": false,
+  "next_gate": "200,000-token Kimi Parasail route canary"
+}
