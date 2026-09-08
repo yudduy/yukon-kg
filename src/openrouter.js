@@ -24,7 +24,18 @@ function parseResponseBody(text) {
   }
 }
 
-export async function chat({ messages, model = process.env.OPENROUTER_MODEL, responseFormat } = {}) {
+export async function chatCompletion({
+  messages,
+  model = process.env.OPENROUTER_MODEL,
+  responseFormat,
+  maxTokens,
+  temperature,
+  seed,
+  reasoning,
+  tools,
+  toolChoice,
+  parallelToolCalls,
+} = {}) {
   if (!Array.isArray(messages) || messages.length === 0) {
     throw new OpenRouterError("messages must be a non-empty array");
   }
@@ -46,6 +57,13 @@ export async function chat({ messages, model = process.env.OPENROUTER_MODEL, res
       model,
       messages,
       ...(responseFormat === undefined ? {} : { response_format: responseFormat }),
+      ...(maxTokens === undefined ? {} : { max_tokens: maxTokens }),
+      ...(temperature === undefined ? {} : { temperature }),
+      ...(seed === undefined ? {} : { seed }),
+      ...(reasoning === undefined ? {} : { reasoning }),
+      ...(tools === undefined ? {} : { tools }),
+      ...(toolChoice === undefined ? {} : { tool_choice: toolChoice }),
+      ...(parallelToolCalls === undefined ? {} : { parallel_tool_calls: parallelToolCalls }),
     }),
   });
   const body = parseResponseBody(await response.text());
@@ -56,14 +74,35 @@ export async function chat({ messages, model = process.env.OPENROUTER_MODEL, res
     });
   }
 
-  const content = body?.choices?.[0]?.message?.content;
-  if (typeof content !== "string") {
-    throw new OpenRouterError("OpenRouter returned no text content", { body });
+  const message = body?.choices?.[0]?.message;
+  if (message === null || typeof message !== "object" || Array.isArray(message)) {
+    throw new OpenRouterError("OpenRouter returned no assistant message", { body });
   }
   return {
     id: typeof body.id === "string" ? body.id : null,
     model: typeof body.model === "string" ? body.model : model,
-    content,
+    message,
     usage: body.usage ?? null,
+    finishReason: body?.choices?.[0]?.finish_reason ?? null,
+  };
+}
+
+export async function chat(options = {}) {
+  const completion = await chatCompletion(options);
+  const { message } = completion;
+  const content = typeof message?.content === "string"
+    ? message.content
+    : typeof message?.reasoning === "string"
+      ? message.reasoning
+      : null;
+  if (content === null) {
+    throw new OpenRouterError("OpenRouter returned no text content", { body });
+  }
+  return {
+    id: completion.id,
+    model: completion.model,
+    content,
+    contentSource: typeof message?.content === "string" ? "content" : "reasoning",
+    usage: completion.usage,
   };
 }

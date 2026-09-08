@@ -1,0 +1,41 @@
+{
+  "schema": "yukon.ecdsa-history-selection.v1",
+  "release_id": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+  "repository_url": "https://github.com/Layr-Labs/ecdsafail-challenge.git",
+  "task_ref": "task:users/bx/ecdsa-fail-v2",
+  "checkpoint_ref": "checkpoint:public/github/layr-labs/ecdsafail-challenge/62ae3d00d1e01d7bc640b5163cfea8dabffd8392",
+  "candidate_path": "src/point_add",
+  "verifier_run": "krv25-smoke-ecdsa-colima",
+  "verifier_tree_sha256": "c058ae1cf5335748c73e422ae99bee175dc9aba7f142f2f5fe8f1736faef09a6",
+  "official_baseline_score": 1481490198,
+  "reference_event_id": "ed30a235-8ee6-4121-8ed8-3de4889af5e7",
+  "minimum_headroom_meaningful_gains": 1,
+  "windows": [
+    {
+      "id": "ecdsa-archive-a",
+      "base_event_id": "3616dbf2-f32d-41c8-9ea2-7a5bbe372fc0",
+      "event_ids": [
+        "d626411f-6cc8-4708-8843-1c0b52b2da1c",
+        "7bb87130-fc25-488e-9db7-e04e8cb086d8",
+        "b4e16cd4-700a-4f04-a501-ef9598aedf30",
+        "c5f59aaa-efb8-41df-aa62-e150b28644db",
+        "e4b51510-27df-4b5b-87d7-a0f338ed6a91"
+      ],
+      "start_event_id": "e4b51510-27df-4b5b-87d7-a0f338ed6a91"
+    },
+    {
+      "id": "ecdsa-archive-b",
+      "base_event_id": "e4b51510-27df-4b5b-87d7-a0f338ed6a91",
+      "event_ids": [
+        "f839d9a6-61e1-449f-aae8-82fbf96ba7e7",
+        "46507827-e937-4fee-a490-26ae7b8b51d0",
+        "347e8893-03ad-4283-8d3d-46c72e7fce67",
+        "dcdab70f-39a3-4b6c-bace-0b9c666f6ff5",
+        "a0fd77fd-1abe-4bb2-aa47-d89b64c82d3e",
+        "7e481634-3702-44c8-9ca6-8455599919c9",
+        "1cd4a7fe-c009-4c5b-9ef7-a49fc0a73ffa"
+      ],
+      "start_event_id": "1cd4a7fe-c009-4c5b-9ef7-a49fc0a73ffa"
+    }
+  ]
+}

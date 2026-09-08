@@ -1,0 +1,170 @@
+{
+  "schema": "yukon.atlas-access-probe-freeze.v1",
+  "createdAt": null,
+  "claimScope": "Positive duplicate recovery under a fixed query budget; mechanism pilot, not full-chain autoresearch efficacy.",
+  "source": {
+    "releaseId": "b4bd9026018a9ab464fafd1ce4c2905c95af95462b29d55ede169c7cb953eac2",
+    "manifestSha256": "db9c9c924543418ab47d871a666f0cdd17bcd4c116369bbcc411bacf97b50925",
+    "fixtureSha256": "7bcdf80445293103645d94fb81b835ff3f6006614b911fdd231120aaba4c5e3d",
+    "sourceAtomHashes": {
+      "raw": "ccc97aa74ae837665060bd8ba2c58160e8a7869771c5b7f3421c97cd036936a6",
+      "flat": "ccc97aa74ae837665060bd8ba2c58160e8a7869771c5b7f3421c97cd036936a6",
+      "flat_plus_brief": "ccc97aa74ae837665060bd8ba2c58160e8a7869771c5b7f3421c97cd036936a6"
+    },
+    "corpusHashes": {
+      "raw": "dd04abb4531c9e498211a37acc244f2080d43403bf29af2bae052298b0f778cc",
+      "flat": "ced6aa43cf24f1e0ac0ba28773913dff1bef45066b0b0e06c72ff892eaba6133",
+      "flat_plus_brief": "e6efcd7e2b4bebd88d3f532e11a9bc52ec63752722b91ce4160f40d187b4fe7e"
+    },
+    "sourceFiles": [
+      {
+        "path": "src/atlas-access-probe.js",
+        "bytes": 14044,
+        "sha256": "c8422d97d6b9135ece12c7b7c8931c18050607971cbf1c4034cca6422da838b2"
+      },
+      {
+        "path": "src/atlas-access-probe-cli.js",
+        "bytes": 12979,
+        "sha256": "b17cbc44ef393599b2da8023020d481eb2f90de3fbf69fdba254a37c31baca32"
+      },
+      {
+        "path": "src/atlas-query.js",
+        "bytes": 10928,
+        "sha256": "088e70952c6996c300d6e6ef3cccddc6d032ae254b6824672b31d239ffaaeb75"
+      },
+      {
+        "path": "src/atlas-duplicate-protocol.js",
+        "bytes": 43668,
+        "sha256": "3f218e46b3b21ebfda610be3e64e7c3c83c500412b57a2c6cbc8c6624450d919"
+      },
+      {
+        "path": "src/openrouter.js",
+        "bytes": 3411,
+        "sha256": "3d5689beb60ec884a01bdac5e8177c190d61a3083686d0de5e36aaeaa3fef7f1"
+      },
+      {
+        "path": "fixtures/atlas-duplicate-cases.json",
+        "bytes": 70595,
+        "sha256": "27d8a09aac02aaaa04a24e92c0226b1d2351893b54d72e78c582abdd3a2cbef9"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "pilot-positive-01",
+      "querySha256": "30cfe91349282d97895690ca0a024be617f5f82c8ec79c571d14e23897f8a700",
+      "goldSha256": "4ea30b745aa10bfe78439de00b4fe66d4fcf38e115941e2abf4334ac9485cd87",
+      "strata": {
+        "lexicalOverlap": "ordinary",
+        "witnessRole": "nonrepresentative",
+        "evidenceScope": "focused"
+      },
+      "corePromptSha256": "ebd5cfe3acfa11906ee2a5c71b20631fc59447a05e3445cdbbd07bece0a2f9c1",
+      "pointerRecordId": "attempt:a6fe4c2a-853a-4f84-b7bf-cef63a3f576c:a6fe4c2a-853a-4f84-b7bf-cef63a3f576c::m1:idea:solinas:direct-shifted-arithmetic"
+    },
+    {
+      "caseId": "pilot-positive-02",
+      "querySha256": "19a45c6b659d758405e620de8fb91230b4655c9abd42acb76dfd1cfb4666cd30",
+      "goldSha256": "a6cab9926ad363d99cd128a642ce28ce8b0bf76143c9541e80220a74972dc664",
+      "strata": {
+        "lexicalOverlap": "low",
+        "witnessRole": "representative",
+        "evidenceScope": "bundled"
+      },
+      "corePromptSha256": "54076727d9ac2c4782fd00b543ee37db2d20b87a7777bda5ac851582f27ff08e",
+      "pointerRecordId": "attempt:06204432-089f-45d1-902c-b7907a252520:06204432-089f-45d1-902c-b7907a252520::m4:candidate:bennett-time-space-tradeoff:66d262c99b"
+    },
+    {
+      "caseId": "pilot-positive-03",
+      "querySha256": "f60adbfedf81f5dd7b62423836d3a21676df31fde6d3e16cf75df0d002cd1ce1",
+      "goldSha256": "1382e9fdc0cc99427b9afa1453d2f05fe4761ff237a794069014bbdc9f0c5aab",
+      "strata": {
+        "lexicalOverlap": "ordinary",
+        "witnessRole": "nonrepresentative",
+        "evidenceScope": "bundled"
+      },
+      "corePromptSha256": "9037aa7a19400aa94897b002e6d8f8296050501ec1f653d6985a8279b4c55810",
+      "pointerRecordId": "attempt:4d38be8c-752c-4356-9964-42c2ae567bd1:4d38be8c-752c-4356-9964-42c2ae567bd1::m1:candidate:unary-iteration:fc35cf45f0"
+    },
+    {
+      "caseId": "confirm-positive-01",
+      "querySha256": "c729056a1aa28054c28a381fefe2954154d309494e7efa2056771a92555b6973",
+      "goldSha256": "705044d3086422271fb837c7d556f54d5a06fa2d32de5f89657423d5de02a44d",
+      "strata": {
+        "lexicalOverlap": "low",
+        "witnessRole": "nonrepresentative",
+        "evidenceScope": "bundled"
+      },
+      "corePromptSha256": "d741f48277b59e7c7ca9851adab362d87d2a55562922307e20a17a9cc8f3e760",
+      "pointerRecordId": "attempt:29755816-a227-47d4-877f-344a377929be:29755816-a227-47d4-877f-344a377929be::m2:idea:comparator:predicate-fusion"
+    },
+    {
+      "caseId": "confirm-positive-12",
+      "querySha256": "bee5e22f97c5d2b154d72279b8c5687b67a9c7e092318a1b029a996853075374",
+      "goldSha256": "349aa267e567aa35d2eb7953a0ae2ef896a60ea11c553e0ebe3ce78c20d0550c",
+      "strata": {
+        "lexicalOverlap": "low",
+        "witnessRole": "nonrepresentative",
+        "evidenceScope": "focused"
+      },
+      "corePromptSha256": "0000ca3fa60de6b2391f24946370a1d267fc32ffe3312b726e1b4a2b2936f920",
+      "pointerRecordId": "attempt:77a20f98-d2d6-4dab-b493-3da388e9fc52:77a20f98-d2d6-4dab-b493-3da388e9fc52::m1:candidate:gidney-s-temporary-and:d783751042"
+    },
+    {
+      "caseId": "confirm-positive-16",
+      "querySha256": "65cd32b22c2ffd3fde05a20f7d30c4340f79f5992e42f630df43081aaba30f8f",
+      "goldSha256": "2ad96942a863a000cf4d27f5e9f59c2a38684a63f37a582bd6fec75f76baea11",
+      "strata": {
+        "lexicalOverlap": "ordinary",
+        "witnessRole": "representative",
+        "evidenceScope": "bundled"
+      },
+      "corePromptSha256": "104a084714e5dce09cc0f5fddb4783352644db4611c329fd23da8d88a01c031f",
+      "pointerRecordId": "attempt:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1:0c7f6650-6cba-4810-aa4a-ff1c5ed985b1::m5:idea:cuccaro:carry-out-elision"
+    }
+  ],
+  "execution": {
+    "models": [
+      "openai/gpt-5.6-sol",
+      "moonshotai/kimi-k3"
+    ],
+    "coreArms": [
+      "raw",
+      "flat",
+      "flat_plus_brief"
+    ],
+    "positiveControlArm": "pointer",
+    "sessions": 48,
+    "concurrency": 2,
+    "maximumDirectSpendUsd": 20,
+    "maximumPerAttemptReservationUsd": 0.75,
+    "administrativeRetryLimit": 2,
+    "order": "sha256-sort-v1",
+    "generation": {
+      "temperature": 0,
+      "maxTokensPerTurn": 2048,
+      "reasoning": {
+        "effort": "low",
+        "exclude": false
+      }
+    },
+    "queryBudget": {
+      "calls": 12,
+      "returnedBytes": 24576,
+      "maximumTurns": 16
+    }
+  },
+  "gates": {
+    "pointerAccuracyPerModel": 0.9,
+    "minimumDistinguishingCasesPerModel": 2,
+    "flatMinimumWinsPerModel": 2,
+    "flatMaximumLossesPerModel": 0,
+    "fabrication": 0,
+    "escalation": "A passing pilot may justify a separately frozen larger access study; it cannot trigger full chains or confirmation automatically."
+  },
+  "preflight": {
+    "reachabilityStatus": "PASS",
+    "reachabilitySha256": "b36f4150bc4b702b77525c9b9aec5a3b446706c1fd6454f59ab18f1549875b28",
+    "cases": 6
+  }
+}

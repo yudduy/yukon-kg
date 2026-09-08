@@ -1,0 +1,38 @@
+schema: dungeness.representation-study-qualification.v1
+version: 26
+phase: executable-history-bank
+treatment_authorized: false
+model_spend_authorized_usd: 0
+source:
+  repository: https://github.com/Layr-Labs/ecdsafail-challenge.git
+  release: e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03
+  selection_sha256: 3958f0800e9f6900424c40daf2feb07581cd171292240066c0c3dc7c09ec3492
+  verification_plan_sha256: c0547d90897b514f34b425e97871cc1122a6037b2e3e948392babd95ace147ad
+verifier:
+  source_run: krv25-smoke-ecdsa-colima
+  tree_sha256: c058ae1cf5335748c73e422ae99bee175dc9aba7f142f2f5fe8f1736faef09a6
+windows:
+  - id: ecdsa-archive-a
+    base_event: 3616dbf2-f32d-41c8-9ea2-7a5bbe372fc0
+    start_event: e4b51510-27df-4b5b-87d7-a0f338ed6a91
+    events: 5
+    sealed_headroom_meaningful_gains: 2.197284864266302
+  - id: ecdsa-archive-b
+    base_event: e4b51510-27df-4b5b-87d7-a0f338ed6a91
+    start_event: 1cd4a7fe-c009-4c5b-9ef7-a49fc0a73ffa
+    events: 7
+    sealed_headroom_meaningful_gains: 1.8197881386325991
+gates:
+  - exact-origin-and-commit-availability
+  - candidate-tree-and-path-safety
+  - clean-score-equals-sealed-score
+  - score-reward-agreement
+  - exact-diff-and-source-bundle-retention
+  - materialized-starting-candidate-hash
+  - renderer-v3-equal-atoms
+  - deterministic-bytes
+  - cutoff-sealing
+  - total-tokens-lte-32000
+  - index-tokens-lte-4000
+stop_on_any_failure: true
+next_gate: separately freeze remaining task histories before any paid treatment

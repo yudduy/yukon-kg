@@ -1,0 +1,26 @@
+{
+  "schema": "yukon.ecdsa-history-selection.v1",
+  "release_id": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+  "repository_url": "https://github.com/Layr-Labs/ecdsafail-challenge.git",
+  "task_ref": "task:users/bx/ecdsa-fail-v2",
+  "checkpoint_ref": "checkpoint:public/github/layr-labs/ecdsafail-challenge/62ae3d00d1e01d7bc640b5163cfea8dabffd8392",
+  "candidate_path": "src/point_add",
+  "verifier_run": "krv25-smoke-ecdsa-colima",
+  "verifier_tree_sha256": "c058ae1cf5335748c73e422ae99bee175dc9aba7f142f2f5fe8f1736faef09a6",
+  "official_baseline_score": 1481490198,
+  "reference_event_id": "ed30a235-8ee6-4121-8ed8-3de4889af5e7",
+  "minimum_headroom_meaningful_gains": 1,
+  "windows": [
+    {
+      "id": "ecdsa-archive-c",
+      "base_event_id": "dcdab70f-39a3-4b6c-bace-0b9c666f6ff5",
+      "event_ids": [
+        "a0fd77fd-1abe-4bb2-aa47-d89b64c82d3e",
+        "7e481634-3702-44c8-9ca6-8455599919c9",
+        "1cd4a7fe-c009-4c5b-9ef7-a49fc0a73ffa",
+        "21a0ba3f-9eae-4d20-bba3-67c08205bca5"
+      ],
+      "start_event_id": "21a0ba3f-9eae-4d20-bba3-67c08205bca5"
+    }
+  ]
+}

@@ -3,10 +3,17 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "atlas:access:analyze": "bun run src/atlas-access-analysis-cli.js",
+    "atlas:access:probe": "bun run src/atlas-access-probe-cli.js",
+    "atlas:access:probe:v2": "bun run src/atlas-access-probe-v2-cli.js",
     "atlas:duplicate": "bun run src/atlas-duplicate-mve.js",
     "data:verify": "bun run src/verify-public-data.js",
     "mve": "bun run src/planning-mve.js",
     "mve:ecdsa": "bun run src/mve.js",
+    "representation:analyze": "bun run src/representation-study-analysis-cli.js",
+    "representation:convergence": "bun run src/seed-convergence-cli.js",
+    "representation:probe": "bun run src/representation-decision-probe-cli.js",
+    "research:view": "bun run src/research-view-cli.js",
     "smoke": "bun run src/smoke.js",
     "test": "bun test"
   }

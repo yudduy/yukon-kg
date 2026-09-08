@@ -1,0 +1,51 @@
+{
+  "ceilings_usd": {
+    "recovery_experiment": 327.787305,
+    "study_ledger": 500
+  },
+  "counts": {
+    "administrative_replacement_cells": 15,
+    "administratively_invalidated_cells": 15,
+    "executable_cells": 15,
+    "source_completed_cells": 3,
+    "replacement_run_specs": 15
+  },
+  "created_at": "2026-08-28T19:24:00Z",
+  "files": {
+    "eval/dungeness": "127bde55a2525f665667cc00737de3930a8db702da09f118e444c2dd739be2dc",
+    "eval/experiments/users/bx/dungeness-representation-v35-admin-recovery/experiment.yaml": "00a308839658b014f9be65d465c76c42f683440db6095d04ca53b83a24b08f27",
+    "eval/representation_study.py": "816fe146343757b39bbb7ef8f973cc584b2115d5c4cf05825544fcbb6e233f3c",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-c0bab2f6779065d68-r1.yaml": "bb51e9d9b3780b00377434d1e7fda795204bb11b8b396ee4bd05a1e05722dbe7",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-c1879231f92951ed3-r1.yaml": "ab345738f76d32ed42f67b94ce16d916661ae308b4cd942f4fa18943e17beeb1",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-c209bec8e166d89e4-r1.yaml": "61cfbfb04d5c509feb92ef8e388eeb5ba1aa6f4f1740d9f884838671e2ad0504",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-c3e25d5336cb4a60d-r1.yaml": "4dad930dfb5aa533b4e138fe90a582d32c36094ce54fe2eabe9757f965100b9e",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-c51089ea3cc46d0b0-r1.yaml": "4edb49b1de9bdaa93f84634f59bcc96037ab5e788f543aa4a4ae2fac2b9bac06",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-c8f56856e01a15b29-r1.yaml": "3d7d67aae0e5a3fa6f88884011c1062623c49bd1dbe0d7374c7563c067bd915d",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-c9397b7d59e9f6058-r1.yaml": "39a77672a25b5414191ab89e8c5791bfa5b1c6c60eaa4c8de3b6b18ef8e53222",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-c9c291ee71fbaa92f-r1.yaml": "fe7e970b1eccf9e9cac83734fb52e2930b6fdcd5e347ef6483d626789352bd9c",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-c9e25470353e8a49e-r1.yaml": "a6f8c4c821f8eaf546a00b86bc382698c60f1eb6f139c0d37bc1090ced9bbfab",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-caa7b9918ca16562e-r1.yaml": "2dfd18fcc57c63e3162e1d963c116812c2d8f8dfe6f7f7244bc14a8e80de058f",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-cadad471c00afdf4f-r1.yaml": "af29fe571109611597a8be1d47a39490ad5db6975ba1b4990622836f7fb90f08",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-cd6f157239b0b65b3-r1.yaml": "cdc8bfc5ae13d92e1e870fb446373d2c26b6dd0726d280f056ae6cf118eedec2",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-cdb0f9198ab20d1fb-r1.yaml": "7b2aa0197c2f41a2c47650e1d17717cd0f8d04c505a09f21a4e97cc2e4a16928",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-cf8d09f4650f69951-r1.yaml": "2e8291d43ea6284ab16b2efe34af9c662eafd1749439fa738c934f4abaa1637f",
+    "eval/run-specs/users/bx/dungeness-representation-v35-admin-recovery/study-cfe377240ae6d084f-r1.yaml": "77c158243a017a0b7825d4a62d4ebc9b3010ff64a5eb4177042c4d226efc20c9",
+    "eval/tests/test_representation_study.py": "2a5fbab1c346f7f29f18c273d13abcb1e6d8794de9453ea3bb465c252cf4208e",
+    "eval/tests/test_representation_study_cli.py": "e8dfe01c355872b3513944bab4e346528dc04ea78076d88639e1fbb91cfb988b",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/create-v35-admin-recovery.py": "0ab46c7ef207af6b957d6cff2fb35025db33750deebfb06cf2fd760343bcdf3a"
+  },
+  "recovery_experiment": {
+    "path": "eval/experiments/users/bx/dungeness-representation-v35-admin-recovery/experiment.yaml",
+    "sha256": "00a308839658b014f9be65d465c76c42f683440db6095d04ca53b83a24b08f27"
+  },
+  "schema_version": 1,
+  "source_experiment": {
+    "path": "eval/experiments/users/bx/dungeness-representation-v34-pilot/experiment.yaml",
+    "sha256": "7a153aa222001cd099b16295fb70581c687f9a72a952d6878a9b7ba28764ad24"
+  },
+  "source_freeze": {
+    "path": "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v34-freeze.json",
+    "sha256": "80e4a5d32ad699cca6ca83419899c373fed51ed33a393dd48d2b57a61b044040"
+  },
+  "type": "dungeness-representation-v35-admin-recovery-freeze"
+}

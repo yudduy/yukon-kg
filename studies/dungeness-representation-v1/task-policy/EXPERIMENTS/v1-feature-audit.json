@@ -1,0 +1,601 @@
+{
+  "schema": "dungeness.task-policy.feature-audit.v1",
+  "generatedAt": null,
+  "claimScope": "Exploratory model-free audit of six frozen v36 histories; not a trained or validated router.",
+  "inputs": [
+    {
+      "path": "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v36-result-freeze.json",
+      "sha256": "e9f4b0e7ef279ab62aff24d58b20359d0964d9e34f8a54e1c86648c91b673633"
+    },
+    {
+      "path": "eval/research-event-exports/v28-ecdsa-archive-a.json",
+      "sha256": "dcbb70e5acbb96831e872e0f5f43d594c152c836d8673ccfe3f9865797753311"
+    },
+    {
+      "path": "eval/research-event-exports/v28-ecdsa-archive-b.json",
+      "sha256": "4b8f68db6871d50c904b2587959485ed97d2aa2a479b00a8e853b6f41c54bfb5"
+    },
+    {
+      "path": "eval/research-event-exports/v30-toy-dual-prefix.json",
+      "sha256": "1d792b42d2463b82758bd7e91bbb1e3e7a1da0a92daf7773cfba3b6d79328cba"
+    },
+    {
+      "path": "eval/research-event-exports/v30-toy-mac-prefix.json",
+      "sha256": "f595751ee26634c29a4ba43906e3dec1f6f8d9cb4253870769607ae4fadcfbdf"
+    },
+    {
+      "path": "eval/research-event-exports/v30-vliw-chain-interleave.json",
+      "sha256": "123043b4e07887139d13b7f5484df6e2856e87c490b3761c446c07a2c583f77c"
+    },
+    {
+      "path": "eval/research-event-exports/v30-vliw-slot-pairing.json",
+      "sha256": "3d5a20d661794047a6fb816b53fc9c3539793d5bea10ccb8d183138dd55ebb65"
+    }
+  ],
+  "histories": [
+    {
+      "history": "ecdsa-archive-a",
+      "task": "ecdsa-fail-v2",
+      "source": {
+        "path": "eval/research-event-exports/v28-ecdsa-archive-a.json",
+        "sha256": "dcbb70e5acbb96831e872e0f5f43d594c152c836d8673ccfe3f9865797753311"
+      },
+      "features": {
+        "eventCount": 4,
+        "validEventCount": 4,
+        "historyPayloadBytesMean": 3481761,
+        "changedPaths": 2,
+        "changedSymbols": 3,
+        "configDimensions": 0,
+        "interventionCount": 8,
+        "uniqueSites": 3,
+        "uniqueIdeas": 3,
+        "repeatedSiteFraction": 0.625,
+        "bundledEventFraction": 1,
+        "branchingParentCount": 0,
+        "positiveDirectionalGainFraction": 1,
+        "scoreDirectionChanges": 0
+      },
+      "views": {
+        "R0": {
+          "id": "c389b4668dace4fbaaee266cfbeb24a6d2a5d67f56472cab37249bfed36625a4",
+          "bytes": 22994,
+          "totalTokens": 11497,
+          "indexTokens": 261
+        },
+        "R1": {
+          "id": "47530b315d983283075c1a15ec8a2c83fda5bf3ebb493ca65e9f00dddb4e051d",
+          "bytes": 23983,
+          "totalTokens": 11992,
+          "indexTokens": 755
+        },
+        "R2": {
+          "id": "c241122f15bbed4252ed1082ba006709b872058112a4a160a74a2a718ae5d8d3",
+          "bytes": 24676,
+          "totalTokens": 12338,
+          "indexTokens": 1102
+        }
+      },
+      "viewOverheadVsR0": {
+        "R1Tokens": 495,
+        "R2Tokens": 841
+      },
+      "r2MechanicalFlags": {
+        "mixedObservedOutcomes": 0,
+        "bundledAttribution": 1,
+        "oneConditionDifferent": 6,
+        "unreplicatedPositiveGain": 1,
+        "missingMatchedControlEncoded": "v"
+      },
+      "outcomes": [
+        {
+          "representation": "R0",
+          "progressAuc": 0,
+          "finalGain": 0
+        },
+        {
+          "representation": "R1",
+          "progressAuc": 0,
+          "finalGain": 0
+        },
+        {
+          "representation": "R2",
+          "progressAuc": 0,
+          "finalGain": 0
+        }
+      ],
+      "exactBestArm": "R0",
+      "practicalBestSetAt025": [
+        "R0",
+        "R1",
+        "R2"
+      ],
+      "routingSignature": "4|4|0|3|3|1|0|0|1|6|1"
+    },
+    {
+      "history": "ecdsa-archive-b",
+      "task": "ecdsa-fail-v2",
+      "source": {
+        "path": "eval/research-event-exports/v28-ecdsa-archive-b.json",
+        "sha256": "4b8f68db6871d50c904b2587959485ed97d2aa2a479b00a8e853b6f41c54bfb5"
+      },
+      "features": {
+        "eventCount": 4,
+        "validEventCount": 4,
+        "historyPayloadBytesMean": 3482595,
+        "changedPaths": 2,
+        "changedSymbols": 5,
+        "configDimensions": 0,
+        "interventionCount": 10,
+        "uniqueSites": 5,
+        "uniqueIdeas": 5,
+        "repeatedSiteFraction": 0.5,
+        "bundledEventFraction": 1,
+        "branchingParentCount": 0,
+        "positiveDirectionalGainFraction": 1,
+        "scoreDirectionChanges": 0
+      },
+      "views": {
+        "R0": {
+          "id": "41d20c756ca43645126b031a22e965bb242cc613608b0dd255514acf7839b8ea",
+          "bytes": 13899,
+          "totalTokens": 6950,
+          "indexTokens": 261
+        },
+        "R1": {
+          "id": "dd9a7719945437b48b3b6cfa98e424bf5c80ce6c3072fa9e3d6c732d82d50314",
+          "bytes": 14888,
+          "totalTokens": 7444,
+          "indexTokens": 755
+        },
+        "R2": {
+          "id": "23881b0da8b354a1fbd0f21768806e8f9fc4ee90107484af1c024b766e87e4e6",
+          "bytes": 15592,
+          "totalTokens": 7796,
+          "indexTokens": 1107
+        }
+      },
+      "viewOverheadVsR0": {
+        "R1Tokens": 494,
+        "R2Tokens": 846
+      },
+      "r2MechanicalFlags": {
+        "mixedObservedOutcomes": 0,
+        "bundledAttribution": 2,
+        "oneConditionDifferent": 2,
+        "unreplicatedPositiveGain": 3,
+        "missingMatchedControlEncoded": "v"
+      },
+      "outcomes": [
+        {
+          "representation": "R0",
+          "progressAuc": 0,
+          "finalGain": 0
+        },
+        {
+          "representation": "R1",
+          "progressAuc": 0,
+          "finalGain": 0
+        },
+        {
+          "representation": "R2",
+          "progressAuc": 0,
+          "finalGain": 0
+        }
+      ],
+      "exactBestArm": "R0",
+      "practicalBestSetAt025": [
+        "R0",
+        "R1",
+        "R2"
+      ],
+      "routingSignature": "4|4|0|5|5|1|0|0|2|2|3"
+    },
+    {
+      "history": "toy-dual-prefix",
+      "task": "toy_isa_opt",
+      "source": {
+        "path": "eval/research-event-exports/v30-toy-dual-prefix.json",
+        "sha256": "1d792b42d2463b82758bd7e91bbb1e3e7a1da0a92daf7773cfba3b6d79328cba"
+      },
+      "features": {
+        "eventCount": 4,
+        "validEventCount": 4,
+        "historyPayloadBytesMean": 763,
+        "changedPaths": 1,
+        "changedSymbols": 1,
+        "configDimensions": 2,
+        "interventionCount": 4,
+        "uniqueSites": 1,
+        "uniqueIdeas": 1,
+        "repeatedSiteFraction": 0.75,
+        "bundledEventFraction": 0,
+        "branchingParentCount": 0,
+        "positiveDirectionalGainFraction": 0.75,
+        "scoreDirectionChanges": 2
+      },
+      "views": {
+        "R0": {
+          "id": "e71aee50e8f6f46b18bf2072f382d0f7730d9a6879e1216bd7f083f0789f76df",
+          "bytes": 10769,
+          "totalTokens": 5385,
+          "indexTokens": 256
+        },
+        "R1": {
+          "id": "b436853ec9918316b909b995fca1991180d465aea6cc5574330cf9c44782a0ea",
+          "bytes": 11758,
+          "totalTokens": 5879,
+          "indexTokens": 751
+        },
+        "R2": {
+          "id": "03b09da4bc7588ade0beaa91b9d75738f4133b572ba1c66663e45153445e80b1",
+          "bytes": 12451,
+          "totalTokens": 6226,
+          "indexTokens": 1097
+        }
+      },
+      "viewOverheadVsR0": {
+        "R1Tokens": 494,
+        "R2Tokens": 841
+      },
+      "r2MechanicalFlags": {
+        "mixedObservedOutcomes": 1,
+        "bundledAttribution": 0,
+        "oneConditionDifferent": 6,
+        "unreplicatedPositiveGain": 0,
+        "missingMatchedControlEncoded": "v"
+      },
+      "outcomes": [
+        {
+          "representation": "R0",
+          "progressAuc": 9.020906479412702,
+          "finalGain": 10.309607405043089
+        },
+        {
+          "representation": "R1",
+          "progressAuc": 9.018113629109479,
+          "finalGain": 10.306415576125119
+        },
+        {
+          "representation": "R2",
+          "progressAuc": 7.954037663581231,
+          "finalGain": 9.09032875837855
+        }
+      ],
+      "exactBestArm": "R0",
+      "practicalBestSetAt025": [
+        "R0",
+        "R1"
+      ],
+      "routingSignature": "4|4|2|1|1|0|0|1|0|6|0"
+    },
+    {
+      "history": "toy-mac-prefix",
+      "task": "toy_isa_opt",
+      "source": {
+        "path": "eval/research-event-exports/v30-toy-mac-prefix.json",
+        "sha256": "f595751ee26634c29a4ba43906e3dec1f6f8d9cb4253870769607ae4fadcfbdf"
+      },
+      "features": {
+        "eventCount": 4,
+        "validEventCount": 4,
+        "historyPayloadBytesMean": 819,
+        "changedPaths": 1,
+        "changedSymbols": 1,
+        "configDimensions": 2,
+        "interventionCount": 4,
+        "uniqueSites": 1,
+        "uniqueIdeas": 1,
+        "repeatedSiteFraction": 0.75,
+        "bundledEventFraction": 0,
+        "branchingParentCount": 0,
+        "positiveDirectionalGainFraction": 0.75,
+        "scoreDirectionChanges": 2
+      },
+      "views": {
+        "R0": {
+          "id": "b0b6d5b2d8923f458da9378b0981ab2e4bae3d136e620979b807b65b8bac117e",
+          "bytes": 10830,
+          "totalTokens": 5415,
+          "indexTokens": 256
+        },
+        "R1": {
+          "id": "3967139c46fb477612c22f01c73bb29bc39db62a61a337640cfc787087146684",
+          "bytes": 11819,
+          "totalTokens": 5910,
+          "indexTokens": 751
+        },
+        "R2": {
+          "id": "08ddb329c801ba20b6a1966a7e88bc7f50c8737b7d4bb365cb487a07802fa4ce",
+          "bytes": 12512,
+          "totalTokens": 6256,
+          "indexTokens": 1097
+        }
+      },
+      "viewOverheadVsR0": {
+        "R1Tokens": 495,
+        "R2Tokens": 841
+      },
+      "r2MechanicalFlags": {
+        "mixedObservedOutcomes": 1,
+        "bundledAttribution": 0,
+        "oneConditionDifferent": 6,
+        "unreplicatedPositiveGain": 0,
+        "missingMatchedControlEncoded": "v"
+      },
+      "outcomes": [
+        {
+          "representation": "R0",
+          "progressAuc": 8.088094478135972,
+          "finalGain": 9.24353654644111
+        },
+        {
+          "representation": "R1",
+          "progressAuc": 8.088094478135972,
+          "finalGain": 9.24353654644111
+        },
+        {
+          "representation": "R2",
+          "progressAuc": 8.082508777529522,
+          "finalGain": 9.23715288860517
+        }
+      ],
+      "exactBestArm": "R0",
+      "practicalBestSetAt025": [
+        "R0",
+        "R1",
+        "R2"
+      ],
+      "routingSignature": "4|4|2|1|1|0|0|1|0|6|0"
+    },
+    {
+      "history": "vliw-chain-interleave",
+      "task": "vliw_scheduler",
+      "source": {
+        "path": "eval/research-event-exports/v30-vliw-chain-interleave.json",
+        "sha256": "123043b4e07887139d13b7f5484df6e2856e87c490b3761c446c07a2c583f77c"
+      },
+      "features": {
+        "eventCount": 4,
+        "validEventCount": 4,
+        "historyPayloadBytesMean": 2061,
+        "changedPaths": 1,
+        "changedSymbols": 1,
+        "configDimensions": 2,
+        "interventionCount": 4,
+        "uniqueSites": 1,
+        "uniqueIdeas": 1,
+        "repeatedSiteFraction": 0.75,
+        "bundledEventFraction": 0,
+        "branchingParentCount": 0,
+        "positiveDirectionalGainFraction": 0.75,
+        "scoreDirectionChanges": 2
+      },
+      "views": {
+        "R0": {
+          "id": "5ffa3e42248b87fe98bc7c8efef549e4cbe1bee673c44e041379d88c996f58c3",
+          "bytes": 13418,
+          "totalTokens": 6709,
+          "indexTokens": 256
+        },
+        "R1": {
+          "id": "a70344d1421f6a0728089842cf6d1dd965d00885637b92ed960aed576a3e1586",
+          "bytes": 14407,
+          "totalTokens": 7204,
+          "indexTokens": 751
+        },
+        "R2": {
+          "id": "b58b7d02fcbedf5133aa67fd8828fc28ac818cf6fbac72e81ec770abb88c618e",
+          "bytes": 15100,
+          "totalTokens": 7550,
+          "indexTokens": 1097
+        }
+      },
+      "viewOverheadVsR0": {
+        "R1Tokens": 495,
+        "R2Tokens": 841
+      },
+      "r2MechanicalFlags": {
+        "mixedObservedOutcomes": 1,
+        "bundledAttribution": 0,
+        "oneConditionDifferent": 6,
+        "unreplicatedPositiveGain": 0,
+        "missingMatchedControlEncoded": "v"
+      },
+      "outcomes": [
+        {
+          "representation": "R0",
+          "progressAuc": -1.618705035971223,
+          "finalGain": -2.5899280575539567
+        },
+        {
+          "representation": "R1",
+          "progressAuc": -1.618705035971223,
+          "finalGain": -2.5899280575539567
+        },
+        {
+          "representation": "R2",
+          "progressAuc": 6.798561151079136,
+          "finalGain": 7.76978417266187
+        }
+      ],
+      "exactBestArm": "R2",
+      "practicalBestSetAt025": [
+        "R2"
+      ],
+      "routingSignature": "4|4|2|1|1|0|0|1|0|6|0"
+    },
+    {
+      "history": "vliw-slot-pairing",
+      "task": "vliw_scheduler",
+      "source": {
+        "path": "eval/research-event-exports/v30-vliw-slot-pairing.json",
+        "sha256": "3d5a20d661794047a6fb816b53fc9c3539793d5bea10ccb8d183138dd55ebb65"
+      },
+      "features": {
+        "eventCount": 4,
+        "validEventCount": 4,
+        "historyPayloadBytesMean": 2065,
+        "changedPaths": 1,
+        "changedSymbols": 1,
+        "configDimensions": 2,
+        "interventionCount": 4,
+        "uniqueSites": 1,
+        "uniqueIdeas": 1,
+        "repeatedSiteFraction": 0.75,
+        "bundledEventFraction": 0,
+        "branchingParentCount": 0,
+        "positiveDirectionalGainFraction": 0.75,
+        "scoreDirectionChanges": 2
+      },
+      "views": {
+        "R0": {
+          "id": "81b9e78c2da0d9b6339ac9435926ed73294fcb6e74be96c935f5ab616cd824f5",
+          "bytes": 13872,
+          "totalTokens": 6936,
+          "indexTokens": 256
+        },
+        "R1": {
+          "id": "a9f381979330a7491d55743006d6a861d5ee61ebcd6fe3fae654e79d3fb911c7",
+          "bytes": 14861,
+          "totalTokens": 7431,
+          "indexTokens": 751
+        },
+        "R2": {
+          "id": "c2b42eb69060b40000e00a80fe8d1e41dc11f92369767f3de64689593e14dd33",
+          "bytes": 15554,
+          "totalTokens": 7777,
+          "indexTokens": 1097
+        }
+      },
+      "viewOverheadVsR0": {
+        "R1Tokens": 495,
+        "R2Tokens": 841
+      },
+      "r2MechanicalFlags": {
+        "mixedObservedOutcomes": 1,
+        "bundledAttribution": 0,
+        "oneConditionDifferent": 6,
+        "unreplicatedPositiveGain": 0,
+        "missingMatchedControlEncoded": "v"
+      },
+      "outcomes": [
+        {
+          "representation": "R0",
+          "progressAuc": -2.023381294964029,
+          "finalGain": -3.237410071942446
+        },
+        {
+          "representation": "R1",
+          "progressAuc": 4.451438848920864,
+          "finalGain": 7.122302158273381
+        },
+        {
+          "representation": "R2",
+          "progressAuc": 1.7805755395683454,
+          "finalGain": 0
+        }
+      ],
+      "exactBestArm": "R1",
+      "practicalBestSetAt025": [
+        "R1"
+      ],
+      "routingSignature": "4|4|2|1|1|0|0|1|0|6|0"
+    }
+  ],
+  "routingSignatureDefinition": [
+    "eventCount",
+    "validEventCount",
+    "configDimensions",
+    "uniqueSites",
+    "uniqueIdeas",
+    "bundledEventFraction",
+    "branchingParentCount",
+    "r2MixedObservedOutcomes",
+    "r2BundledAttribution",
+    "r2OneConditionDifferent",
+    "r2UnreplicatedPositiveGain"
+  ],
+  "routingSignatureCollisions": [
+    {
+      "signature": "4|4|2|1|1|0|0|1|0|6|0",
+      "histories": [
+        {
+          "history": "toy-dual-prefix",
+          "task": "toy_isa_opt",
+          "exactBestArm": "R0",
+          "practicalBestSetAt025": [
+            "R0",
+            "R1"
+          ]
+        },
+        {
+          "history": "toy-mac-prefix",
+          "task": "toy_isa_opt",
+          "exactBestArm": "R0",
+          "practicalBestSetAt025": [
+            "R0",
+            "R1",
+            "R2"
+          ]
+        },
+        {
+          "history": "vliw-chain-interleave",
+          "task": "vliw_scheduler",
+          "exactBestArm": "R2",
+          "practicalBestSetAt025": [
+            "R2"
+          ]
+        },
+        {
+          "history": "vliw-slot-pairing",
+          "task": "vliw_scheduler",
+          "exactBestArm": "R1",
+          "practicalBestSetAt025": [
+            "R1"
+          ]
+        }
+      ],
+      "distinctExactBestArms": [
+        "R0",
+        "R2",
+        "R1"
+      ]
+    }
+  ],
+  "vliwTraceMechanismAudit": {
+    "R0": {
+      "sessions": 6,
+      "sessionsReadingView": 6,
+      "failedSessions": 6,
+      "developmentEvaluationCount": 0,
+      "recognized1200CycleLowerBound": 5,
+      "mentionedMountedResearch": 4,
+      "citedConcretePriorScore": 0
+    },
+    "R1": {
+      "sessions": 6,
+      "sessionsReadingView": 6,
+      "failedSessions": 6,
+      "developmentEvaluationCount": 0,
+      "recognized1200CycleLowerBound": 3,
+      "mentionedMountedResearch": 6,
+      "citedConcretePriorScore": 0
+    },
+    "R2": {
+      "sessions": 6,
+      "sessionsReadingView": 6,
+      "failedSessions": 6,
+      "developmentEvaluationCount": 0,
+      "recognized1200CycleLowerBound": 5,
+      "mentionedMountedResearch": 6,
+      "citedConcretePriorScore": 0
+    }
+  },
+  "conclusionsSupportedByAudit": [
+    "The six histories are too few to train or validate a task-to-representation classifier.",
+    "Current mechanical history features collide across histories with different exact winning arms.",
+    "All VLIW arms usually recognized the same 1200-cycle lower bound, so the trace does not isolate a representation-specific idea-discovery mechanism.",
+    "A future router must include task/actionability features and be evaluated on held-out task families."
+  ]
+}

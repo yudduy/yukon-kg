@@ -1,0 +1,117 @@
+{
+  "schema": "yukon.atlas-access-probe-analysis.v1",
+  "rows": 48,
+  "caseCount": 6,
+  "models": [
+    "openai/gpt-5.6-sol",
+    "moonshotai/kimi-k3"
+  ],
+  "totals": {
+    "openai/gpt-5.6-sol": {
+      "raw": {
+        "sessions": 6,
+        "passed": 0,
+        "fabricated": 0,
+        "meanQueries": 11.333333333333334,
+        "meanReturnedBytes": 22765.5,
+        "costUsd": 0.28321480000000004
+      },
+      "flat": {
+        "sessions": 6,
+        "passed": 5,
+        "fabricated": 0,
+        "meanQueries": 3.8333333333333335,
+        "meanReturnedBytes": 9818,
+        "costUsd": 0.10859880000000001
+      },
+      "flat_plus_brief": {
+        "sessions": 6,
+        "passed": 6,
+        "fabricated": 0,
+        "meanQueries": 4,
+        "meanReturnedBytes": 10159.5,
+        "costUsd": 0.116921
+      },
+      "pointer": {
+        "sessions": 6,
+        "passed": 6,
+        "fabricated": 0,
+        "meanQueries": 2,
+        "meanReturnedBytes": 5394.5,
+        "costUsd": 0.07422959999999999
+      }
+    },
+    "moonshotai/kimi-k3": {
+      "raw": {
+        "sessions": 6,
+        "passed": 0,
+        "fabricated": 3,
+        "meanQueries": 11,
+        "meanReturnedBytes": 18890.833333333332,
+        "costUsd": 0.53392185
+      },
+      "flat": {
+        "sessions": 6,
+        "passed": 6,
+        "fabricated": 0,
+        "meanQueries": 6,
+        "meanReturnedBytes": 13517.666666666666,
+        "costUsd": 0.30885602
+      },
+      "flat_plus_brief": {
+        "sessions": 6,
+        "passed": 5,
+        "fabricated": 0,
+        "meanQueries": 6.166666666666667,
+        "meanReturnedBytes": 14702.5,
+        "costUsd": 0.41263782000000004
+      },
+      "pointer": {
+        "sessions": 6,
+        "passed": 6,
+        "fabricated": 0,
+        "meanQueries": 2.3333333333333335,
+        "meanReturnedBytes": 5897.166666666667,
+        "costUsd": 0.15590130000000002
+      }
+    }
+  },
+  "comparisons": {
+    "openai/gpt-5.6-sol:flat_vs_raw": {
+      "cases": 6,
+      "wins": 5,
+      "losses": 0,
+      "ties": 1,
+      "netWins": 5
+    },
+    "openai/gpt-5.6-sol:flat_plus_brief_vs_flat": {
+      "cases": 6,
+      "wins": 1,
+      "losses": 0,
+      "ties": 5,
+      "netWins": 1
+    },
+    "moonshotai/kimi-k3:flat_vs_raw": {
+      "cases": 6,
+      "wins": 6,
+      "losses": 0,
+      "ties": 0,
+      "netWins": 6
+    },
+    "moonshotai/kimi-k3:flat_plus_brief_vs_flat": {
+      "cases": 6,
+      "wins": 0,
+      "losses": 1,
+      "ties": 5,
+      "netWins": -1
+    }
+  },
+  "gates": {
+    "pointerSensitive": true,
+    "coreDistinguishing": true,
+    "flatMechanism": true,
+    "zeroFabrication": false,
+    "proceed": false
+  },
+  "totalCostUsd": 1.99428119
+}

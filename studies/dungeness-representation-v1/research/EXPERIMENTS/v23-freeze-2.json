@@ -1,0 +1,43 @@
+{
+  "schema": "dungeness.v23-qualification-freeze.v2",
+  "frozen_at": "2026-08-28T05:27:53Z",
+  "supersedes": "v23-freeze.json",
+  "reason": "The first zero-cost canary was rejected locally because its reservation cap did not fit the installed Codex request envelope. The replacement freeze uses a previously proven 100000-token, $1 session envelope and retains the best clean candidate across sessions.",
+  "repositories": {
+    "eval_base_commit": "adb208c5219c84b227af924678bd5bd8073b60f4",
+    "kg_base_commit": "3ef4e71aac4c26c67cd50f004961b1afcf2eb683",
+    "branch": "autoresearch/dungeness-representation-v23-20260827"
+  },
+  "files": {
+    "kg/studies/dungeness-representation-v1/preregistration-v23.md": "0a4f047ac7802a574ca908160b1f515f835477c41249d120d4f5f648dd01cfa7",
+    "kg/studies/dungeness-representation-v1/v23-qualification.yaml": "6b5485de92aa7e9a37ce13a652a218343b52129b70bf1676043fccbacf2111ac",
+    "eval/experiments/users/bx/dungeness-representation-v23-pilot/experiment.yaml": "bbb3c5ba4363fcf5b73a1ace4671122b217c539aa00ef9fabbeba3902b44cc33",
+    "eval/run-specs/dungeness-representation-v23/krv23-route-canary-gpt.yaml": "306276a342cbd955a895a8349a781bb3dafafb2e1ce39231b62ab5cceeb15bb7",
+    "eval/run-specs/dungeness-representation-v23/krv23-route-canary-gpt-v2.yaml": "769477503a790db837b942727e4b97ce981620a9a786f0b6dee901c685309ba3",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-tool-gpt.yaml": "ea1a9de436b68e19f5f0e0112e51e0f2e0466d265b10bc711de2e346e1401425",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-tool-kimi.yaml": "adf49995f337be4a6d329bbba341b0e96b2486851e4285fee2f4b319cf408301",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-toy-gpt.yaml": "18b77853be5b48b75ee703ab132d688b2b789007ef586c0377fe35b66aeb511b",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-toy-kimi.yaml": "77f844456e0f282075019e7f11170cac4599798177fc9974fd424242f7c459bd",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-vliw-gpt.yaml": "c16b905db7b2af6821a5c0a2e4325b3b7f5e3929cf97f97730a37ea13b3fa183",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-vliw-kimi.yaml": "b707fcaa3dfa9b1bfbd51ba3373011347896dce5adfe17924db2094e8f8b5739",
+    "eval/agents/projects/dungeness/codex-openrouter/agent.yaml": "2531d8771e8bcadd4621e3c209611d439708c20bf7addf335286123dcbf94c8f",
+    "eval/agents/projects/dungeness/codex-kimi-openrouter/agent.yaml": "a5a8b62503649cc616f21272c5fd52ae3dfd05fa9d72e36ac4e01bb293d6df97",
+    "eval/services/gateway/pricing.yaml": "ebb22dcaf63e15d59a44db1fdd08e7c8df409e6dead8af7ff1756f78398d61bb",
+    "eval/external-bundles/autolab/cpu-reserve.json": "9f2e7bc9435ebc7cf9da128ba2ef491ad01fa0c1b8c6a43ec680b48c22646e5e",
+    "eval/adapters/harbor_bundles/runtime.py": "581ab09ccf166f7e036dfc41ca63461e1190754d786a6cfe884ce4c1b6768394",
+    "eval/representation_study.py": "683681d5b966590dc73a902fe2fe6bf44bebbeb26d07bd63e8f03694b8365951",
+    "eval/dungeness": "a81492107b36e750ca55e01e4f58b61e04c2d6390a5a9c65c3e480477637eb8d",
+    "kg/src/research-view.js": "2a5d24ad02577eca072f47ff67abf4f34c7cdc102b8b20f09244ecc035316b60",
+    "kg/src/research-view-cli.js": "c4d4de396a74e579299f0ac6d4406cc6c68c78466145561707237052716b01d5"
+  },
+  "validation": {
+    "dungeness_core_tests": 160,
+    "gateway_tests": 76,
+    "yukon_tests_passed": 113,
+    "yukon_tests_skipped": 2,
+    "public_data": "PASS",
+    "live_openrouter_policy": "PASS"
+  },
+  "paid_treatment_allowed": false,
+  "next_gate": "replacement exact GPT OpenRouter route canary"
+}

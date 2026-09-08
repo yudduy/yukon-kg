@@ -1,0 +1,11 @@
+# Version 24 Qualification Preregistration
+
+Version 24 supersedes version 23 before any eligible history or R0/R1/R2 treatment. It changes one apparatus component: every external verifier wrapper now copies the exact candidate it scores into the retained verifier directory, regardless of whether the task also needs nullable-reward normalization.
+
+The triggering v23 Splay/GPT-A run completed Harbor with one valid baseline development evaluation and a clean score of 48,656, but its no-anchor verifier did not retain `dungeness-final-candidate`. Dungeness correctly refused to bind that score to an unknown final artifact. The attempt cost $1.008114, is classified as an apparatus failure, and contributes no event, candidate, or outcome to v24. Its campaign is terminal and cannot resume. A model-free full Harbor smoke after the repair retained the exact 16,151-byte baseline at SHA-256 `abdee5a83d47af1ac23b51f3e71b50635da6ab49ad85a484e5b012b95250a2a0` and clean-verified 48,656 rotations.
+
+All v23 scientific controls remain unchanged: six independent GPT histories, two per task; one shared campaign cap of $6, 400,000 model tokens, 3,600 agent-seconds, eight evaluations, and six fresh sessions; per-session reservation envelopes of $3, 200,000 tokens, 600 seconds, and two evaluations; no research view or narrative resume state; clean improvement required for handoff; at least four valid evaluations, two candidate hashes, two scores, positive progress, and one meaningful gain of remaining headroom.
+
+The qualification order remains Splay-A, Splay-B, Toy-A, Toy-B, and VLIW-A, with VLIW-B completing the six histories. At least four of the first five must pass. Every v24 campaign has a new experiment-derived identity and lineage. No v23 run bytes enter its canonical history. Treatment remains blocked until six histories pass the frozen convergence checker.
+
+The active producer is the exact GPT-5.6 Sol OpenRouter route with fallbacks disabled and model-scoped live validation. Kimi remains a future gated replication only after a stable exact route is frozen. Confirmation cannot start automatically. The study ledger remains cumulative across every precursor and v24 and may never exceed $500.

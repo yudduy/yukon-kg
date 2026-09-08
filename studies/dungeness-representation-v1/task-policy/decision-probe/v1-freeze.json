@@ -1,0 +1,1349 @@
+{
+  "schema": "yukon.representation-decision-probe-freeze.v1",
+  "created_at": null,
+  "claim_scope": "Mechanism and construct-validity pilot; not a full-chain representation efficacy result.",
+  "generation": {
+    "seed": "dungeness-decision-probe-v1",
+    "variants": 3,
+    "factors": [
+      "selection_load",
+      "comparison_opportunity",
+      "comparison_actionable"
+    ],
+    "cases": 24,
+    "source_files": [
+      {
+        "path": "src/representation-decision-probe.js",
+        "bytes": 23809,
+        "sha256": "c3874d4156afb428ca614cd07b8f03d830ed3ade84ace68c13f140a1ed2a2423"
+      },
+      {
+        "path": "src/representation-decision-probe-cli.js",
+        "bytes": 10887,
+        "sha256": "7a20e73c6ada3a39fd6bbcbf3643ff02ee27a7888b5045ceeb24da26d6b534dc"
+      },
+      {
+        "path": "src/research-view.js",
+        "bytes": 99365,
+        "sha256": "fe9a340d0d19dee91cbf8e5f2ade4b919c5cc95e129bcb6bb20d57f2cd690b8f"
+      },
+      {
+        "path": "src/openrouter.js",
+        "bytes": 2597,
+        "sha256": "bcfe72c4dad57d953fb58778c16c8abc22b53c93ac44041242639a2cce97dd93"
+      }
+    ]
+  },
+  "execution": {
+    "models": [
+      "openai/gpt-5.6-sol",
+      "moonshotai/kimi-k3"
+    ],
+    "core_arms": [
+      "R0",
+      "R1",
+      "R2"
+    ],
+    "positive_control_arm": "P",
+    "core_calls": 144,
+    "positive_control_calls": 48,
+    "maximum_calls": 192,
+    "maximum_direct_model_spend_usd": 12,
+    "generation": {
+      "temperature": 0,
+      "max_tokens": 1024,
+      "response_format": "json_object"
+    },
+    "randomization": "sha256-order-v1",
+    "administrative_retry_limit": 2
+  },
+  "gates": {
+    "positive_control_accuracy_per_model": 0.9,
+    "practical_accuracy_margin": 0.15,
+    "r1_target": "R1-R0 on frontier-decision cases",
+    "r2_target": "R2-R1 on comparison-decision cases",
+    "cross_model_requirement": "target contrast must be nonnegative in every model",
+    "proceed_to_full_chains": "positive control and both selective mechanism gates pass",
+    "stop_rule": "If the positive control fails, repair the assay. If a selective gate fails, do not claim that index is useful and do not fund a routed full-chain study from these results."
+  },
+  "cases": [
+    {
+      "case_id": "case-89261d9110b8817c",
+      "variant": 2,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": false,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-923376324a61",
+        "evidenceEventIds": [
+          "event-90f5d9e19658"
+        ],
+        "decisionClass": "chronology"
+      },
+      "common_sha256": "d26478f4329ca9f9ecbadb3131edcf736446163da635c5428f35ba79e59308eb",
+      "atoms_sha256": "79707dc1b1e06acfad90df82e145318c785fd908aac8c6d4a49bc4a1501d7890",
+      "index_sha256": {
+        "R0": "3b8c85eaff063163c8d2d746c31d8ea5b5cfef76d8a6a0f6110effacffc3e13a",
+        "R1": "e6294bf6e392dd07baf8c6760b04b697acf3dd2f90ff338813a40d0855ccbd76",
+        "R2": "15b0425007658df4824005ca4c61d61468c5f05bec59e453fb3364f2b6c7a44c"
+      },
+      "packet_sha256": {
+        "R0": "a17585e7a2c35417f543691819dd8c2e70e6e8559b4907498f924c7871215aa0",
+        "R1": "191457ef9c9fe3a5627d4f450b78df8dda11cb256a49e7a1873751f881b875d1",
+        "R2": "65a983cdc5c3cfb0a63fe9680981fadbc9b523f04b4e566068619bde744b572c",
+        "P": "4a723b4341cef9678e7fd4f4d090b688d47a1ce1efc4d2e58ccb699669005d14"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 6,
+        "comparisonEventRefs": [
+          1,
+          7
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6982,
+            "index": 266
+          },
+          "R1": {
+            "total": 7746,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8150,
+            "index": 1435
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-19377251ee4f306e",
+      "variant": 0,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": false,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-583f7dc13466",
+        "evidenceEventIds": [
+          "event-7e81a0b62c53"
+        ],
+        "decisionClass": "chronology"
+      },
+      "common_sha256": "7c3e3a0dd405457b8960b3ab9118db9b300bd5450d632bac4abb699d94491104",
+      "atoms_sha256": "54ed551d7b6adbfae541a77cb7d066c94de8277ab6dc1a425a17f68db75c9411",
+      "index_sha256": {
+        "R0": "bc05ff3d4a38dc4f446c17a67d97ef4f7a30b030aaf8c098f342cb0fa278f77d",
+        "R1": "e6a785ce38a7a3745166c4d9ab145fd95b461e3f4a604f636e7cf7485c8cea92",
+        "R2": "28f080d6e8b9250c730cf8db553817450b39ef5bfc86d69b395f1c79bbe48979"
+      },
+      "packet_sha256": {
+        "R0": "dfecf830b00f53645b79535973497e9e750043e19fa4dd9d3f5c843629c5c666",
+        "R1": "f7930186ef6da37aa9c50e86cbb36fc159e65221d8ffbd8d7a7198e0e477dbe7",
+        "R2": "765ebb50c6923ee58aaa581d5935be50a3037454c7a5f00b79f302110e4e6ce0",
+        "P": "6252951b5bec6e867cb46bc78c5aa7c69e1978b5b7ab6ab3eb620170e7d59827"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 2,
+        "comparisonEventRefs": [
+          0,
+          8
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6984,
+            "index": 266
+          },
+          "R1": {
+            "total": 7748,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8152,
+            "index": 1435
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-9d9c44aa143de7e7",
+      "variant": 0,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": false,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-b029dcfa1d09",
+        "evidenceEventIds": [
+          "event-60eea547c7dc"
+        ],
+        "decisionClass": "chronology"
+      },
+      "common_sha256": "f7c7d846a86122edff0038abb4844e89ec7751967d6364d82d1d3a28489f9818",
+      "atoms_sha256": "a0ad39b528162c6b54ee42246caa8497a739b9eb75f2d86be75cc28e6214e900",
+      "index_sha256": {
+        "R0": "a0395690803cccca13fa24e4cb5780a64a5f117750b0d4535c843703c7a50f32",
+        "R1": "c424d4173f72f714790488fa35c5ed1eb6f0161d28314045bb314eed4351d626",
+        "R2": "9444600a1d648836e4e3bd5b93cd7b7e28b42a647865f15a194f4e778a4c176f"
+      },
+      "packet_sha256": {
+        "R0": "925553b1ba1f2703aef117c8c48581c5408becb08e164a990f56a630e81d83da",
+        "R1": "b30b69c404c32e5cbfcb68b7698be413a634cb3c85b0f0d6ef09a9bc87635053",
+        "R2": "25e6c787bc92f21290bc77a6f8e2dfb3a74b875d599179ed0c44edff042a145c",
+        "P": "ab8fcf0af42fb68149aefad56ed3ab78d1869493ae6a9def621b94c6d16cb9e5"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 3,
+        "comparisonEventRefs": [
+          0,
+          9
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6982,
+            "index": 266
+          },
+          "R1": {
+            "total": 7746,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8150,
+            "index": 1435
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-d02814872f69eec8",
+      "variant": 0,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": true,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-38eaeaaa2b76",
+        "evidenceEventIds": [
+          "event-91209c59d592"
+        ],
+        "decisionClass": "frontier"
+      },
+      "common_sha256": "f4cb207ffc0beb68ba0102b587c52e1becb540a78d201206bb52b24910c32189",
+      "atoms_sha256": "a1cd0eb97747c8c798010ba9f7ea3f767ec00e727d84bb0ee9a51f1574417799",
+      "index_sha256": {
+        "R0": "270451ba7820452590f48e9dde4d1d3f3e8ab1836a4958e885d71f008a007d98",
+        "R1": "cc624f2fc6c90941af729b2e15d3be74fb0b454dcd8e0285eb8e02a554b68641",
+        "R2": "75bfab19440fac99f672d98352955c2cf86972548f40b86676b8af48839f9c53"
+      },
+      "packet_sha256": {
+        "R0": "eef1cfe91f760449f4dbc5df96f0f690c1ae57cd41622067e7d7616edf511838",
+        "R1": "3d62a7a59613247ceb5da1dea58aa360e4d8dfbbeb5b9661df8175b96a8ce695",
+        "R2": "c1b64ff0f6ad3aad1d4b77569d52da51bc281bd58a1f7df8631141f41ffbae6f",
+        "P": "fbd5eb3fb1266d7ee5e6667b15f81775fb7f24b4d4bab4916a41478359986a3f"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 18,
+        "comparisonEventRefs": [
+          3,
+          19
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19515,
+            "index": 299
+          },
+          "R1": {
+            "total": 21339,
+            "index": 2123
+          },
+          "R2": {
+            "total": 22081,
+            "index": 2865
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-bd7ff675fe6a9a25",
+      "variant": 1,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": false,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-073fa60eaa38",
+        "evidenceEventIds": [
+          "event-e21013d9c6e7"
+        ],
+        "decisionClass": "frontier"
+      },
+      "common_sha256": "edb305a0dfe01fbbba48f05e24ddd319058fec49686ea832b1c2e2bc33f228c8",
+      "atoms_sha256": "51d7d5bb941d3b3d2b1d244fc33cecc9253de0e61f62f47fe72e02d68407aee1",
+      "index_sha256": {
+        "R0": "bd2acd85d7cd5394196667acee9dc3b0b658e9448c3cc2642b98992f1722b3bd",
+        "R1": "9d0f526fcb1bb93134eae07180eca82fd68bdbe58e286bc1e23eb6f017a200a3",
+        "R2": "79949efb1b2f0df11fec0e0dc7c709957e45e85d7ebe83cc490c5fba168eeea2"
+      },
+      "packet_sha256": {
+        "R0": "fa224cfdc3e5183e69558c55eaf4ffb7e8493731bc54aa46546a5e197851c42d",
+        "R1": "0eb3707ba8de8aaa3f4068090a269f1cce806beddb7f6ee6f93e793db2027a81",
+        "R2": "c7839f1ec9b3da3a24c5d1e316b8a6696aaac9dcd21b2224057c9881ec047441",
+        "P": "fff0dbee916706af9620a335708f520ca1a50d10b7f674df545c4b0f6f780612"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 30,
+        "comparisonEventRefs": [
+          10,
+          24
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19531,
+            "index": 299
+          },
+          "R1": {
+            "total": 21354,
+            "index": 2123
+          },
+          "R2": {
+            "total": 22068,
+            "index": 2837
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-ba100cb5b4057e05",
+      "variant": 1,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": false,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-0f24c69e16bb",
+        "evidenceEventIds": [
+          "event-645987b22872"
+        ],
+        "decisionClass": "chronology"
+      },
+      "common_sha256": "f2ab2c70cf08d737d42ed04b2cd059c4bb1e06b3776d44e6ae0c703203d82a0a",
+      "atoms_sha256": "d9f232bb9abb7f73b81a9af5c5f1cc473c211f1b51740b5ea6a7a6eb20b94ff3",
+      "index_sha256": {
+        "R0": "a6db466efadf16d0b113f55285fbbee0a6a9ae14c0236a8e180638e7677e99fe",
+        "R1": "17c22850d6f4da30a73ed21f10e3aa3860eb69887a71612a7b6dd4f925606d6f",
+        "R2": "5ea21b434b1cadf36955b4dfd696a113c73f0496c19a0aee590bbe47a8857779"
+      },
+      "packet_sha256": {
+        "R0": "cfbb10f3507e2c2c94b33c4e5c7adb5c3cecb982789349f16a47725ef26ef394",
+        "R1": "d60ef725ce71dd1bbd84c4ec2e2b14e7760b2f345a8bc3c47c36dccd6596a38d",
+        "R2": "74ab2d1a019cdecb64ad30172972d61d95d6c09742e1f52848bb9e5ac6b76223",
+        "P": "ac32eb88a4789e711e50403d5909734044e00e58a60225097d923d305b936d9a"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 4,
+        "comparisonEventRefs": [
+          2,
+          7
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6989,
+            "index": 266
+          },
+          "R1": {
+            "total": 7753,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8157,
+            "index": 1435
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-8a9165b5ba345352",
+      "variant": 2,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": true,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-58618836484b",
+        "evidenceEventIds": [
+          "event-ce5e201354f6"
+        ],
+        "decisionClass": "chronology"
+      },
+      "common_sha256": "74c2059b6a9b9095df80e3770d4eeb269091c5e836edaad96978071a21cfe5f1",
+      "atoms_sha256": "30da77a078761e6fabee3b8b2adbe97578e4aafd85e4c79324200843543fb505",
+      "index_sha256": {
+        "R0": "e61437b4241d8607675673cc3065bf87154e0016eeddfb6a0adc00d9603b39d5",
+        "R1": "587102171b4077956680229184f135e0fad7f767b09003ef976198157d27e964",
+        "R2": "740cc17e4df267f798ff9409906a53e462d998ab54410a9d95e9fe5c046ddc3d"
+      },
+      "packet_sha256": {
+        "R0": "873f1295b0e73672bcb78f60a045a8b0c6c5dac2b80b22185679c01948bd9c10",
+        "R1": "0849a33737cbb5123b2c1ab9b8120a57e26afb75af24ef74c03da095cba7bdd3",
+        "R2": "0228c6df02826f9faf480ffb6985dd7d95de6bf615033162af98d309f895ec18",
+        "P": "2c9a54c72083238daaca372a3ddb03013d627e103a65130b66ca2df9f3fedb97"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 6,
+        "comparisonEventRefs": [
+          8,
+          9
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6965,
+            "index": 266
+          },
+          "R1": {
+            "total": 7729,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8158,
+            "index": 1460
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-ceed8b4a61da9b70",
+      "variant": 0,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": false,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-b899ed8cc51d",
+        "evidenceEventIds": [
+          "event-ae6ae015468c"
+        ],
+        "decisionClass": "frontier"
+      },
+      "common_sha256": "37294c0a7421fa9532f503193ce3f05b418382231a9b4cae4432692c4468e674",
+      "atoms_sha256": "2c6aa50e88ce75eeb35259c0257fe724a74ec3e1914d0866f0273f82158c38df",
+      "index_sha256": {
+        "R0": "7140a63a64eaba5d7d4fde0ca85f8c7d5b8149c14e709629b5591cbf1176883b",
+        "R1": "2c98d96af31e3d7ae472f853ad2d0c66bc5429175120a393fe503e8262b375f9",
+        "R2": "79cb84a204e400ccb918ba8e42e619bc02b4d3d05f290b000ff76e264fdfcb3f"
+      },
+      "packet_sha256": {
+        "R0": "274acb90cc20b3cd8b042f7361a43850b93375ea36c47ff1db6f74fb3a06e2d5",
+        "R1": "b9738b9b88024599429661b2a1afaa733636e2b86e70c3f7514416ab0c8855a9",
+        "R2": "11c090e4fc8c3e02afae98da257e4a4ab080450e1ce816550db5143af471d42f",
+        "P": "8a60b0fcbe712b6d89a5f7b34340eda2b4c926e132619794bfc32d37ff254659"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 17,
+        "comparisonEventRefs": [
+          8,
+          29
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19505,
+            "index": 299
+          },
+          "R1": {
+            "total": 21329,
+            "index": 2123
+          },
+          "R2": {
+            "total": 22043,
+            "index": 2837
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-9f89dce7ba3a813e",
+      "variant": 1,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": false,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-40188d4c9a19",
+        "evidenceEventIds": [
+          "event-09bf49d63c04"
+        ],
+        "decisionClass": "frontier"
+      },
+      "common_sha256": "d605742de1b0a1762276441efa1223347bc6e297c8dd40d91934f7e90d5ee76c",
+      "atoms_sha256": "a5f8c3bcb1f36ead3f45f5168fece3eaedeacd947defd111089c7fce9baa61e1",
+      "index_sha256": {
+        "R0": "caa4f8050425b7390d215b6a6fe940eb82fdae9a4dd22ef963b8c24566a3487f",
+        "R1": "427cbf4ceed7ea2a0601ab9e0456965798999919c9fc8774c2b4d02a2ae5e1b5",
+        "R2": "2de1a68bd0927a0c194a7a31decd74cf5bb1ba5d37642eb8659fd400a4375316"
+      },
+      "packet_sha256": {
+        "R0": "4ac9f3cf6384e9c55a3ff76c04afdec5a808525d026fdfaef43d326f06b7e178",
+        "R1": "361029aad0bb663f442b7ab7d8e2be7053f6af04e9d8d9e1720cf85c24990778",
+        "R2": "96e583b82ec4b005151cbaea46b06ad75bb92201fe970c0191605d98f397e2bc",
+        "P": "11125e2309478418fda5ae61407845cd7bc7a0203a9f8133d355a58f24767c12"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 1,
+        "comparisonEventRefs": [
+          14,
+          24
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19530,
+            "index": 299
+          },
+          "R1": {
+            "total": 21353,
+            "index": 2122
+          },
+          "R2": {
+            "total": 22067,
+            "index": 2836
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-2b16ce6562a8089d",
+      "variant": 0,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": true,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-02df54f28984",
+        "evidenceEventIds": [
+          "event-034eedea326d",
+          "event-8eb3650306ce"
+        ],
+        "decisionClass": "comparison"
+      },
+      "common_sha256": "c707203e84b8349b0046b55ca7c84509a3a473dd5abb77c00e72002dfe5ed1da",
+      "atoms_sha256": "75c84c5a22923177300eca2c4e65400503ea35a0f4d1845f516cc9a27a365200",
+      "index_sha256": {
+        "R0": "a40a5c4ebf469e76e7b96b08dd9070b42739501f3a846700909645e0047541ec",
+        "R1": "2b1443781288b36248bd9f5fe89645b8f2f316d2fb2da557f44b80b0802150b8",
+        "R2": "19582105e271e86cb1ed63dbbd6851c4b65a06446b8a6d503b95b4d86e7a034b"
+      },
+      "packet_sha256": {
+        "R0": "104ad8c92bd51e9406f8890286469e8a4649bec045740389803ee2d1067fe821",
+        "R1": "e771ff0ae812590feb777af939c5c24945d6be676437f524f8d0fe3b8e64f0d9",
+        "R2": "7aad792db8702be6f631b2029ac08317ff8089bc844764875ec558cdefd27c7c",
+        "P": "ce13ca7a1916185adc3272b3cba67eabdf6f6e957c540a5fdc57eff21a1dd9a1"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 24,
+        "comparisonEventRefs": [
+          0,
+          23
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19514,
+            "index": 299
+          },
+          "R1": {
+            "total": 21338,
+            "index": 2123
+          },
+          "R2": {
+            "total": 22080,
+            "index": 2865
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-0c754804bee1ab86",
+      "variant": 2,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": false,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-257a9cba5931",
+        "evidenceEventIds": [
+          "event-228c70fa7653"
+        ],
+        "decisionClass": "frontier"
+      },
+      "common_sha256": "5347f0904c4f7cb7ed199ec98b5b133bdd024649195d6fa91373bd0c038121b8",
+      "atoms_sha256": "fd13b4837187a71099b70e38a8e8b40ca8f082db7c1e44f1ef0b75e8d225c3ed",
+      "index_sha256": {
+        "R0": "61c93d942ceef0cbc519cf3a078ad30f81b780ef2afdcd04d22e6a49e8525aba",
+        "R1": "c82fa33863406fcefde7a81d1e8c90a464edebe8737b06098823206555d3007a",
+        "R2": "a995a596bb1784065b849e5442e657e3ccede7f096e595f53c6bde46c069ace5"
+      },
+      "packet_sha256": {
+        "R0": "18f14016712130a35d10f1eb90658760de85e2e23071731373b36ca4098f4277",
+        "R1": "b79d1dc477cd1ecbcf54c8b7aded13aab458eaea420348332171bdd6e5c0d886",
+        "R2": "a5ccf0460f79c4a13851421983723ce4a831b2ffd2bcb379e1fc42578342e24b",
+        "P": "2c4e904979d77b3436112e42584fcce0dc546bcfbd560bd1aca7f0e536f26bfe"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 5,
+        "comparisonEventRefs": [
+          17,
+          22
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19541,
+            "index": 299
+          },
+          "R1": {
+            "total": 21364,
+            "index": 2122
+          },
+          "R2": {
+            "total": 22078,
+            "index": 2836
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-ec868cbc505f0454",
+      "variant": 1,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": true,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-7df93011277a",
+        "evidenceEventIds": [
+          "event-eb204275403c",
+          "event-fd95f4e52c62"
+        ],
+        "decisionClass": "comparison"
+      },
+      "common_sha256": "a3708ccf86773ec31f56dd3be0e0a43da7b875abd129caac7ad47b9d0ebff57f",
+      "atoms_sha256": "4cafd24450fee5f5cfe6a9c745390dc648ffb6777f4951f31a20587495826ee5",
+      "index_sha256": {
+        "R0": "36b7335f562e50d50e787236af5f60c3ade3fb23cdbd31386c515e1497f5d8a6",
+        "R1": "be82829c5002437c1f1be81678b71772c12c21fe6ce2d2900d39fae716a3d0e2",
+        "R2": "87414329747f9d4dea41cd9d5c2f133e70c326d431a05a2772c3afdda97b702b"
+      },
+      "packet_sha256": {
+        "R0": "e4d105b454c2ada3f539140f1b0d7d2f5d368d2f2b90e1f14cd558c8799ba152",
+        "R1": "652f4a82c8168ef81095966d7be29e206f48da45035677635772996f3ed24052",
+        "R2": "3ea5b03fdf2628999445a96ac8938c879def7c25af842f51bcd9701815c3946c",
+        "P": "512e11fdff8389b16da3bf7306be0a2d88f7d88d07fed23f45b7b60d3cf04466"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 0,
+        "comparisonEventRefs": [
+          8,
+          9
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6963,
+            "index": 266
+          },
+          "R1": {
+            "total": 7727,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8156,
+            "index": 1460
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-6378d9bd775f84b9",
+      "variant": 1,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": true,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-20135e9112cc",
+        "evidenceEventIds": [
+          "event-00938c87570e",
+          "event-8bca25a60334"
+        ],
+        "decisionClass": "comparison"
+      },
+      "common_sha256": "76d6bf771941686309b380f353c7cb2b6dd93563acb81b11756433f3e5e95d54",
+      "atoms_sha256": "4159ccb2d0adbdd19675aca160d3a89f8f4ea7aef4bb57a6ae33a8fa7344acfb",
+      "index_sha256": {
+        "R0": "880a615d614956442dd18a12a0b9d403a46e9bc4d4d11e649b0a5e90ba1d948f",
+        "R1": "1ad465b430a34bc313cbb50639989058b76cbf83ddb8518ad0c1748a7ef8dbb5",
+        "R2": "f12e75311c8a14f731ebd749f793647abf8adc853d913fefd7e6460d466a3389"
+      },
+      "packet_sha256": {
+        "R0": "d0be3059ff713c0498e494cd276f809b4f754bd1845f2798a3dfe1cdc280618e",
+        "R1": "0672b43410c11183b52c6e4fba7847c236733c20134402de5aa854458251ddc6",
+        "R2": "519c682baffedffc4d88a42ac4d0feca37685095654c2b5c60384bf66272949d",
+        "P": "824c03a5898b4b695673e63fc841b0fcbaed32a0f106669385bdd386f47a9897"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 29,
+        "comparisonEventRefs": [
+          0,
+          17
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19514,
+            "index": 299
+          },
+          "R1": {
+            "total": 21338,
+            "index": 2123
+          },
+          "R2": {
+            "total": 22080,
+            "index": 2865
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-c41f882c2b047c6f",
+      "variant": 1,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": false,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-b7df9bc2e4f3",
+        "evidenceEventIds": [
+          "event-090012c42282"
+        ],
+        "decisionClass": "chronology"
+      },
+      "common_sha256": "1203d51e35eac2f1b5f49124c7674093fde37d35eb67f71f0de607d22cea1833",
+      "atoms_sha256": "e08e41d0a4d309595cf57e05eb7920fe211d802b9ef0cf62fb11c322322e000d",
+      "index_sha256": {
+        "R0": "7f569a709507161ec08695c49206b0a09acc4e21a81e886014f7c67305af8c95",
+        "R1": "d69dae314f076d654b76c240573dffd4ac21951d9a5f4e874e44a9786e16a6b1",
+        "R2": "a6db18f325d32a07040fe1f15f1c8fc5e93e0d56f76d4b5d6e1f694c0f235f5a"
+      },
+      "packet_sha256": {
+        "R0": "a1aac0079f14daf2923bf26670056b850419af36255d91098ab6cf4a5c9f999c",
+        "R1": "9fce38d91cad6cfaf28df80b967b4223f32fc5e2ea5189710df0deb3a24c72e0",
+        "R2": "55c093cf15aa7e1f3703dc39216ada5b4035d530111ca435d9b7620ec0af6ff5",
+        "P": "3d450a8525a517e8c26db9c894d0f3f4640789999c7ee1d0c8e9c9fa874baf57"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 0,
+        "comparisonEventRefs": [
+          1,
+          9
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6985,
+            "index": 266
+          },
+          "R1": {
+            "total": 7749,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8153,
+            "index": 1435
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-1ca152dd635dcd72",
+      "variant": 2,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": true,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-911812b7662e",
+        "evidenceEventIds": [
+          "event-a75ab41ccb17",
+          "event-c4a46f9ec8a6"
+        ],
+        "decisionClass": "comparison"
+      },
+      "common_sha256": "151f47055f79ef3d4a4b41b68d3d9d45f6f8aef44423e24174d24cdbd882f656",
+      "atoms_sha256": "5eb7d5367a76b07881731c743bf9510d31e282a5b420c49a650bc0eb845797a7",
+      "index_sha256": {
+        "R0": "111e3ba53c85630f89ccd08f9179e0dfe9b5befa32be9d223527905ade18cf44",
+        "R1": "8ca2f5e28787c0042cb85864c9bf4b68c51ad140854c3b1356cdfcabc4513044",
+        "R2": "ca1d4ac0fe72bd2f52ba4f877ea3ef39402ad1af72770b482f1ba4d9bf1d031c"
+      },
+      "packet_sha256": {
+        "R0": "ca50676647ab39b0786610d7d0447836a86b788b149695636ce68b8ad05181c3",
+        "R1": "ba17fa4565889748b0500d249c6a6ac27b94e25ecc374ccb1f673b99260e8eb7",
+        "R2": "fda65f5535a38ca0cebdbea091e5299cc6b225d47787224b3ec386a417567fac",
+        "P": "37a597fbcfa8489c18feae45e5fbebd73e75b3b24ea6da6c745de86c0773aec5"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 6,
+        "comparisonEventRefs": [
+          7,
+          8
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6962,
+            "index": 266
+          },
+          "R1": {
+            "total": 7727,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8156,
+            "index": 1460
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-0574c4fe617c8d5a",
+      "variant": 0,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": false,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-7ede3fa2b5a9",
+        "evidenceEventIds": [
+          "event-7abc371bfd24"
+        ],
+        "decisionClass": "frontier"
+      },
+      "common_sha256": "810c8a37f606ce87d0f30fc629053b96b094cbedeacb698327977edb98a5cbfb",
+      "atoms_sha256": "2d774a187c89803f6e71e84cca3b64933cdb0c5a365d0b4ef0f54343764bc46e",
+      "index_sha256": {
+        "R0": "e191ab9fb3ae588b27ffd88885299bf0bc81abaf4cc82c58492c19d726e1edab",
+        "R1": "02fc53fab257f0e943dac129f02a2196ac6de35796fa31acfa190d72476c07e2",
+        "R2": "9db2c4861f8467c58b5e95ead97a33e7da5af72e78d87f325740c9550087a5c0"
+      },
+      "packet_sha256": {
+        "R0": "fbe6d5c3049af300e38ebffec71fc44a05006a60f59bdbe1cb9091d9e2d420b4",
+        "R1": "e9a46db44dabc540ef7ce385feddd55609b5901b6540695aa1f2e881139ca475",
+        "R2": "53b9734006006af95bb5e1c64642adaad12d4f07ef7373d67f9452f021180d78",
+        "P": "59fe26ab138e580e630dd7b5b8a3c8a4e2b2d8fdd4cecdfe5a6b64e1bf70459a"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 14,
+        "comparisonEventRefs": [
+          19,
+          25
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19542,
+            "index": 299
+          },
+          "R1": {
+            "total": 21366,
+            "index": 2123
+          },
+          "R2": {
+            "total": 22080,
+            "index": 2837
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-17b1c0b1ae65ace5",
+      "variant": 2,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": true,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-7f432d837073",
+        "evidenceEventIds": [
+          "event-47ec8d84f8a7"
+        ],
+        "decisionClass": "frontier"
+      },
+      "common_sha256": "ed28d389c5b3e81fa4bac73a10c3dfd145db54badcbbcf6b721039775b2c44af",
+      "atoms_sha256": "7f2daf035109fab348f1269880a40d0d16af49cbd66cce737cbc988bf13ce37b",
+      "index_sha256": {
+        "R0": "7b21ae468a0e600b2197491c6806f5c1960884f4b68e291e953c679338906110",
+        "R1": "49deec79107a92a920cf35ea3da2468c98d8193b6aebc92bdf863b9f64c669e9",
+        "R2": "cb219f755df3550162163f864931fae6f6ee187a0243bc517bced03e8399fbb7"
+      },
+      "packet_sha256": {
+        "R0": "1c6bca2b9f74eaab16ceb18495579ba0f220c72f06cdf47af840d379c767f0bf",
+        "R1": "d199790143f5bd65cb08acf1a76abfadba44598e4297c98df6ae6d3041491dae",
+        "R2": "699a0def7609dc8fda7a04288cfbff33ae5eaad88244109134cebe29095c7f3b",
+        "P": "556ae8c2e8eead447e4730c516e926ac6b78b43747281a7330169f73d082ca8d"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 9,
+        "comparisonEventRefs": [
+          29,
+          30
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19514,
+            "index": 299
+          },
+          "R1": {
+            "total": 21337,
+            "index": 2122
+          },
+          "R2": {
+            "total": 22080,
+            "index": 2865
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-6ea12ee9af5a771e",
+      "variant": 0,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": true,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-c6f16dd2194c",
+        "evidenceEventIds": [
+          "event-2f85be4755f4",
+          "event-336b87ef3eb1"
+        ],
+        "decisionClass": "comparison"
+      },
+      "common_sha256": "6eeb9987c0d970127c5f30417171e93eae1bdd72bbba24851c29d925c71f15b7",
+      "atoms_sha256": "883fceae78182dcb331efa21b22d3566f42dea1173cb55ef1f34da928e8ea7b8",
+      "index_sha256": {
+        "R0": "e1292bb05579a1615b0d06cb8867e46c3f189f3995872d457c3fb17ecf236706",
+        "R1": "61021de39fb62fb6feae59f386e189419a408cde58c32143b359b8f03d82b1f1",
+        "R2": "ae688ce8120095d48f546c2f424a6aef8983aa9eac3c488bb58ccaa4d494b30a"
+      },
+      "packet_sha256": {
+        "R0": "baa8f696d07752431014c88c632fb8b911a1fdd8657e1a0fb8f23e4a9e4fcf00",
+        "R1": "e2ef46fc49953ec650ca1b50f2d0c9630b87a302efd411a26e74974f83b6a0ef",
+        "R2": "cecc183f6f8d2ba24242ddd829c06a97c806c3b5c83b1297a5fcbc1341ff2117",
+        "P": "19be3a8a7c175bb32e56066f546bd6bcb0eed534a5bffbc9e4cd279e91561b4f"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 2,
+        "comparisonEventRefs": [
+          0,
+          1
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6959,
+            "index": 266
+          },
+          "R1": {
+            "total": 7724,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8153,
+            "index": 1460
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-107fb1d32caff2bc",
+      "variant": 2,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": false,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-b87d5e18765c",
+        "evidenceEventIds": [
+          "event-774aeae1c404"
+        ],
+        "decisionClass": "chronology"
+      },
+      "common_sha256": "fc6198bf4d97dd5f2dcb167255823acc2c0ae4b2b3c2aa409896f00d74ec2ac6",
+      "atoms_sha256": "6002d94879a96d19f0073ef12bfcdbcff98bfae570e283097d8fc46537056a70",
+      "index_sha256": {
+        "R0": "af5b75c4d5ffde99131b95a061010e41fa28f6930bab4fcc663a7974936fc662",
+        "R1": "5fa0f2f2b11c455feaa19d85293c86af65d649f9381a0b3d6600d941c3af547f",
+        "R2": "fd313379f8debc166c03c1fcf5c7c74e5f6c6467ced08e342d020ec614ff04e7"
+      },
+      "packet_sha256": {
+        "R0": "847a984a3e53a951ba1a45290c2d800a2ddf0dc34327d66fa54272c93623f2ae",
+        "R1": "7994a8080da523da5b65258636dfba6d423fe7b97fcb9442ccfae825a5120a38",
+        "R2": "600771e56474186026c3d1ba6b08a239180c28b839db1e2746a7438efacf3dc7",
+        "P": "ffb4aae08db5e8fc4cd297e9c8ff7641723994da442a89ff59cd03b3de42764a"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 3,
+        "comparisonEventRefs": [
+          0,
+          4
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6987,
+            "index": 266
+          },
+          "R1": {
+            "total": 7751,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8155,
+            "index": 1435
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-7d4536631c5b8467",
+      "variant": 0,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": true,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-d004443aeeb2",
+        "evidenceEventIds": [
+          "event-6dd3bbac74d2"
+        ],
+        "decisionClass": "chronology"
+      },
+      "common_sha256": "e273d365abe510984dc114d7dd47debc41b0b38ddcf633fb35cfb5e255968454",
+      "atoms_sha256": "0e7b60a897053276ee474fe4d240bf68c74b5019aae1b41575c92cf027cb29fa",
+      "index_sha256": {
+        "R0": "a17ab1233e8b8a673b11f0eb2bada28766d4c4c82188a5ada6aa2e02fb62aea7",
+        "R1": "39c098de65f95efbde80e0a70e7fa2a8e32231f6af0442bf43877c292481fd89",
+        "R2": "29ca529136cde768cf711a2fb4d5f33b23732b3f2148ccd611b84142bd3565c8"
+      },
+      "packet_sha256": {
+        "R0": "0d9873fc07c803433fe11f6a4afe0b8dab900668e691f8de84e3fba8ceca51f3",
+        "R1": "4cefac1d82dd4afd80633eef475055fde9655b689bee95ce1d775b9ffcbade45",
+        "R2": "93b64e932620ca335ca182d7a2cdcda78275bb9000b1a3ac94518b3900a4c4da",
+        "P": "e12deeb386c0f3a33ef280d00886ae9d969113412ee4f91d77c6cd3cfc916941"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 5,
+        "comparisonEventRefs": [
+          6,
+          8
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6965,
+            "index": 266
+          },
+          "R1": {
+            "total": 7730,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8159,
+            "index": 1460
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-5cda7e85f4e00453",
+      "variant": 1,
+      "factors": {
+        "selectionLoad": false,
+        "comparisonOpportunity": true,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-d0a067794b5b",
+        "evidenceEventIds": [
+          "event-f5a45f9bc338"
+        ],
+        "decisionClass": "chronology"
+      },
+      "common_sha256": "e5e0ced8dee7c40fe6376ac6d74ac9c29292d0f243eddcddb2da761e57d36766",
+      "atoms_sha256": "0e0b26618101c700c7f3b90d5d679565b904f4e72a619487894c0a23f5e4bd93",
+      "index_sha256": {
+        "R0": "961d6ff532f048cff63810c0fdf0c00b8066b88458ec75a50cab53e032040fe5",
+        "R1": "bbbbf9a9f5871871102039d897efde7f22df9665f6b89f6aba6244a0c1269f27",
+        "R2": "122f168b24e16fbd393f18750c28dbc03a32e7970798c3477cd07699c21195f3"
+      },
+      "packet_sha256": {
+        "R0": "4398b42e87395414a4b623f96213388fddbf7e7b1f2e1bde111ed41f23a4281c",
+        "R1": "6f107a40c9f90670acc540a1b901e576bf0806468ca2ac7fe8f15fe09a02ecb6",
+        "R2": "a826298b0b38b61210c9507719031056b15a32e1362b5e81802304eacc96e252",
+        "P": "09c79e7b7400bbe383f146a2f18dc6ff041ad1ffc66a3ece7f834413792a8eb5"
+      },
+      "diagnostics": {
+        "eventCount": 10,
+        "frontierEventRef": 9,
+        "comparisonEventRefs": [
+          1,
+          5
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 6962,
+            "index": 266
+          },
+          "R1": {
+            "total": 7727,
+            "index": 1031
+          },
+          "R2": {
+            "total": 8156,
+            "index": 1460
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-0db17bf30011ca5b",
+      "variant": 1,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": true,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-e7b774566631",
+        "evidenceEventIds": [
+          "event-6c3d67328fff"
+        ],
+        "decisionClass": "frontier"
+      },
+      "common_sha256": "0e22957c55e979c4e12c163fc20e46cf274c79ed83ff76e92c095036110dd047",
+      "atoms_sha256": "9b9b055bd0fcac6d1f41fc1f785a5c5b43d82929da562da71ffd43ed9536c74c",
+      "index_sha256": {
+        "R0": "e187c6a7dc4c0228ac498b929553824b5992f54a840338a6398b4e2d67305ad1",
+        "R1": "4584c0b604655df9b4b74909a96fab2fc0cffda5f941848be37fbee8b6291f86",
+        "R2": "78197f1665749b5e11436ac4c0d1ba15cdaf64b373ff493ada38033301a71007"
+      },
+      "packet_sha256": {
+        "R0": "6843d6a5a69550bce434f337193cf37e51f907b7ed61b6d52c0020900ed73e98",
+        "R1": "ba512fcb22c79706bf0189cdea09db441f38a6673a195073dc6ba1230699484e",
+        "R2": "a97df0ffde151ff898193b5354190fb1af0ee67ce2260ae05a74107be4459c74",
+        "P": "d546dd6affdb02eb7c7a9571699de857d7d2e739dbc002728c27ea0e9c0f18d6"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 16,
+        "comparisonEventRefs": [
+          4,
+          18
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19496,
+            "index": 299
+          },
+          "R1": {
+            "total": 21319,
+            "index": 2123
+          },
+          "R2": {
+            "total": 22061,
+            "index": 2865
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-80831beacfc11460",
+      "variant": 2,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": true,
+        "comparisonActionable": true
+      },
+      "oracle": {
+        "actionId": "action-c22cb30745ef",
+        "evidenceEventIds": [
+          "event-0cdb43b0f9c9",
+          "event-e1d59b693036"
+        ],
+        "decisionClass": "comparison"
+      },
+      "common_sha256": "b7467eae7060a35d61e9212938dc22482bc40492888323472a77dc56517a83c6",
+      "atoms_sha256": "5e83a33dbeb6db053cebdb48f472bc8339c55e7a173cd015de1bfe131cfd0d59",
+      "index_sha256": {
+        "R0": "ac63bae5bd0e09e6274d8868d0afac9aa496c2259ace4239e7f83a8003b4b785",
+        "R1": "c964e1c6a1cb474f93843f7ccd426aae2c3cc5d34fa582648c84d6c2580f6700",
+        "R2": "d3d181907b6543c11e2f9858afc8c142473063455edd1ff4e51092c08449a36b"
+      },
+      "packet_sha256": {
+        "R0": "5c72eb9910453b2e04bbd3843cf06a3c0a2099371e5a18ca0fcfbcfeef504769",
+        "R1": "8089080025909eddaff6fc419aa9d50e5d0e22ff2fee978def788a6ea792c9d9",
+        "R2": "7cd6ca0b60ea97b59fa29185b35a171dfa3d471116c99a0991db5e9fcc83a507",
+        "P": "4a328d2f70911dcbe00e30b6ff38edbc0d3ae078b5f1f6307911569b5603d5cb"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 19,
+        "comparisonEventRefs": [
+          1,
+          31
+        ],
+        "r2OneConditionDifferentCount": 1,
+        "r2MixedOutcomeCount": 1,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19500,
+            "index": 299
+          },
+          "R1": {
+            "total": 21323,
+            "index": 2123
+          },
+          "R2": {
+            "total": 22065,
+            "index": 2865
+          }
+        }
+      }
+    },
+    {
+      "case_id": "case-ecb5fa555da8e518",
+      "variant": 2,
+      "factors": {
+        "selectionLoad": true,
+        "comparisonOpportunity": false,
+        "comparisonActionable": false
+      },
+      "oracle": {
+        "actionId": "action-4e1095035de0",
+        "evidenceEventIds": [
+          "event-f6a7c9e174ea"
+        ],
+        "decisionClass": "frontier"
+      },
+      "common_sha256": "33b0632d798e127af36d19dab5872f2fa80bb6cbd4c4d7353603fa6da8eea529",
+      "atoms_sha256": "72e3e60d51498c150a95fcd48e8d0b843b74fdc32d4d509fdaecbc35c81b416b",
+      "index_sha256": {
+        "R0": "27ed9f486f3b038150ebcc481ecd1987efedf0d2c6991a2c25128745e9da00f7",
+        "R1": "1fea53371f22b3acccef452d461b02828b8efe7499878527f681e5bbfe14327a",
+        "R2": "0e52814a1c3d74ffc7e69f8e82673ea847dbaacc9eef488573113a6cb55660b6"
+      },
+      "packet_sha256": {
+        "R0": "5a7153ff5b68c2f1c0f96b8c0af3338e21234d5d3cef8d4d322ff21e51c66fbb",
+        "R1": "36c1fb0701a9645a8d76f76d08b98e06fed070bc761e7326382dbc89f47b650c",
+        "R2": "eb8ed965aa2dc464269f43a7ecab7a0f30d2673e30a7417c0d3f79233e0f6424",
+        "P": "4cb306fb386d0ced01ff49c8f43b5d35404e450271ea4956cda000c14cd95c4b"
+      },
+      "diagnostics": {
+        "eventCount": 32,
+        "frontierEventRef": 31,
+        "comparisonEventRefs": [
+          6,
+          19
+        ],
+        "r2OneConditionDifferentCount": 0,
+        "r2MixedOutcomeCount": 0,
+        "mountedTokenProxy": {
+          "R0": {
+            "total": 19544,
+            "index": 299
+          },
+          "R1": {
+            "total": 21368,
+            "index": 2123
+          },
+          "R2": {
+            "total": 22082,
+            "index": 2837
+          }
+        }
+      }
+    }
+  ]
+}

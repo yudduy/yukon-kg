@@ -1,0 +1,33 @@
+{
+  "schema": "dungeness.failure-classifications.v1",
+  "experiment": "experiment:users/bx/dungeness-representation-v36-terminal-milestone-restart",
+  "blindedResultsSha256": "69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a",
+  "classificationStatus": "frozen-before-treatment-unblinding",
+  "classifications": [
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c046a073605b3bda2","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c0e3e051bf9c6d09d","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c11d0d1808374d2f9","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c12ce80cc98d67aff","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c2a11f0ada14653ba","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c43c309ae8a30b31b","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c6169cec5323e975c","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c73cb8fe3b2867a84","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c7de06b80f78866a2","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c8520f5b3f0aedba3","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c9b4875f79474815c","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-c9eda25c4862c8557","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-ca457e44645fcf075","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-ca88162837d0717ce","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-cb8373fff961e568b","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-cccd40c4fdf068800","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-ce174c24126f7d74f","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"administrative_failure","cellId":"study-ceba26fb4a6b63099","code":"verifier-service-failure"},
+    {"blindedResultsSha256":"69a08cd78555d4ef6f66ff6d83d100eb4ff71b3f68e37aeb98678bb2f346437a","category":"treatment_failure","cellId":"study-c8da9974463624662","code":"verification-failure"}
+  ],
+  "notes": {
+    "excludedSourceCells": "The 18 administrative failures are the preregistered v34 source cells retained in v36 and replaced one-to-one before v36 execution.",
+    "activeFailure": "The 25% terminal candidate for study-c8da9974463624662 exited the clean verifier with status 134 and no reward; it is a treatment-produced invalid patch, not an administrative retry.",
+    "budgetStops": "Harbor ApiRateLimitError records caused by the trusted local session budget stop are treatment outcomes and do not require cell-level administrative exclusion.",
+    "executorIncident": "The first outer-verification attempt stopped because Dungeness propagated the verifier exit. The candidate, rounds, usage, and verifier bytes were already sealed; the recorder was repaired model-free to retain the exit as an invalid milestone, all 183 core tests passed, and no model session was repeated."
+  }
+}

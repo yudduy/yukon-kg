@@ -1,0 +1,175 @@
+{
+  "schema": "yukon.atlas-access-probe-freeze.v2",
+  "createdAt": null,
+  "claimScope": "Fresh-case positive duplicate recovery after repairing an output-contract sensitivity failure; mechanism pilot, not full-chain autoresearch efficacy.",
+  "source": {
+    "releaseId": "b4bd9026018a9ab464fafd1ce4c2905c95af95462b29d55ede169c7cb953eac2",
+    "manifestSha256": "db9c9c924543418ab47d871a666f0cdd17bcd4c116369bbcc411bacf97b50925",
+    "fixtureSha256": "7bcdf80445293103645d94fb81b835ff3f6006614b911fdd231120aaba4c5e3d",
+    "sourceAtomHashes": {
+      "raw": "ccc97aa74ae837665060bd8ba2c58160e8a7869771c5b7f3421c97cd036936a6",
+      "flat": "ccc97aa74ae837665060bd8ba2c58160e8a7869771c5b7f3421c97cd036936a6",
+      "flat_plus_brief": "ccc97aa74ae837665060bd8ba2c58160e8a7869771c5b7f3421c97cd036936a6"
+    },
+    "corpusHashes": {
+      "raw": "dd04abb4531c9e498211a37acc244f2080d43403bf29af2bae052298b0f778cc",
+      "flat": "ced6aa43cf24f1e0ac0ba28773913dff1bef45066b0b0e06c72ff892eaba6133",
+      "flat_plus_brief": "e6efcd7e2b4bebd88d3f532e11a9bc52ec63752722b91ce4160f40d187b4fe7e"
+    },
+    "sourceFiles": [
+      {
+        "path": "src/atlas-access-probe.js",
+        "bytes": 14044,
+        "sha256": "c8422d97d6b9135ece12c7b7c8931c18050607971cbf1c4034cca6422da838b2"
+      },
+      {
+        "path": "src/atlas-access-probe-v2.js",
+        "bytes": 1664,
+        "sha256": "c25d0c363ce7fc4baba91105f75a9a35ea69c4956eb7668ec33b9dd18a23826b"
+      },
+      {
+        "path": "src/atlas-access-probe-v2-cli.js",
+        "bytes": 13103,
+        "sha256": "6beb7a0c7d1a5b1d7b4356492f0609ac9d7d4cc7e185f8329a608e749733fc8b"
+      },
+      {
+        "path": "src/atlas-query.js",
+        "bytes": 10928,
+        "sha256": "088e70952c6996c300d6e6ef3cccddc6d032ae254b6824672b31d239ffaaeb75"
+      },
+      {
+        "path": "src/atlas-duplicate-protocol.js",
+        "bytes": 43668,
+        "sha256": "3f218e46b3b21ebfda610be3e64e7c3c83c500412b57a2c6cbc8c6624450d919"
+      },
+      {
+        "path": "src/openrouter.js",
+        "bytes": 3411,
+        "sha256": "3d5689beb60ec884a01bdac5e8177c190d61a3083686d0de5e36aaeaa3fef7f1"
+      },
+      {
+        "path": "fixtures/atlas-duplicate-cases.json",
+        "bytes": 70595,
+        "sha256": "27d8a09aac02aaaa04a24e92c0226b1d2351893b54d72e78c582abdd3a2cbef9"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "confirm-positive-02",
+      "querySha256": "4c4dfe7391183daa759e0f118fbeabd032bc7c2df54b6b781236201525717263",
+      "goldSha256": "b14a00ebd3e77fa94c7f766c5578be8cf579ebfe4a793edc840e62844736d1a5",
+      "strata": {
+        "lexicalOverlap": "low",
+        "witnessRole": "nonrepresentative",
+        "evidenceScope": "bundled"
+      },
+      "corePromptSha256": "9873df3d9983a3563c98e092aaf2f8decd0cdd169db37dda4aabece0babee9c0",
+      "pointerRecordId": "attempt:56cac87f-949c-4859-8847-7015a03be359:56cac87f-949c-4859-8847-7015a03be359::m1:candidate:bernstein-yang-divstep:eb2ae042ae"
+    },
+    {
+      "caseId": "confirm-positive-03",
+      "querySha256": "9edd7383b0e16c58a0bdba2ea635de768c663951f7225b2a8285fae4f9b3be57",
+      "goldSha256": "3974e567c04e44337bcdbe635ac0e229e2e9c500a81f5840361088caa87bdcf6",
+      "strata": {
+        "lexicalOverlap": "ordinary",
+        "witnessRole": "nonrepresentative",
+        "evidenceScope": "bundled"
+      },
+      "corePromptSha256": "0c0b75bf5f916dfcf3aa423a5e16e56317826a8fba69fe640f04059fd854fbd4",
+      "pointerRecordId": "attempt:437e22ad-c5b1-498d-b58b-050a35247fc8:437e22ad-c5b1-498d-b58b-050a35247fc8::m2:idea:kaliski:per-step-width-tapering"
+    },
+    {
+      "caseId": "confirm-positive-09",
+      "querySha256": "b919bbdba616273e6b4425e5246177d2e600497922fed428b34b95f176075924",
+      "goldSha256": "a469eaf16f159ddaecf307b6c33eba45b5cadc9502c024fb9bdcc9219b144f51",
+      "strata": {
+        "lexicalOverlap": "low",
+        "witnessRole": "nonrepresentative",
+        "evidenceScope": "bundled"
+      },
+      "corePromptSha256": "b37a502b61333b2eaa2ecd4ea154253f9cdb8e8b131ac46ada2f70f6f499d107",
+      "pointerRecordId": "attempt:b7958275-578f-4383-8f24-b15d1a8cfd1c:b7958275-578f-4383-8f24-b15d1a8cfd1c::m2:idea:toffoli:construction-time-liveness-pruning"
+    },
+    {
+      "caseId": "confirm-positive-11",
+      "querySha256": "1c4102de33c4f93deaccb99dfd9299b4166f3677bf150654580e92bb1c238085",
+      "goldSha256": "b12eec565c1d0e45ba5c9e049db8eb745da9fa7dad20ca9b7b014055154a9169",
+      "strata": {
+        "lexicalOverlap": "ordinary",
+        "witnessRole": "nonrepresentative",
+        "evidenceScope": "focused"
+      },
+      "corePromptSha256": "9ed32cc0769fc109ff5b95b290a914178434f3a5003fca1c7f178c9bb89e8e06",
+      "pointerRecordId": "attempt:2fb80375-439b-4c96-805f-6b739896d415:2fb80375-439b-4c96-805f-6b739896d415::m1:candidate:borrowed-dirty-ancillae:286a6cff55"
+    },
+    {
+      "caseId": "confirm-positive-17",
+      "querySha256": "766c5adaa87025f054669aa78c6962b03ad41c387bfd018bf50798c0d42ea963",
+      "goldSha256": "00eb56b6b9260512b230ca0840c0adc2eab3ff27c563dcb2ac73c287ebba01e4",
+      "strata": {
+        "lexicalOverlap": "low",
+        "witnessRole": "representative",
+        "evidenceScope": "bundled"
+      },
+      "corePromptSha256": "734b0accd09551ef24bbe364ecc0a38f79ee69a1c90c92f5265e3eea0519b65d",
+      "pointerRecordId": "attempt:51d09c74-63f0-4804-bbb2-bdc6cf2623cb:51d09c74-63f0-4804-bbb2-bdc6cf2623cb::m1:idea:representation:reachable-state-coding"
+    },
+    {
+      "caseId": "confirm-positive-18",
+      "querySha256": "7e8ad47e3f20e304e506302a5979a4c7e60314398e5bac5be1688b7ec2c085bb",
+      "goldSha256": "b87fe60d3e2a1279aa90fca363f72834f12d4bc48b93677cf67cb38304d7e3eb",
+      "strata": {
+        "lexicalOverlap": "ordinary",
+        "witnessRole": "representative",
+        "evidenceScope": "bundled"
+      },
+      "corePromptSha256": "385bcaeb36a428dd96e6bb62e4f9c102f5f62d3ccad5a533f0426eb98022e2c8",
+      "pointerRecordId": "attempt:6757b234-f41e-491d-ab4a-9d12d594bd34:6757b234-f41e-491d-ab4a-9d12d594bd34::m3:idea:toffoli:symbolic-control-reasoning"
+    }
+  ],
+  "execution": {
+    "models": [
+      "openai/gpt-5.6-sol",
+      "moonshotai/kimi-k3"
+    ],
+    "coreArms": [
+      "raw",
+      "flat",
+      "flat_plus_brief"
+    ],
+    "positiveControlArm": "pointer",
+    "sessions": 48,
+    "concurrency": 2,
+    "maximumDirectSpendUsd": 20,
+    "maximumPerAttemptReservationUsd": 0.75,
+    "administrativeRetryLimit": 4,
+    "order": "sha256-sort-v1",
+    "generation": {
+      "temperature": 0,
+      "maxTokensPerTurn": 2048,
+      "reasoning": {
+        "effort": "low",
+        "exclude": false
+      }
+    },
+    "queryBudget": {
+      "calls": 12,
+      "returnedBytes": 24576,
+      "maximumTurns": 16
+    }
+  },
+  "gates": {
+    "pointerAccuracyPerModel": 0.9,
+    "minimumDistinguishingCasesPerModel": 2,
+    "flatMinimumWinsPerModel": 2,
+    "flatMaximumLossesPerModel": 0,
+    "fabrication": 0,
+    "escalation": "A passing pilot may justify a separately frozen larger access study; it cannot trigger full chains or confirmation automatically."
+  },
+  "preflight": {
+    "reachabilityStatus": "PASS",
+    "reachabilitySha256": "9c51bcfd07bf8c82963142dbb08f899e9e63d63bee67864447e6b239dac4c9d3",
+    "cases": 6
+  }
+}

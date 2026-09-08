@@ -1,0 +1,51 @@
+{
+  "schema": "dungeness.v28-history-qualification-freeze.v1",
+  "frozen_at": "2026-08-28T16:52:00.000Z",
+  "treatment_authorized": false,
+  "model_spend_authorized_usd": 0,
+  "files": {
+    "eval/history_bank.py": "6f1e41cfdb742c3783a7968825ee3518d2dfc4a8482c0d1b9a609008098d8736",
+    "eval/dungeness": "1d68e389935d557d3f122e02066a860d973436d05ac0ad1fa2ee20a5eccbfce6",
+    "eval/tests/test_history_bank.py": "4937c31937eadd7907614d3102d8f71535ced24dbb887958527925b0631e45dc",
+    "eval/history-bank-plans/v28-ecdsa.json": "ee56a9e2747675f2a95b641e41ea152b3be2ea7d42eab01d9b33df7c4b988c47",
+    "eval/runs/users/bx/krv25-smoke-ecdsa-colima/record.json": "c572f5516a956e8a4b2ad9109ffe73d1302e2da6f3b1de73ed2ce5a02161d128",
+    "kg/src/research-view.js": "fb01ad1318bb451422b95660796cd9910da58404d11574b106a0bf2dffa6d9e2",
+    "kg/src/research-view-cli.js": "e7b0c73660ceed002836f454cfa541fba65ce096def1fa8234e736d1243c8eaf",
+    "kg/test/research-view.test.js": "29ffc53a3f0c1cc268eee4368334058fbd8e78edb1cb5222da9ddc30b0a87f3b",
+    "kg/studies/dungeness-representation-v1/v28-ecdsa-history-selection.json": "7466e38d8346c92400cee8fabd239068d6a8f19aa7d9e36715dfb9c13d4425a2",
+    "kg/studies/dungeness-representation-v1/preregistration-v28.md": "cfc98e035bfe28851f11dbf11061c05c45489a73217ac685338ff846b3ab684e",
+    "kg/studies/dungeness-representation-v1/v28-history-qualification.yaml": "c255116cf4bed34f716d0ba394bb4463b47a851feb952d55e4261f1d3547c8fa",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v27-freeze.json": "cfef87ecb82e4883bb774dfe3a3253a4ffc8b3aa944da39eea617e031eb90581"
+  },
+  "excluded_v27": {
+    "history_bank_id": "650c87fca9e71e956712b97b3a9624d4714aa0a1ae4b899b10d609120cf125ac",
+    "record_sha256": "f649cb4191958a2ea853fdc1bb64a408019f2a43e281b48c08e1f656ae63dd35",
+    "source_bundle_sha256": "671620a6548ba3118c73e3ef86ad42377594102c258a598f7da4d2616d47a680",
+    "failure": "ecdsa-archive-b R0 exceeded the frozen 32000-token context allowance",
+    "treatment_chains": 0
+  },
+  "frozen_delta": {
+    "events_per_window": 4,
+    "trusted_export_schema": "dungeness.trusted-research-events.v2",
+    "recorded_interventions_preserved": true,
+    "diagnostic_only_r2_tokens": {
+      "ecdsa-archive-a": 27924,
+      "ecdsa-archive-b": 23408
+    },
+    "materialization_namespace": "users/bx/v28"
+  },
+  "model_free_gates": {
+    "dungeness_core": {"passed": 167, "failed": 0},
+    "gateway": {"passed": 77, "failed": 0},
+    "yukon": {"passed": 115, "skipped": 2, "failed": 0},
+    "public_data": "PASS"
+  },
+  "budget": {
+    "scope": "knowledge-representation-autoresearch-v1",
+    "hard_ceiling_usd": 500,
+    "committed_usd": 25.227542,
+    "active_reservations": 0,
+    "remaining_usd": 474.772458
+  },
+  "next_gate": "repeat all 11 clean verifications, reconstruct both starts, and compile each four-event window twice; no treatment"
+}

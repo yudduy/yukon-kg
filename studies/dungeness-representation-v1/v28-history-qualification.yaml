@@ -1,0 +1,17 @@
+schema: dungeness.representation-study-qualification.v1
+version: 28
+supersedes: 27
+treatment_authorized: false
+model_spend_authorized_usd: 0
+selection_sha256: 7466e38d8346c92400cee8fabd239068d6a8f19aa7d9e36715dfb9c13d4425a2
+verification_plan_sha256: ee56a9e2747675f2a95b641e41ea152b3be2ea7d42eab01d9b33df7c4b988c47
+verifier_tree_sha256: c058ae1cf5335748c73e422ae99bee175dc9aba7f142f2f5fe8f1736faef09a6
+required_candidates: 11
+events_per_window: 4
+trusted_export_schema: dungeness.trusted-research-events.v2
+materialization_namespace: users/bx/v28
+diagnostic_r2_tokens:
+  ecdsa-archive-a: 27924
+  ecdsa-archive-b: 23408
+restart_from_clean_verification: true
+stop_on_any_failure: true

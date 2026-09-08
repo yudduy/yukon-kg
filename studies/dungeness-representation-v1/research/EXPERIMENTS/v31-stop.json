@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "type": "pre-treatment-apparatus-exclusion",
+  "study_version": "v31",
+  "recorded_at": "2026-08-28T17:27:25.000Z",
+  "planned": "Qualify the six-block first-model pilot with native and external candidate-artifact plus research-view no-model smokes before freezing assignments.",
+  "observed": {
+    "initial_native_smoke": {
+      "run_id": "krv31-smoke-native-view",
+      "record_sha256": "41004e692007a7cebbced0b35e303a441c23e5f512328778740dba31bea43a21",
+      "status": "invalid",
+      "sentinel_score": 1e18,
+      "cause": "Candidate-artifact 0444/0555 modes were preserved in the disposable workspace, preventing Harbor artifact collection and preventing a paid agent from editing the candidate."
+    },
+    "post_repair_native_smoke": {
+      "run_id": "krv31-smoke-native-view-fixed",
+      "record_sha256": "4d90a21a9fb9a0f9caa7e4e2c3585e58b78db050965cb16d67b5b2d1140352af",
+      "status": "ok",
+      "clean_score": 1249230840,
+      "expected_starting_score": 1249230840
+    },
+    "post_repair_external_smoke": {
+      "run_id": "krv31-smoke-external-view-fixed",
+      "record_sha256": "24f4c9fa5ff09bd13d9f953cbf06bafcb4fcf510ba085eca44abb11146032bf8",
+      "status": "valid",
+      "clean_score": 8007,
+      "expected_starting_score": 8007
+    },
+    "candidate_store_remained_immutable": true,
+    "workspace_candidate_became_owner_writable": true,
+    "research_view_remained_read_only": true,
+    "scientific_treatment_chains_started": 0,
+    "model_spend_usd": 0,
+    "study_committed_usd_after_smokes": 25.227542,
+    "active_budget_reservations": 0
+  },
+  "interpretation": "The representation comparison was not exposed to this failure. The defect and repair are apparatus evidence only; both repaired paths reproduce their sealed starting metrics exactly.",
+  "decision": "Exclude v31 before treatment and rotate the experiment identity and randomization seed for v32.",
+  "next_test": "Freeze v32 only after full model-free suites, blinded assignment checks, and fresh native plus external no-model smokes pass.",
+  "repair_source_sha256": {
+    "eval/adapters/harbor/build.py": "df7e99cab17b656d660806fa126b3f6de41bc771632fbe2690e0b189ffa92d89",
+    "eval/adapters/harbor_bundles/runtime.py": "c79b222bc365d2c030b854ad30d356c3c8bdf2ec9eb4d7b11c20434c6d13e7a7"
+  }
+}

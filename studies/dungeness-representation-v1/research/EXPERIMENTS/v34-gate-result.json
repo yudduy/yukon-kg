@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "type": "dungeness-representation-release-gate-result",
+  "study_version": 34,
+  "status": "PASS",
+  "treatment_model_calls": 0,
+  "planned": "Qualify the fresh v34 metric-bound, renderer-v4 experiment through deterministic compilation, real or clean-verified event append, complete-chain context projection, all runtime paths, isolation, randomization, route, and budget gates before treatment.",
+  "observed": "All 18 views compiled twice identically and accepted task-matched appended events with identical within-block atom hashes. First-handoff views use at most 13906 tokens; 12-event projections use at most 16880. Complete suites passed 177 Dungeness, 77 gateway, and 117 Yukon tests with two intentional skips. Public data, live route, three Docker smokes, and read-only view isolation passed. The 18 fresh cells use every treatment order once with no arm or block labels in run specs. Committed spend is 25.787305 USD and active reservations are zero.",
+  "interpretation": "v34 exercises the full planned handoff envelope and all task-family runtimes without changing representation semantics or inspecting treatment outcomes.",
+  "decision": "Permit only the frozen v34 first-model pilot. Run the first opaque chain through all three rounds before continuing the remaining cells. Preserve blinded failure classification and the 500 USD hard ceiling.",
+  "next_test": "Execute the first opaque three-round chain, verify its append and provenance records, then continue the frozen batch if no apparatus failure occurs.",
+  "tests": {
+    "dungeness": {"passed": 177, "failed": 0},
+    "gateway": {"passed": 77, "failed": 0},
+    "yukon": {"passed": 117, "failed": 0, "skipped": 2},
+    "public_data": "PASS"
+  },
+  "context": {
+    "initial_views": 18,
+    "first_handoff_views": 18,
+    "maximum_first_handoff_tokens": 13906,
+    "maximum_first_handoff_index_tokens": 1161,
+    "complete_chain_projections": 6,
+    "maximum_twelve_event_tokens": 16880,
+    "maximum_twelve_event_index_tokens": 1193
+  },
+  "smokes": {
+    "native": {"run_id": "krv34-smoke-native-view", "score": 1243629702, "record_sha256": "58b8072adb51cc57ebd72c10cac887f18e350541fb2d97398148dca610b4f8c7"},
+    "toy_isa": {"run_id": "krv34-smoke-toy-view", "score": 7337, "record_sha256": "3211f069fc73660279c1417d06dcbfc7f74a9985c30e3c22e2760edeb57f1545"},
+    "vliw": {"run_id": "krv34-smoke-vliw-view", "score": 3360, "record_sha256": "fc7347f8b8de11b82f52778d9c4bcab85d88ca9cc3cba0eaafc3bda8212fc726"},
+    "research_view_write_rejected": true
+  },
+  "route": {
+    "request_model": "openai/gpt-5.6-sol",
+    "endpoint_model": "openai/gpt-5.6-sol-20260709",
+    "endpoint_tag": "openai",
+    "fallbacks": false,
+    "pricing_matches_frozen_bounds": true
+  },
+  "budget": {
+    "scope": "knowledge-representation-autoresearch-v1",
+    "committed_before_v34_treatment_usd": 25.787305,
+    "first_model_incremental_ceiling_usd": 162,
+    "experiment_cumulative_ceiling_usd": 187.787305,
+    "hard_ceiling_usd": 500,
+    "active_reservations": 0
+  },
+  "known_risk": "AutoLab tasks: no declared license as of commit 7aff5fe71dfbe152fb0b8e8ac8087210b4bc27d5; used for internal evaluation only, not redistributed"
+}

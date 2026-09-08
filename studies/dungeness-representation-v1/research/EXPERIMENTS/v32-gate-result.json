@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "type": "dungeness-representation-pilot-gate-result",
+  "study_version": "v32",
+  "recorded_at": "2026-08-28T17:30:00.000Z",
+  "status": "passed-pre-treatment",
+  "freeze_sha256": "4cbce223bf286e5b0356a173f2b024949de2beb34b4681f85f1587053608992b",
+  "frozen_files_checked": 374,
+  "frozen_file_mismatches": 0,
+  "eligible_histories": 6,
+  "opaque_chains": 18,
+  "maximum_rounds": 54,
+  "treatment_counts": {"R0": 6, "R1": 6, "R2": 6},
+  "all_six_orders_once": true,
+  "treatment_or_block_name_leaks": 0,
+  "tests": {
+    "dungeness": {"passed": 176, "failed": 0},
+    "gateway": {"passed": 77, "failed": 0},
+    "yukon": {"passed": 115, "skipped": 2, "failed": 0},
+    "public_data": "PASS"
+  },
+  "smokes": {
+    "native": {"expected": 1249230840, "observed": 1249230840},
+    "external": {"expected": 8007, "observed": 8007},
+    "research_view_write_rejected": true,
+    "candidate_store_immutable": true,
+    "workspace_candidate_editable": true
+  },
+  "budget": {
+    "committed_usd": 25.227542,
+    "active_reservations": 0,
+    "incremental_authorized_usd": 162,
+    "cumulative_pilot_ceiling_usd": 187.227542,
+    "hard_study_ceiling_usd": 500
+  },
+  "scientific_treatment_chains_started": 0,
+  "representation_outcomes_observed": 0,
+  "decision": "Release only the frozen v32 first-model pilot. Analyze blinded outcomes before any replication or confirmation decision."
+}

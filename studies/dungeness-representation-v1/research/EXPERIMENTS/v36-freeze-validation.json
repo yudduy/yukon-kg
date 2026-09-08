@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "all_pass": true,
+    "all_source_cells_invalidated": true,
+    "ceilings_match": true,
+    "confirmation_not_automatic": true,
+    "counts_match": true,
+    "freeze_files_match": true,
+    "freeze_identity": true,
+    "no_v36_outputs_before_freeze": true,
+    "real_terminal_diagnostic_reproduced": true,
+    "replacement_block_completeness": true,
+    "replacement_frozen_fields_match": true,
+    "replacement_specs_match_and_are_opaque": true,
+    "replacement_targets_unique": true,
+    "replacement_treatment_balance": true,
+    "restart_experiment_matches": true,
+    "source_cell_membership": true,
+    "source_experiment_matches": true,
+    "three_task_family_zero_model_smokes": true
+  },
+  "freeze_path": "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v36-freeze.json",
+  "freeze_sha256": "b30a511e70dc7f8a163e190426b4b54bbd6de3522440a1aa25ac1dc5eb639c28",
+  "schema_version": 1,
+  "status": "PASS",
+  "type": "dungeness-representation-v36-freeze-validation",
+  "validated_at": "2026-08-28T20:32:00Z"
+}

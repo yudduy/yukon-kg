@@ -1,0 +1,49 @@
+{
+  "schema": "dungeness.v27-history-qualification-freeze.v1",
+  "frozen_at": "2026-08-28T16:42:00.000Z",
+  "treatment_authorized": false,
+  "model_spend_authorized_usd": 0,
+  "files": {
+    "eval/history_bank.py": "c2a81e915ceaf816968e700345c321afe33e06904c0b77ac2b286d0c271cd334",
+    "eval/dungeness": "1d68e389935d557d3f122e02066a860d973436d05ac0ad1fa2ee20a5eccbfce6",
+    "eval/tests/test_history_bank.py": "4937c31937eadd7907614d3102d8f71535ced24dbb887958527925b0631e45dc",
+    "eval/history-bank-plans/v26-ecdsa.json": "c0547d90897b514f34b425e97871cc1122a6037b2e3e948392babd95ace147ad",
+    "eval/runs/users/bx/krv25-smoke-ecdsa-colima/record.json": "c572f5516a956e8a4b2ad9109ffe73d1302e2da6f3b1de73ed2ce5a02161d128",
+    "kg/src/research-view.js": "66d802081b271ae5e80ead48174a6bdc6c3d937d779f18ef1d82794b5610c370",
+    "kg/src/research-view-cli.js": "e7b0c73660ceed002836f454cfa541fba65ce096def1fa8234e736d1243c8eaf",
+    "kg/test/research-view.test.js": "0bb270b763df4a116df2f17d77c56f9cdbf6427726a5fa855ea380ae3b4c2d54",
+    "kg/studies/dungeness-representation-v1/v26-ecdsa-history-selection.json": "3958f0800e9f6900424c40daf2feb07581cd171292240066c0c3dc7c09ec3492",
+    "kg/studies/dungeness-representation-v1/preregistration-v27.md": "f48afd9378891fa2ff090ea72ec591ea7b9329c3ac865ce7c6316a0649959c97",
+    "kg/studies/dungeness-representation-v1/v27-history-qualification.yaml": "7eedef9b14c6c0e3a26c96bbdd78beaa404e04505d33ef0a680ba2b3e0d7d2a3",
+    "kg/studies/dungeness-representation-v1/research/EXPERIMENTS/v26-freeze.json": "3269db91787fd793e4b38fd111e5ab892e1ae851341ec5c093c0055aba3dbb48"
+  },
+  "excluded_v26": {
+    "history_bank_id": "6f75cedd7b3880678a8ba5573cb44534263c67a2e0f4cd51fdf15dbd9c6c1019",
+    "record_sha256": "e8258cea5c465838276bfb31d2ed95a2812f7a8d964947ba8faf62267211879c",
+    "source_bundle_sha256": "2005af017b74eccae30e8cac921a7803328dc4237bcb45bc15478c32dd3dc8a3",
+    "failure": "ordinary clone omitted custom history refs during starting-artifact reconstruction",
+    "treatment_chains": 0
+  },
+  "frozen_delta": {
+    "builder_version": "dungeness.git-history-bank-builder.v2",
+    "builder_source_sha256": "c2a81e915ceaf816968e700345c321afe33e06904c0b77ac2b286d0c271cd334",
+    "custom_ref_fetch": true,
+    "fetched_commit_assertion": true,
+    "regression_test": true,
+    "materialization_namespace": "users/bx/v27"
+  },
+  "model_free_gates": {
+    "dungeness_core": {"passed": 167, "failed": 0},
+    "gateway": {"passed": 77, "failed": 0},
+    "yukon": {"passed": 114, "skipped": 2, "failed": 0},
+    "public_data": "PASS"
+  },
+  "budget": {
+    "scope": "knowledge-representation-autoresearch-v1",
+    "hard_ceiling_usd": 500,
+    "committed_usd": 25.227542,
+    "active_reservations": 0,
+    "remaining_usd": 474.772458
+  },
+  "next_gate": "repeat all 14 clean verifications, reconstruct both starts, and compile both windows; no treatment"
+}

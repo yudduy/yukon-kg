@@ -1,0 +1,48 @@
+{
+  "schema": "yukon.atlas-access-probe-paired-statistics.v1",
+  "sourceResultsSha256": "de29856082779275d9dec292c16f00f89ac5d141c1e3eae85c52b0a0b88460c3",
+  "method": "exact two-sided McNemar on whole-answer pass pairs",
+  "contrasts": {
+    "flat_vs_raw": {
+      "moonshotai/kimi-k3": {
+        "controlOnly": 0,
+        "treatmentOnly": 6,
+        "discordant": 6,
+        "pValue": 0.03125
+      },
+      "openai/gpt-5.6-sol": {
+        "controlOnly": 0,
+        "treatmentOnly": 5,
+        "discordant": 5,
+        "pValue": 0.0625
+      },
+      "pooled_descriptive": {
+        "controlOnly": 0,
+        "treatmentOnly": 11,
+        "discordant": 11,
+        "pValue": 0.0009765625
+      }
+    },
+    "flat_plus_brief_vs_flat": {
+      "moonshotai/kimi-k3": {
+        "controlOnly": 1,
+        "treatmentOnly": 0,
+        "discordant": 1,
+        "pValue": 1
+      },
+      "openai/gpt-5.6-sol": {
+        "controlOnly": 0,
+        "treatmentOnly": 1,
+        "discordant": 1,
+        "pValue": 1
+      },
+      "pooled_descriptive": {
+        "controlOnly": 1,
+        "treatmentOnly": 1,
+        "discordant": 2,
+        "pValue": 1
+      }
+    }
+  },
+  "interpretationBoundary": "The contrasts and pair directions were frozen; p-values were not preregistered decision thresholds. Pooled model-case pairs share six cases and are descriptive, not independent population draws."
+}

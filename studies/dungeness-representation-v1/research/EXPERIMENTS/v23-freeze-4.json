@@ -1,0 +1,48 @@
+{
+  "schema": "dungeness.v23-qualification-freeze.v4",
+  "frozen_at": "2026-08-28T05:46:17Z",
+  "supersedes": "v23-freeze-3.json",
+  "reason": "The clean GPT canary passed. Before seed production, Agent Tool Routing was rejected because unchanged-candidate timing spread exceeded the target practical effect. This freeze substitutes deterministic Adversarial Splay, binds the frozen checkpoint as the initial best, requires a clean improvement before campaign eligibility, distinguishes upstream from executed verifier hashes, and replaces the unavailable Together Kimi route with the live exact official Moonshot endpoint.",
+  "repositories": {
+    "eval_base_commit": "adb208c5219c84b227af924678bd5bd8073b60f4",
+    "kg_base_commit": "3ef4e71aac4c26c67cd50f004961b1afcf2eb683",
+    "branch": "autoresearch/dungeness-representation-v23-20260827"
+  },
+  "files": {
+    "kg/studies/dungeness-representation-v1/preregistration-v23.md": "6e789ccc4aa2190c4d7c72e598a43b83b214195cbc13aac761267fe7e08157db",
+    "kg/studies/dungeness-representation-v1/v23-qualification.yaml": "329c6879cc270fd5f48b6489ce1b0ffd4d5db7c9a8fea55e8e901c71264dea99",
+    "eval/experiments/users/bx/dungeness-representation-v23-pilot/experiment.yaml": "e05d590607e0682b68ff45775cb1ed5baf7e3106a1fb2b0249f2263c282a204f",
+    "eval/run-specs/dungeness-representation-v23/krv23-route-canary-gpt-v3.yaml": "abc788db6ef643e9adf6de0457c6b9aa2b095e41988ac7e08c8df0291861a993",
+    "eval/run-specs/dungeness-representation-v23/krv23-route-canary-kimi.yaml": "2002327776e0ba654db6f7ef241249d3987967226100c17456cb85eceacc109a",
+    "eval/run-specs/dungeness-representation-v23/krv23-smoke-splay-1.yaml": "0d3817f4cc9964b124ce5ff4ff567ee3ddc1a2d4ebf6c7a72170e5fdda023218",
+    "eval/run-specs/dungeness-representation-v23/krv23-smoke-splay-2.yaml": "42b9a724ed2311b3f927d2e775edc505c1b55280100264a6fd4aa4d03e4a5780",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-splay-gpt.yaml": "24860f054b7568de153d53f67f8ee3c8ebdd09410b89602e0066a946350cb2b8",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-splay-kimi.yaml": "debb3c1dcf74aa2a55db6e719475a26edddd89d07609ac3f32c1ab2251e33c45",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-toy-gpt.yaml": "18b77853be5b48b75ee703ab132d688b2b789007ef586c0377fe35b66aeb511b",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-toy-kimi.yaml": "77f844456e0f282075019e7f11170cac4599798177fc9974fd424242f7c459bd",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-vliw-gpt.yaml": "c16b905db7b2af6821a5c0a2e4325b3b7f5e3929cf97f97730a37ea13b3fa183",
+    "eval/run-specs/dungeness-representation-v23/krv23-seed-vliw-kimi.yaml": "b707fcaa3dfa9b1bfbd51ba3373011347896dce5adfe17924db2094e8f8b5739",
+    "eval/services/gateway/pricing.yaml": "56438069a9f49c17f35329797b38853039e2f6222a272a7dd04e65a933222f7c",
+    "eval/external-bundles/autolab/cpu-reserve.json": "9f2e7bc9435ebc7cf9da128ba2ef491ad01fa0c1b8c6a43ec680b48c22646e5e",
+    "eval/adapters/harbor_bundles/runtime.py": "581ab09ccf166f7e036dfc41ca63461e1190754d786a6cfe884ce4c1b6768394",
+    "eval/adapters/harbor_bundles/evaluation.py": "462669074e6a46b5fe1108540409a6d2bf87323648a971b35f0b9a6e0ed5ea96",
+    "eval/adapters/harbor_bundles/evaluator_server.py": "4c95474ceba5a30b67192c8e5210f426189892eea957dbae1f8896439f322954",
+    "eval/agents/common/evaluate.py": "83acb447725573ccffe3cd349900a808f9fb3a6adfb19235f2c306b250cc88a5",
+    "eval/representation_study.py": "d426e27fb50440616f5cbd03e5a3bef7152850c2196ab3a9b9a8236afc49b219",
+    "eval/dungeness": "22a732834e4756b21a26fa4083cb42d4cfe302a486943e24b586d105d00e295a",
+    "kg/src/research-view.js": "2a5d24ad02577eca072f47ff67abf4f34c7cdc102b8b20f09244ecc035316b60",
+    "kg/src/research-view-cli.js": "c4d4de396a74e579299f0ac6d4406cc6c68c78466145561707237052716b01d5"
+  },
+  "validation": {
+    "dungeness_core_tests": 161,
+    "gateway_tests": 76,
+    "yukon_tests_passed": 113,
+    "yukon_tests_skipped": 2,
+    "public_data": "PASS",
+    "live_openrouter_policy": "PASS",
+    "splay_smokes": [48656, 48656]
+  },
+  "committed_study_usd": 13.648948,
+  "paid_treatment_allowed": false,
+  "next_gate": "Kimi official-Moonshot route canary, then first Splay/GPT seed campaign"
+}
