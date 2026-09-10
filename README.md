@@ -1,5 +1,7 @@
 # Yukon KG
 
+**[Download the processed ECDSA Fail dataset (ZIP, 1.37 MB)](https://github.com/yudduy/yukon-kg/releases/download/ecdsa-data-e1765263/ecdsa-fail-processed-e1765263.zip)** — 949 submissions with organized ideas, review statuses, and evidence excerpts. Unzip and start with the included README; no application or account setup is needed. This is a historical snapshot, with missing metadata preserved explicitly. [Release details and checksum](https://github.com/yudduy/yukon-kg/releases/tag/ecdsa-data-e1765263).
+
 Standalone experiments for deciding how agents should retrieve and use research history. This repository does not depend on the Yukon application checkout.
 
 ## Current question
