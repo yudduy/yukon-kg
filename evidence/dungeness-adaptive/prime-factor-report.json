@@ -1,0 +1,7 @@
+{
+  "schema": "yukon-kg.dungeness-prime-factor-decision.v1",
+  "createdAt": "2026-08-27T05:51:25.835Z",
+  "status": "NOT_WARRANTED",
+  "reason": "no confirmatory adaptive-evidence result exists",
+  "parentReportSha256": null
+}

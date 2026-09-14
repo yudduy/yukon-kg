@@ -1,0 +1,19 @@
+{
+  "schema": "yukon-kg.dungeness-bind.v1",
+  "protocolVersion": "yukon-kg.dungeness-kb.v1",
+  "status": "blocked",
+  "present": false,
+  "reason": "GITHUB_TOKEN is required to clone Layr-Labs/dungeness as yudduy. The default cloud token is GitHub user cursor and cannot see that repo.",
+  "repo": "https://github.com/Layr-Labs/dungeness.git",
+  "inspection": {
+    "status": "blocked",
+    "present": false,
+    "reason": "GITHUB_TOKEN is required to clone Layr-Labs/dungeness as yudduy. The default cloud token is GitHub user cursor and cannot see that repo.",
+    "repo": "https://github.com/Layr-Labs/dungeness.git"
+  },
+  "policy": {
+    "mutateHarness": false,
+    "outerCourtEditableByProposer": false,
+    "knowledgeIsContextOnly": true
+  }
+}

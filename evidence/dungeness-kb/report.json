@@ -1,0 +1,1348 @@
+{
+  "schema": "yukon-kg.dungeness-kb-court",
+  "protocolVersion": "yukon-kg.dungeness-kb.v1",
+  "runId": "2026-08-27T02-27-16-782Z-f5ccd62b",
+  "createdAt": "2026-08-27T02:28:12.675Z",
+  "model": "openai/gpt-5.4",
+  "releaseId": "e1765263b502938947633c7decf4019f0627d251ba2d1486a900a3bcbe0ccc03",
+  "dungeness": {
+    "present": false,
+    "kind": "missing",
+    "directory": "/workspace/third_party/dungeness",
+    "signals": [],
+    "pin": {
+      "schema": "yukon-kg.dungeness-vendor-pin.v1",
+      "repo": "https://github.com/Layr-Labs/dungeness.git",
+      "sha": null,
+      "branch": null,
+      "kind": "missing",
+      "clonedAt": null,
+      "note": "Populate by running bun run src/dungeness-clone.js with a yudduy GITHUB_TOKEN."
+    }
+  },
+  "totals": {
+    "cold": {
+      "cases": 8,
+      "passed": 4
+    },
+    "raw": {
+      "cases": 8,
+      "passed": 4
+    },
+    "flat": {
+      "cases": 8,
+      "passed": 4
+    },
+    "state_brief": {
+      "cases": 8,
+      "passed": 7
+    },
+    "winner_only": {
+      "cases": 8,
+      "passed": 4
+    }
+  },
+  "gate": [
+    {
+      "caseId": "seed-grinding-mechanism",
+      "state_brief": true,
+      "winner_only": false
+    },
+    {
+      "caseId": "largest-isolated-effect",
+      "state_brief": true,
+      "winner_only": false
+    }
+  ],
+  "adopted": null,
+  "reason": "state_brief beat winner_only on mechanism identity but missed next-untried.",
+  "results": [
+    {
+      "caseId": "seed-grinding-mechanism",
+      "arm": "cold",
+      "answer": "Yes.",
+      "rationale": "The packet explicitly notes a degenerate optimum: identity-pair nonce grinding can change the Fiat-Shamir sample without a structural circuit change.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 255,
+        "completion_tokens": 44,
+        "total_tokens": 299,
+        "cost": 0.0012975,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0012975,
+          "upstream_inference_prompt_cost": 0.0006375,
+          "upstream_inference_completions_cost": 0.00066
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797637-t5NmSyeIMGr2ipcbwkhr"
+    },
+    {
+      "caseId": "seed-grinding-mechanism",
+      "arm": "raw",
+      "answer": "yes",
+      "rationale": "Supported via reroll/fallback/operation-stream retry controls and optional screening/identity-tail builder mechanisms.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 7049,
+        "completion_tokens": 37,
+        "total_tokens": 7086,
+        "cost": 0.0181775,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0181775,
+          "upstream_inference_prompt_cost": 0.0176225,
+          "upstream_inference_completions_cost": 0.000555
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797638-zdI3uXxgUz826ABZVWyW"
+    },
+    {
+      "caseId": "seed-grinding-mechanism",
+      "arm": "flat",
+      "answer": "yes",
+      "rationale": "The packet includes Seed grinding and variants Nonce grinding, Reroll selection, and Seed-tail search.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3401,
+        "completion_tokens": 38,
+        "total_tokens": 3439,
+        "cost": 0.0090725,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0090725,
+          "upstream_inference_prompt_cost": 0.0085025,
+          "upstream_inference_completions_cost": 0.00057
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797640-jHFFas5rQgeAlfwRAd0O"
+    },
+    {
+      "caseId": "seed-grinding-mechanism",
+      "arm": "state_brief",
+      "answer": "No",
+      "rationale": "It is flagged as a hazard: identity-pair nonce grinding and stream padding can change the Fiat–Shamir sample without a structural circuit change.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3499,
+        "completion_tokens": 46,
+        "total_tokens": 3545,
+        "cost": 0.0094375,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0094375,
+          "upstream_inference_prompt_cost": 0.0087475,
+          "upstream_inference_completions_cost": 0.00069
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797641-KrKdtqHZ4rVNdIPWJfeH"
+    },
+    {
+      "caseId": "seed-grinding-mechanism",
+      "arm": "winner_only",
+      "answer": "yes",
+      "rationale": "Supported: both “Nonce grinding” and “Seed grinding” appear in the snapshot.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 2451,
+        "completion_tokens": 34,
+        "total_tokens": 2485,
+        "cost": 0.0066375,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0066375,
+          "upstream_inference_prompt_cost": 0.0061275,
+          "upstream_inference_completions_cost": 0.00051
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797642-gqEs2NSbQyYRokpewM3X"
+    },
+    {
+      "caseId": "largest-isolated-effect",
+      "arm": "cold",
+      "answer": "Identity-pair nonce grinding",
+      "rationale": "The packet says the degenerate optimum comes from identity-pair nonce grinding and padding moving the Fiat-Shamir sample without structural circuit change; the largest isolated gain is the nonce-grinding change.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 255,
+        "completion_tokens": 59,
+        "total_tokens": 314,
+        "cost": 0.0015225,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0015225,
+          "upstream_inference_prompt_cost": 0.0006375,
+          "upstream_inference_completions_cost": 0.000885
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797643-k0IVO1jRfzBcenjmLt5R"
+    },
+    {
+      "caseId": "largest-isolated-effect",
+      "arm": "raw",
+      "answer": "Lower the fallback count used when constructing the operation sequence",
+      "rationale": "Among promoted submissions with exactly one listed change, case 30c8dede-fa09-466a-b19d-f4d14bc1ad2a has the highest score: 10753444395.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 7049,
+        "completion_tokens": 70,
+        "total_tokens": 7119,
+        "cost": 0.0031205,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 6912,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0031205,
+          "upstream_inference_prompt_cost": 0.0020705,
+          "upstream_inference_completions_cost": 0.00105
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797645-eSFlUo8wGCyS4FX1fmJg"
+    },
+    {
+      "caseId": "largest-isolated-effect",
+      "arm": "flat",
+      "answer": "Nonce grinding",
+      "rationale": "The largest promoted isolated variant is variant:seed-grinding:nonce with promoted 182.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3401,
+        "completion_tokens": 36,
+        "total_tokens": 3437,
+        "cost": 0.0027065,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0027065,
+          "upstream_inference_prompt_cost": 0.0021665,
+          "upstream_inference_completions_cost": 0.00054
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797646-YiOrOnXza0xzaYyEMax6"
+    },
+    {
+      "caseId": "largest-isolated-effect",
+      "arm": "state_brief",
+      "answer": "Adaptive phase correction",
+      "rationale": "It has the largest isolated one-change officialDelta: -66,073,800.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3499,
+        "completion_tokens": 36,
+        "total_tokens": 3535,
+        "cost": 0.0029515,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0029515,
+          "upstream_inference_prompt_cost": 0.0024115,
+          "upstream_inference_completions_cost": 0.00054
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797647-VDY7R5Pnqj2A0jZBmAJM"
+    },
+    {
+      "caseId": "largest-isolated-effect",
+      "arm": "winner_only",
+      "answer": "Nonce grinding",
+      "rationale": "It has the highest promoted count (182) among isolated one-change interventions.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 2451,
+        "completion_tokens": 33,
+        "total_tokens": 2484,
+        "cost": 0.0025905,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0025905,
+          "upstream_inference_prompt_cost": 0.0020955,
+          "upstream_inference_completions_cost": 0.000495
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797648-Vf3vSQtvHlVvoUqOR8NV"
+    },
+    {
+      "caseId": "karatsuba-isolated",
+      "arm": "cold",
+      "answer": "No.",
+      "rationale": "The packet only states the objective, validity conditions, mutable surface, and a note about nonce grinding/padding; it provides no jointly qualified one-change ablation isolating Karatsuba squaring.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 261,
+        "completion_tokens": 56,
+        "total_tokens": 317,
+        "cost": 0.0014925,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0014925,
+          "upstream_inference_prompt_cost": 0.0006525,
+          "upstream_inference_completions_cost": 0.00084
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797650-9dol8btGO5aEw1D5zJEs"
+    },
+    {
+      "caseId": "karatsuba-isolated",
+      "arm": "raw",
+      "answer": "No.",
+      "rationale": "No submission shows a one-change ablation that isolates Karatsuba squaring; Karatsuba-related promoted changes are either multi-change or concern modular-add folds/reduction path, not an isolated squaring-only change.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 7055,
+        "completion_tokens": 60,
+        "total_tokens": 7115,
+        "cost": 0.0029855,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 6912,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0029855,
+          "upstream_inference_prompt_cost": 0.0020855,
+          "upstream_inference_completions_cost": 0.0009
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797652-NOYsN7zvkmWdXrrQh5jl"
+    },
+    {
+      "caseId": "karatsuba-isolated",
+      "arm": "flat",
+      "answer": "No",
+      "rationale": "The packet lists Karatsuba multiplication, but no isolated Karatsuba squaring ablation or jointly qualified one-change result for case karatsuba-isolated.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3407,
+        "completion_tokens": 49,
+        "total_tokens": 3456,
+        "cost": 0.0029165,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0029165,
+          "upstream_inference_prompt_cost": 0.0021815,
+          "upstream_inference_completions_cost": 0.000735
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797653-lm0ultDZZA6a5d7laZuD"
+    },
+    {
+      "caseId": "karatsuba-isolated",
+      "arm": "state_brief",
+      "answer": "No.",
+      "rationale": "Product-register squaring appears only as historical_only open cut `disc:isolate:experiment:ecdsafail-round84-xtail-karatsuba-8e62-v1`, which says historical or bundled observation cannot identify the component.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3505,
+        "completion_tokens": 65,
+        "total_tokens": 3570,
+        "cost": 0.0034015,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0034015,
+          "upstream_inference_prompt_cost": 0.0024265,
+          "upstream_inference_completions_cost": 0.000975
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797654-5DgS0ATBdJi33LQ3rdKZ"
+    },
+    {
+      "caseId": "karatsuba-isolated",
+      "arm": "winner_only",
+      "answer": "No",
+      "rationale": "The snapshot lists Karatsuba multiplication, but no isolated Karatsuba squaring or jointly qualified one-change ablation for it.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 2457,
+        "completion_tokens": 43,
+        "total_tokens": 2500,
+        "cost": 0.0027555,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0027555,
+          "upstream_inference_prompt_cost": 0.0021105,
+          "upstream_inference_completions_cost": 0.000645
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797655-5yKpjM2zGREGGUAAMbO1"
+    },
+    {
+      "caseId": "fermat-retry",
+      "arm": "cold",
+      "answer": "No.",
+      "rationale": "The pinned objective only rewards lower verified qubit-Toffoli cost with changes confined to src/point_add/**, and the snapshot gives no indication that retrying Fermat inversion on the current representation is the winning mechanism.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 255,
+        "completion_tokens": 61,
+        "total_tokens": 316,
+        "cost": 0.0015525,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0015525,
+          "upstream_inference_prompt_cost": 0.0006375,
+          "upstream_inference_completions_cost": 0.000915
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797656-gh6znp0sFfPa0XvRNAf1"
+    },
+    {
+      "caseId": "fermat-retry",
+      "arm": "raw",
+      "answer": "no",
+      "rationale": "The promoted changes consistently improve the Kaliski inversion/state path and operation-stream construction; the snapshot provides no support for retrying Fermat inversion on the current representation.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 7049,
+        "completion_tokens": 50,
+        "total_tokens": 7099,
+        "cost": 0.0028205,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 6912,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0028205,
+          "upstream_inference_prompt_cost": 0.0020705,
+          "upstream_inference_completions_cost": 0.00075
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797658-UL6rwyNOYX6BgE8boOTM"
+    },
+    {
+      "caseId": "fermat-retry",
+      "arm": "flat",
+      "answer": "no",
+      "rationale": "Fermat inversion has promoted 0 in this snapshot, while other inversion families are promoted.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3401,
+        "completion_tokens": 36,
+        "total_tokens": 3437,
+        "cost": 0.0027065,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0027065,
+          "upstream_inference_prompt_cost": 0.0021665,
+          "upstream_inference_completions_cost": 0.00054
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797659-EwlQBo7nxihx59TwqO4U"
+    },
+    {
+      "caseId": "fermat-retry",
+      "arm": "state_brief",
+      "answer": "No.",
+      "rationale": "Negative knowledge says Fermat inversion had 1 submission and 0 promoted; reopen only if the inversion representation itself changes.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3499,
+        "completion_tokens": 41,
+        "total_tokens": 3540,
+        "cost": 0.0030265,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0030265,
+          "upstream_inference_prompt_cost": 0.0024115,
+          "upstream_inference_completions_cost": 0.000615
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797660-PlQxjy3IOYMUwPG9c1Jw"
+    },
+    {
+      "caseId": "fermat-retry",
+      "arm": "winner_only",
+      "answer": "No.",
+      "rationale": "Fermat inversion has 0 promotions in 1 attempt on the current snapshot.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 2451,
+        "completion_tokens": 34,
+        "total_tokens": 2485,
+        "cost": 0.0026055,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0026055,
+          "upstream_inference_prompt_cost": 0.0020955,
+          "upstream_inference_completions_cost": 0.00051
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797661-wrsVLDy19O7NFtBvlp78"
+    },
+    {
+      "caseId": "toffoli-can-rise",
+      "arm": "cold",
+      "answer": "Yes.",
+      "rationale": "The scorer is the qubit-Toffoli product, so a Toffoli increase can still lower the official score if it reduces qubits enough; the packet also notes nonce grinding/padding can change the sampled score without a structural circuit change.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 259,
+        "completion_tokens": 66,
+        "total_tokens": 325,
+        "cost": 0.0016375,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0016375,
+          "upstream_inference_prompt_cost": 0.0006475,
+          "upstream_inference_completions_cost": 0.00099
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797662-1a1cGtqn3qAzKcwu5sCU"
+    },
+    {
+      "caseId": "toffoli-can-rise",
+      "arm": "raw",
+      "answer": "Yes.",
+      "rationale": "Several promoted submissions changed mechanism choices or added operations while still achieving higher official scores than earlier baselines, so Toffoli count can rise and the score can still improve.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 7053,
+        "completion_tokens": 51,
+        "total_tokens": 7104,
+        "cost": 0.0028455,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 6912,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0028455,
+          "upstream_inference_prompt_cost": 0.0020805,
+          "upstream_inference_completions_cost": 0.000765
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797664-8i0BB5N8ubPIIZlQGGTM"
+    },
+    {
+      "caseId": "toffoli-can-rise",
+      "arm": "flat",
+      "answer": "Yes",
+      "rationale": "The official score is not just Toffoli count; resource tradeoffs like logical qubit count can improve it even if Toffolis rise.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3405,
+        "completion_tokens": 46,
+        "total_tokens": 3451,
+        "cost": 0.0028665,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0028665,
+          "upstream_inference_prompt_cost": 0.0021765,
+          "upstream_inference_completions_cost": 0.00069
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797665-bUUfdJy3M1RPgokQu4mH"
+    },
+    {
+      "caseId": "toffoli-can-rise",
+      "arm": "state_brief",
+      "answer": "Yes",
+      "rationale": "Solinas reduction improved the official score by -7288088 while Toffoli count increased by 192.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3503,
+        "completion_tokens": 39,
+        "total_tokens": 3542,
+        "cost": 0.0030065,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0030065,
+          "upstream_inference_prompt_cost": 0.0024215,
+          "upstream_inference_completions_cost": 0.000585
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797666-FttJyAfxse6drLgQGLxj"
+    },
+    {
+      "caseId": "toffoli-can-rise",
+      "arm": "winner_only",
+      "answer": "Yes",
+      "rationale": "The official score is not solely Toffoli count; winner-only promotions show changes in other dimensions can outweigh a Toffoli increase.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 2455,
+        "completion_tokens": 44,
+        "total_tokens": 2499,
+        "cost": 0.0027655,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0027655,
+          "upstream_inference_prompt_cost": 0.0021055,
+          "upstream_inference_completions_cost": 0.00066
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797668-0aMJkjr9bfNoKNSujVg1"
+    },
+    {
+      "caseId": "qubit-floor",
+      "arm": "cold",
+      "answer": "No pinned qubit floor is specified.",
+      "rationale": "The packet gives objective, unit, mutable surface, shots, validity conditions, and a degenerate optimum note, but no numeric or fixed qubit floor.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 253,
+        "completion_tokens": 54,
+        "total_tokens": 307,
+        "cost": 0.0014425,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0014425,
+          "upstream_inference_prompt_cost": 0.0006325,
+          "upstream_inference_completions_cost": 0.00081
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797670-APkLaJZccqT8UlyMtUqh"
+    },
+    {
+      "caseId": "qubit-floor",
+      "arm": "raw",
+      "answer": "10753444395",
+      "rationale": "Highest promoted score in the snapshot.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 7047,
+        "completion_tokens": 27,
+        "total_tokens": 7074,
+        "cost": 0.0024705,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 6912,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0024705,
+          "upstream_inference_prompt_cost": 0.0020655,
+          "upstream_inference_completions_cost": 0.000405
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797673-hYNbRuARAM2Bln1YzklF"
+    },
+    {
+      "caseId": "qubit-floor",
+      "arm": "flat",
+      "answer": "7",
+      "rationale": "The pinned qubit floor for this interface is 7.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3399,
+        "completion_tokens": 29,
+        "total_tokens": 3428,
+        "cost": 0.0025965,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0025965,
+          "upstream_inference_prompt_cost": 0.0021615,
+          "upstream_inference_completions_cost": 0.000435
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797674-4dREqRqJSC2CahwVRz1e"
+    },
+    {
+      "caseId": "qubit-floor",
+      "arm": "state_brief",
+      "answer": "512",
+      "rationale": "The Qubit count bound has limitKind \"pinned_floor\" with limitValue 512.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3497,
+        "completion_tokens": 36,
+        "total_tokens": 3533,
+        "cost": 0.0029465,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0029465,
+          "upstream_inference_prompt_cost": 0.0024065,
+          "upstream_inference_completions_cost": 0.00054
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797675-43XkdduO7WZvz0QHgiPK"
+    },
+    {
+      "caseId": "qubit-floor",
+      "arm": "winner_only",
+      "answer": "7",
+      "rationale": "The only matching pinned floor in the snapshot is the logical qubit count candidate with promoted value 7.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 2449,
+        "completion_tokens": 38,
+        "total_tokens": 2487,
+        "cost": 0.0026605,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0026605,
+          "upstream_inference_prompt_cost": 0.0020905,
+          "upstream_inference_completions_cost": 0.00057
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797677-hhVstanzX0OhZMFgOhRn"
+    },
+    {
+      "caseId": "frontier-mixed",
+      "arm": "cold",
+      "answer": "No.",
+      "rationale": "The packet states a degenerate optimum: identity-pair nonce grinding and operation-stream padding can change the Fiat-Shamir sample without a structural circuit change, so the champion score is not a pure mechanism effect.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 252,
+        "completion_tokens": 58,
+        "total_tokens": 310,
+        "cost": 0.0015,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0015,
+          "upstream_inference_prompt_cost": 0.00063,
+          "upstream_inference_completions_cost": 0.00087
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797679-tEnsCaTadsXyLSbqXodN"
+    },
+    {
+      "caseId": "frontier-mixed",
+      "arm": "raw",
+      "answer": "No",
+      "rationale": "The top promoted submission mixes a mechanism change with a fallback-count tuning change, so the champion score is not a pure mechanism effect.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 7046,
+        "completion_tokens": 43,
+        "total_tokens": 7089,
+        "cost": 0.002708,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 6912,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.002708,
+          "upstream_inference_prompt_cost": 0.002063,
+          "upstream_inference_completions_cost": 0.000645
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797680-BEfBUEYPCZOmkiSDCKzB"
+    },
+    {
+      "caseId": "frontier-mixed",
+      "arm": "flat",
+      "answer": "No",
+      "rationale": "Case frontier-mixed indicates a mixed effect, not a pure mechanism effect.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3398,
+        "completion_tokens": 32,
+        "total_tokens": 3430,
+        "cost": 0.008975,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.008975,
+          "upstream_inference_prompt_cost": 0.008495,
+          "upstream_inference_completions_cost": 0.00048
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797682-UR9tkz1QPBaNgVPwpRno"
+    },
+    {
+      "caseId": "frontier-mixed",
+      "arm": "state_brief",
+      "answer": "No",
+      "rationale": "The frontier score is marked \"mixed\" and includes seed grinding, so it is not a pure mechanism effect.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3496,
+        "completion_tokens": 39,
+        "total_tokens": 3535,
+        "cost": 0.002989,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.002989,
+          "upstream_inference_prompt_cost": 0.002404,
+          "upstream_inference_completions_cost": 0.000585
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797683-oOuhaLZ3NDlrgtZl3fKd"
+    },
+    {
+      "caseId": "frontier-mixed",
+      "arm": "winner_only",
+      "answer": "No",
+      "rationale": "The winner is a search-and-tuning variant (Nonce grinding), so the champion score is not a pure mechanism effect.",
+      "pass": true,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 2448,
+        "completion_tokens": 41,
+        "total_tokens": 2489,
+        "cost": 0.002703,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.002703,
+          "upstream_inference_prompt_cost": 0.002088,
+          "upstream_inference_completions_cost": 0.000615
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797685-DRrmX9pR0LXZM1vpNBuv"
+    },
+    {
+      "caseId": "next-untried",
+      "arm": "cold",
+      "answer": "Field/coordinate representation class",
+      "rationale": "The packet’s degenerate optimum note distinguishes changes by whether they alter the circuit structurally; a representation class is one such discriminator and is not otherwise enumerated.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 252,
+        "completion_tokens": 53,
+        "total_tokens": 305,
+        "cost": 0.001425,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.001425,
+          "upstream_inference_prompt_cost": 0.00063,
+          "upstream_inference_completions_cost": 0.000795
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797686-Vi7Jr9LCxNyJo0DDDc9o"
+    },
+    {
+      "caseId": "next-untried",
+      "arm": "raw",
+      "answer": "status",
+      "rationale": "Entries are labeled with representation-like classes such as promoted, rejected, and failed.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 7046,
+        "completion_tokens": 33,
+        "total_tokens": 7079,
+        "cost": 0.002558,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 6912,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.002558,
+          "upstream_inference_prompt_cost": 0.002063,
+          "upstream_inference_completions_cost": 0.000495
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797687-lXfLnxyBC1MHMeHOdDl5"
+    },
+    {
+      "caseId": "next-untried",
+      "arm": "flat",
+      "answer": "Implicit Bézout representation",
+      "rationale": "It is a representation-style idea listed in the packet.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3398,
+        "completion_tokens": 32,
+        "total_tokens": 3430,
+        "cost": 0.002639,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.002639,
+          "upstream_inference_prompt_cost": 0.002159,
+          "upstream_inference_completions_cost": 0.00048
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797688-WXUfAeUJ4FY226hqxtkq"
+    },
+    {
+      "caseId": "next-untried",
+      "arm": "state_brief",
+      "answer": "disc:half-gcd",
+      "rationale": "Listed as untried_in_atlas and changes inversion representation.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 3496,
+        "completion_tokens": 34,
+        "total_tokens": 3530,
+        "cost": 0.002914,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.002914,
+          "upstream_inference_prompt_cost": 0.002404,
+          "upstream_inference_completions_cost": 0.00051
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797690-tqgGHCqHbJkeGBw9PXYv"
+    },
+    {
+      "caseId": "next-untried",
+      "arm": "winner_only",
+      "answer": "candidate:fermat-inversion:b1eff02f73",
+      "rationale": "It is a candidate with 0 promotions, i.e. untried as a promoted representation-class option.",
+      "pass": false,
+      "model": "openai/gpt-5.4",
+      "usage": {
+        "prompt_tokens": 2448,
+        "completion_tokens": 50,
+        "total_tokens": 2498,
+        "cost": 0.002838,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.002838,
+          "upstream_inference_prompt_cost": 0.002088,
+          "upstream_inference_completions_cost": 0.00075
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "completionId": "gen-1787797691-3bpjJ4x7fxjURVpNyxxN"
+    }
+  ],
+  "missed": [
+    "next-untried"
+  ],
+  "notes": [
+    "next-untried gold is Barrett reciprocal reduction; state_brief answered \"disc:half-gcd\". That cut is also listed untried_in_atlas. A holistic packet names several untried discriminators without ranking them."
+  ],
+  "rescoredAt": "2026-08-27T02:29:25.817Z"
+}
